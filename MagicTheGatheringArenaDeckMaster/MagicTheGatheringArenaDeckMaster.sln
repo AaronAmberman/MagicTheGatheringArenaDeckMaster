@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicTheGatheringArena.Core", "MagicTheGatheringArena.Core\MagicTheGatheringArena.Core.csproj", "{7CA150F5-6625-4FF9-BAF7-DC56D2747861}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicTheGatheringArenaDeckMaster", "MagicTheGatheringArenaDeckMaster\MagicTheGatheringArenaDeckMaster.csproj", "{C1693AD8-178A-4312-A357-1A9CAD6F599E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CA150F5-6625-4FF9-BAF7-DC56D2747861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CA150F5-6625-4FF9-BAF7-DC56D2747861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CA150F5-6625-4FF9-BAF7-DC56D2747861}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CA150F5-6625-4FF9-BAF7-DC56D2747861}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1693AD8-178A-4312-A357-1A9CAD6F599E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1693AD8-178A-4312-A357-1A9CAD6F599E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1693AD8-178A-4312-A357-1A9CAD6F599E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1693AD8-178A-4312-A357-1A9CAD6F599E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7BCBEDA2-77EF-43AE-BEAD-D4566EE22F56}
+	EndGlobalSection
+EndGlobal
