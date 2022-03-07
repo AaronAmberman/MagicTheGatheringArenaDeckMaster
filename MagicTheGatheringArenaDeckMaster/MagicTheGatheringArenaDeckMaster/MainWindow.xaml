@@ -270,36 +270,6 @@
                     </ScrollViewer>
                 </Grid>
             </Expander>
-            <Button x:Name="aboutButton" Grid.Column="0" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" 
-                    Margin="0,0,0,5" BorderThickness="0" Focusable="False"
-                    Command="{Binding AboutCommand}">
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Setter Property="Opacity" Value="0.8" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Opacity" Value="1.0" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-                <Rectangle Width="16" Height="16">
-                    <Rectangle.Fill>
-                        <DrawingBrush>
-                            <DrawingBrush.Drawing>
-                                <DrawingGroup>
-                                    <DrawingGroup.Children>
-                                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                        <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0,8C0,3.582 3.582,0 8,0 12.418,0 16,3.582 16,8 16,12.418 12.418,16 8,16 3.582,16 0,12.418 0,8" />
-                                        <GeometryDrawing Brush="#FF1AA1E2" Geometry="F1M11,7C11,8.104,10.102,9,9,9L9,10 7,10 7,9C7,7.896,7.897,7,9,7L9,5.203C8.841,5.115 8.495,5 8,5 7.505,5 7.159,5.115 7,5.203L7,6 5,6 5,5C5,3.841 6.262,3 8,3 9.738,3 11,3.841 11,5z M9,13L7,13 7,11 9,11z M8,1C4.134,1 1,4.134 1,8 1,11.865 4.134,15 8,15 11.866,15 15,11.865 15,8 15,4.134 11.866,1 8,1" />
-                                        <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M9,11L7,11 7,13 9,13z M9,10L7,10 7,9C7,7.896,7.897,7,9,7L9,5.203C8.841,5.115 8.495,5 8,5 7.505,5 7.159,5.115 7,5.203L7,6 5,6 5,5C5,3.841 6.262,3 8,3 9.738,3 11,3.841 11,5L11,7C11,8.104,10.102,9,9,9z" />
-                                    </DrawingGroup.Children>
-                                </DrawingGroup>
-                            </DrawingBrush.Drawing>
-                        </DrawingBrush>
-                    </Rectangle.Fill>
-                </Rectangle>
-            </Button>
             <!--<Button x:Name="settingsButton" Grid.Column="0" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" 
                     Margin="0,0,0,30" BorderThickness="0" Focusable="False">
                 <Button.Style>
@@ -328,6 +298,48 @@
                 </Rectangle>
             </Button>-->
             <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+                <StatusBarItem>
+                    <Button x:Name="aboutButton" Grid.Column="0" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" 
+                            Margin="0,0,0,0" BorderThickness="0" Focusable="False" Background="Transparent"
+                            Command="{Binding AboutCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="Opacity" Value="0.8" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="1.0" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Rectangle Width="16" Height="16" Margin="2">
+                            <Rectangle.Fill>
+                                <DrawingBrush>
+                                    <DrawingBrush.Drawing>
+                                        <DrawingGroup>
+                                            <DrawingGroup.Children>
+                                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0,8C0,3.582 3.582,0 8,0 12.418,0 16,3.582 16,8 16,12.418 12.418,16 8,16 3.582,16 0,12.418 0,8" />
+                                                <GeometryDrawing Brush="#FF1AA1E2" Geometry="F1M11,7C11,8.104,10.102,9,9,9L9,10 7,10 7,9C7,7.896,7.897,7,9,7L9,5.203C8.841,5.115 8.495,5 8,5 7.505,5 7.159,5.115 7,5.203L7,6 5,6 5,5C5,3.841 6.262,3 8,3 9.738,3 11,3.841 11,5z M9,13L7,13 7,11 9,11z M8,1C4.134,1 1,4.134 1,8 1,11.865 4.134,15 8,15 11.866,15 15,11.865 15,8 15,4.134 11.866,1 8,1" />
+                                                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M9,11L7,11 7,13 9,13z M9,10L7,10 7,9C7,7.896,7.897,7,9,7L9,5.203C8.841,5.115 8.495,5 8,5 7.505,5 7.159,5.115 7,5.203L7,6 5,6 5,5C5,3.841 6.262,3 8,3 9.738,3 11,3.841 11,5L11,7C11,8.104,10.102,9,9,9z" />
+                                            </DrawingGroup.Children>
+                                        </DrawingGroup>
+                                    </DrawingBrush.Drawing>
+                                </DrawingBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Button>
+                </StatusBarItem>
+                <StatusBarItem>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="#FFBBBBBB" Width="1" Height="18" />
+                        <Border Grid.Column="1" Background="#FF222222" Width="1" Height="18" />
+                    </Grid>
+                </StatusBarItem>
                 <StatusBarItem>
                     <TextBlock Text="{Binding StatusMessage}" />
                 </StatusBarItem>                
@@ -567,9 +579,9 @@
                     </Style>
                 </id:ProgressInternalDialog.ProgressBarStyle>
             </id:ProgressInternalDialog>
-            <id:MovableResizableInternalDialog x:Name="aboutDialog" 
+            <id:MovableResizableInternalDialog x:Name="aboutDialog"
                                                Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="1"
-                                               Foreground="White" TitleContent="About MTGA Deck Master" 
+                                               Foreground="White" TitleContent="About MTGA Deck Master"
                                                TitleAreaBackground="#FF101010" AnswerAreaBackground="#FF2F2F2F" ContentBackground="#FF3F3F3F"
                                                Visibility="{Binding AboutBoxVisibility}"
                                                FocusParent="{Binding ElementName=rootGrid}">
@@ -603,14 +615,14 @@
                     <TextBlock TextWrapping="Wrap">
                         <Italic Foreground="#FFAAAAAA">
                             This application is unofficial content permitted under the Wizards of the Coast Fan Content Policy. The literal and graphical 
-                            information presented in this application about Magic: The Gathering, including card images, the mana symbols, and Oracle text, 
+                            information presented in this application about Magic: The Gathering, including card images, the mana symbols and card text, 
                             is copyright Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. Magic The Gathering Arena Deck Master is not produced by, 
                             endorsed by, supported by, or affiliated with Wizards of the Coast.
                         </Italic>
                         <LineBreak /><LineBreak />
                         <Run Text="{Binding Version, Mode=OneWay, StringFormat=Version {0}}" />
                     </TextBlock>
-                </ScrollViewer>                
+                </ScrollViewer>
             </id:MovableResizableInternalDialog>
             <id:MessageBoxInternalDialog x:Name="mbDialog"
                                          Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="1" Foreground="White"
