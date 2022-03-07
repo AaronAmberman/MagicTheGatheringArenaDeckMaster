@@ -97,7 +97,7 @@ namespace MagicTheGatheringArena.Core
         public static string ReplaceBadWindowsCharacters(this string str)
         {
             return str.Replace("<", "-").Replace(">", "-").Replace(":", "-").Replace("/", "-")
-                      .Replace("\\", "-").Replace("|", "-").Replace("?", "-").Replace("*", "-");
+                      .Replace("\\", "-").Replace("|", "-").Replace("?", "-").Replace("*", "-").Replace("//", "-");
         }
 
         #endregion

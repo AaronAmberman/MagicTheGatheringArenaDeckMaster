@@ -890,6 +890,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     }
                 }                
 
+                uniqueCards = uniqueCards.Where(card => card.image_uris != null).ToList();
                 uniqueCards = uniqueCards.OrderBy(uat => uat.set_name).ThenBy(uat => uat.name_field).ToList();
 
                 // build our vm representations
@@ -898,6 +899,48 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                 // we know what cards are allowed in standard mode, then we get the list of distinct set names just like above                
                 standardOnlySets = uniqueCards.Where(c => c.legalities.standard == "legal").Select(c => c.set_name).Distinct().ToList();
+
+                // check to see if we have already downloaded cards
+                List<string> setPaths = Directory.GetDirectories(ServiceLocator.Instance.PathingService.CardImagePath).ToList();
+
+                foreach (string setPath in setPaths)
+                {
+                    // let's first get all the cards in that set
+                    List<UniqueArtTypeViewModel> setCards =
+                        vms.Where(card => card.Model.set_name.ReplaceBadWindowsCharacters() == setPath.Substring(setPath.LastIndexOf("\\", StringComparison.OrdinalIgnoreCase) + 1))
+                        .ToList();
+
+                    // loop through all our matching cards
+                    foreach (UniqueArtTypeViewModel card in setCards)
+                    {
+                        // get all the paths in our set directory
+                        List<string> cardPaths = Directory.GetDirectories(setPath).ToList();
+
+                        foreach (string cardPath in cardPaths)
+                        {
+                            // if the card directory name matches the last part of our path (the card name part)
+                            if (card.Model.name_field.ReplaceBadWindowsCharacters() == cardPath.Substring(cardPath.LastIndexOf("\\", StringComparison.OrdinalIgnoreCase) + 1))
+                            {
+                                // check which images it has
+                                List<string> cardImagesFiles = Directory.GetFiles(cardPath).ToList();
+
+                                foreach (string cardImagePath in cardImagesFiles)
+                                {
+                                    string name = Path.GetFileNameWithoutExtension(cardImagePath);
+
+                                    if (string.IsNullOrWhiteSpace(name)) continue;
+
+                                    if (name.Contains("small")) card.DownloadSmallPicture = true;
+                                    if (name.Contains("normal")) card.DownloadNormalPicture = true;
+                                    if (name.Contains("large")) card.DownloadLargePicture = true;
+                                    if (name.Contains("png")) card.DownloadPngPicture = true;
+                                    if (name.Contains("artCrop")) card.DownloadArtCropPicture = true;
+                                    if (name.Contains("borderCrop")) card.DownloadBorderCropPicture = true;
+                                }
+                            }
+                        }
+                    }
+                }
 
                 InvokeOnDispatcher(() =>
                 {
