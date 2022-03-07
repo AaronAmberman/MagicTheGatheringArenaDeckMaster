@@ -709,9 +709,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 {
                     List<UniqueArtTypeViewModel> selectedCards = new List<UniqueArtTypeViewModel>();
 
-                    for (int i = 0; i < CardCollectionView.Count; i++)
+                    for (int i = 0; i < CardData.Count; i++)
                     {
-                        UniqueArtTypeViewModel? vm = CardCollectionView.GetItemAt(i) as UniqueArtTypeViewModel;
+                        UniqueArtTypeViewModel? vm = CardData[i];
 
                         if (vm == null) continue;
 
@@ -730,8 +730,13 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     // we'll parallel process all the images the best we can
                     Parallel.ForEach(selectedCards, new ParallelOptions { MaxDegreeOfParallelism = 6 }, card =>
                     {
+                        string setPath = Path.Combine(ServiceLocator.Instance.PathingService.CardImagePath, card.Model.set_name.ReplaceBadWindowsCharacters());
+
+                        if (!Directory.Exists(setPath))
+                            Directory.CreateDirectory(setPath);
+
                         ServiceLocator.Instance.ScryfallService.DownloadArtworkFiles(card.Model, card.DownloadSmallPicture, card.DownloadNormalPicture,
-                            card.DownloadLargePicture, card.DownloadPngPicture, card.DownloadArtCropPicture, card.DownloadBorderCropPicture);
+                            card.DownloadLargePicture, card.DownloadPngPicture, card.DownloadArtCropPicture, card.DownloadBorderCropPicture, setPath);
                     });
 
                     ServiceLocator.Instance.ScryfallService.ImageProcessed -= ScryfallService_ImageProcessed;

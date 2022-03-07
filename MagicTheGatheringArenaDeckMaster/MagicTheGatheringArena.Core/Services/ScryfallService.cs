@@ -74,7 +74,7 @@ namespace MagicTheGatheringArena.Core.Services
             }
         }
 
-        public void DownloadArtworkFiles(UniqueArtType uniqueDataType, bool small, bool normal, bool large, bool png, bool artCrop, bool borderCrop)
+        public void DownloadArtworkFiles(UniqueArtType uniqueDataType, bool small, bool normal, bool large, bool png, bool artCrop, bool borderCrop, string setPath)
         {
             try
             {
@@ -87,9 +87,10 @@ namespace MagicTheGatheringArena.Core.Services
                     int index2 = uniqueDataType.image_uris.small.LastIndexOf("?", StringComparison.OrdinalIgnoreCase);
                     int count = index2 - index;
 
-                    string name = uniqueDataType.image_uris.small.Substring(index, count).Replace(".jpg", "");
+                    //string name = uniqueDataType.image_uris.small.Substring(index, count).Replace(".jpg", "");
+                    string name = uniqueDataType.name_field.ReplaceBadWindowsCharacters();
+                    string fullPath = Path.Combine(setPath, name);
                     string fullName = name + "-small.jpg";
-                    string fullPath = Path.Combine(pathing.CardImagePath, name);
                     string absolutePathToFile = Path.Combine(fullPath, fullName);
 
                     HttpClient client = new HttpClient();

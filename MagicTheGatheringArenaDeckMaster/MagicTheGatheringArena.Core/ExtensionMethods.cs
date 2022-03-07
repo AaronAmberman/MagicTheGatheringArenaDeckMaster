@@ -88,5 +88,18 @@ namespace MagicTheGatheringArena.Core
         }
 
         #endregion
+
+        #region String
+
+        /// <summary>Removes <, >, :, ", /, \, |, ? and * from the string and replace them with a - (hyphen).</summary>
+        /// <param name="str">The string to replace characters in.</param>
+        /// <returns>The corrected string.</returns>
+        public static string ReplaceBadWindowsCharacters(this string str)
+        {
+            return str.Replace("<", "-").Replace(">", "-").Replace(":", "-").Replace("/", "-")
+                      .Replace("\\", "-").Replace("|", "-").Replace("?", "-").Replace("*", "-");
+        }
+
+        #endregion
     }
 }
