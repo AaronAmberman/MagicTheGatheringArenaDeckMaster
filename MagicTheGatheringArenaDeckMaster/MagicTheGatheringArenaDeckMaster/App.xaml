@@ -13,8 +13,8 @@
                 <ResourceDictionary Source="pack://application:,,,/DarkThemeHighlight.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <converter:ArithmeticConverter x:Key="ArithmeticConverter" />
             <con:CardImageSourceConverter x:Key="CardImageSourceConverter" />
+            <converter:ArithmeticConverter x:Key="ArithmeticConverter" />
 
             <!-- Custom Styles -->
             <Style x:Key="DarkThemeTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
