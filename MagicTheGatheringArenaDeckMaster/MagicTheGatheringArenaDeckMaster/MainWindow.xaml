@@ -204,7 +204,54 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Cards">
-
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Card Filter" Margin="0,0,5,0" />
+                            <TextBox x:Name="cardImageFilterText" Grid.Column="1" Text="{Binding CardImageSearch, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Grid.Column="1" IsHitTestVisible="False" Text="Filter for card name or text..." Foreground="LightGray" 
+                                       Margin="3,0,0,0" Padding="0,1,0,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=cardImageFilterText, Path=Text}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ElementName=cardImageFilterText, Path=Text}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                        <ListView x:Name="CardImageListView" Grid.Row="1" ItemsSource="{Binding CardImageData}" Margin="5">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" Margin="2,5"
+                                               Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualWidth, 
+                                                               Converter={StaticResource ArithmeticConverter}, ConverterParameter=-25}" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Image Margin="5" Width="146" Height="204" 
+                                               Source="{Binding Converter={StaticResource CardImageSourceConverter}}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Deck Builder">
 

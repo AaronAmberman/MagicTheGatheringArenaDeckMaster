@@ -26,6 +26,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private ICommand? browseCommand;
         private CollectionView? cardCollectionView;
         private ObservableCollection<UniqueArtTypeViewModel> cardData;
+        private CollectionView? cardImageCollectionView;
+        private ObservableCollection<UniqueArtTypeViewModel> cardImageData;
+        private string? cardImageSearch;
         private string? cardNameSearch;
         private int cardProgressValue;
         private Visibility cardProgressVisibility = Visibility.Collapsed;
@@ -100,6 +103,39 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
+        public CollectionView? CardImageCollectionView
+        {
+            get => cardImageCollectionView;
+            set
+            {
+                cardImageCollectionView = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<UniqueArtTypeViewModel> CardImageData
+        {
+            get => cardImageData;
+            set
+            {
+                cardImageData = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string? CardImageSearch
+        {
+            get => cardImageSearch;
+            set
+            {
+                cardImageSearch = value;
+
+                CardImageCollectionView?.Refresh();
+
+                OnPropertyChanged();
+            }
+        }
+
         public string? CardNameSearch
         {
             get => cardNameSearch;
@@ -108,6 +144,13 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 cardNameSearch = value;
 
                 CardCollectionView?.Refresh();
+
+                VerifyStateOfSmallCheckBoxAndSet();
+                VerifyStateOfNormalCheckBoxAndSet();
+                VerifyStateOfLargeCheckBoxAndSet();
+                VerifyStateOfPngCheckBoxAndSet();
+                VerifyStateOfArtCropCheckBoxAndSet();
+                VerifyStateOfBorderCropCheckBoxAndSet();
 
                 OnPropertyChanged();
             }
@@ -475,6 +518,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         public MainWindowViewModel()
         {
             cardData = new ObservableCollection<UniqueArtTypeViewModel>();
+            cardImageData = new ObservableCollection<UniqueArtTypeViewModel>();
             setNames = new ObservableCollection<SetNameViewModel>();
         }
 
@@ -602,6 +646,37 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     else
                     {
                         if (uavm.Set == vm.Name) return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool CardImageFilterPredicate(object obj)
+        {
+            if (obj is not UniqueArtTypeViewModel uavm) return false;
+
+            foreach (SetNameViewModel vm in SetNames)
+            {
+                if (vm.IsChecked)
+                {
+                    if (!string.IsNullOrWhiteSpace(CardImageSearch))
+                    {
+                        if (uavm.Set == vm.Name &&
+                           (!string.IsNullOrWhiteSpace(uavm.ImagePathSmall) || !string.IsNullOrWhiteSpace(uavm.ImagePathNormal)) ||
+                            !string.IsNullOrWhiteSpace(uavm.ImagePathLarge) || !string.IsNullOrWhiteSpace(uavm.ImagePathPng) &&
+                            (uavm.Name.IndexOf(CardImageSearch, StringComparison.OrdinalIgnoreCase) > -1 || 
+                             (!string.IsNullOrWhiteSpace(uavm.Model.oracle_text) && 
+                              uavm.Model.oracle_text.IndexOf(CardImageSearch, StringComparison.OrdinalIgnoreCase) > -1)))
+                            return true;
+                    }
+                    else
+                    {
+                        if (uavm.Set == vm.Name && 
+                           (!string.IsNullOrWhiteSpace(uavm.ImagePathSmall) || !string.IsNullOrWhiteSpace(uavm.ImagePathNormal)) ||
+                            !string.IsNullOrWhiteSpace(uavm.ImagePathLarge) || !string.IsNullOrWhiteSpace(uavm.ImagePathPng)) 
+                            return true;
                     }
                 }
             }
@@ -739,6 +814,78 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                             card.DownloadLargePicture, card.DownloadPngPicture, card.DownloadArtCropPicture, card.DownloadBorderCropPicture, setPath);
                     });
 
+                    // check to see if we have already downloaded cards
+                    List<string> setPaths = Directory.GetDirectories(ServiceLocator.Instance.PathingService.CardImagePath).ToList();
+
+                    foreach (string setPath in setPaths)
+                    {
+                        // let's first get all the cards in that set
+                        List<UniqueArtTypeViewModel> setCards =
+                            selectedCards.Where(card => card.Model.set_name.ReplaceBadWindowsCharacters() == setPath.Substring(setPath.LastIndexOf("\\", StringComparison.OrdinalIgnoreCase) + 1))
+                            .ToList();
+
+                        // loop through all our matching cards
+                        foreach (UniqueArtTypeViewModel card in setCards)
+                        {
+                            // get all the paths in our set directory
+                            List<string> cardPaths = Directory.GetDirectories(setPath).ToList();
+
+                            foreach (string cardPath in cardPaths)
+                            {
+                                // if the card directory name matches the last part of our path (the card name part)
+                                if (card.Model.name_field.ReplaceBadWindowsCharacters() == cardPath.Substring(cardPath.LastIndexOf("\\", StringComparison.OrdinalIgnoreCase) + 1))
+                                {
+                                    // check which images it has
+                                    List<string> cardImagesFiles = Directory.GetFiles(cardPath).ToList();
+
+                                    foreach (string cardImagePath in cardImagesFiles)
+                                    {
+                                        string name = Path.GetFileNameWithoutExtension(cardImagePath);
+
+                                        if (string.IsNullOrWhiteSpace(name)) continue;
+
+                                        if (name.Contains("small"))
+                                        {
+                                            card.ImagePathSmall = cardImagePath;
+                                        }
+
+                                        if (name.Contains("normal"))
+                                        {
+                                            card.ImagePathNormal = cardImagePath;
+                                        }
+
+                                        if (name.Contains("large"))
+                                        {
+                                            card.ImagePathLarge = cardImagePath;
+                                        }
+
+                                        if (name.Contains("png"))
+                                        {
+                                            card.ImagePathPng = cardImagePath;
+                                        }
+
+                                        if (name.Contains("artCrop"))
+                                        {
+                                            card.ImagePathArtCrop = cardImagePath;
+                                        }
+
+                                        if (name.Contains("borderCrop"))
+                                        {
+                                            card.ImagePathBorderCrop = cardImagePath;
+                                        }
+                                    }
+                                }
+                            }
+
+                            // if our images doesn't contain our card then add because we added an image
+                            InvokeOnDispatcher(() => 
+                            {
+                                if (!CardImageData.Contains(card))
+                                    CardImageData.Add(card);
+                            });                            
+                        }
+                    }
+
                     ServiceLocator.Instance.ScryfallService.ImageProcessed -= ScryfallService_ImageProcessed;
 
                     CardProgressVisibility = Visibility.Collapsed;
@@ -749,6 +896,11 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     MessageBoxTitle = "Card Images Downloaded";
                     MessageBoxMessage = "The card images that could be downloaded have been downloaded. See please log for failures (if any).";
                     MessageBoxVisibility = Visibility.Visible;
+
+                    InvokeOnDispatcher(() =>
+                    {
+                        CardImageCollectionView?.Refresh();
+                    });
 
                     Task.Delay(5000).ContinueWith(task => 
                     {
@@ -930,12 +1082,41 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                                     if (string.IsNullOrWhiteSpace(name)) continue;
 
-                                    if (name.Contains("small")) card.DownloadSmallPicture = true;
-                                    if (name.Contains("normal")) card.DownloadNormalPicture = true;
-                                    if (name.Contains("large")) card.DownloadLargePicture = true;
-                                    if (name.Contains("png")) card.DownloadPngPicture = true;
-                                    if (name.Contains("artCrop")) card.DownloadArtCropPicture = true;
-                                    if (name.Contains("borderCrop")) card.DownloadBorderCropPicture = true;
+                                    if (name.Contains("small"))
+                                    {
+                                        card.DownloadSmallPicture = true;
+                                        card.ImagePathSmall = cardImagePath;
+                                    }
+
+                                    if (name.Contains("normal"))
+                                    {
+                                        card.DownloadNormalPicture = true;
+                                        card.ImagePathNormal = cardImagePath;
+                                    }
+
+                                    if (name.Contains("large"))
+                                    {
+                                        card.DownloadLargePicture = true;
+                                        card.ImagePathLarge = cardImagePath;
+                                    }
+
+                                    if (name.Contains("png"))
+                                    {
+                                        card.DownloadPngPicture = true;
+                                        card.ImagePathPng = cardImagePath;
+                                    }
+
+                                    if (name.Contains("artCrop"))
+                                    {
+                                        card.DownloadArtCropPicture = true;
+                                        card.ImagePathArtCrop = cardImagePath;
+                                    }
+
+                                    if (name.Contains("borderCrop"))
+                                    {
+                                        card.DownloadBorderCropPicture = true;
+                                        card.ImagePathBorderCrop = cardImagePath;
+                                    }
                                 }
                             }
                         }
@@ -947,6 +1128,10 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     CardData.Clear();
                     CardData.AddRange(vms);
 
+                    CardImageData.Clear();
+                    CardImageData.AddRange(vms.Where(vm => !string.IsNullOrWhiteSpace(vm.ImagePathPng) || !string.IsNullOrWhiteSpace(vm.ImagePathSmall) ||
+                                                           !string.IsNullOrWhiteSpace(vm.ImagePathNormal) || !string.IsNullOrWhiteSpace(vm.ImagePathLarge)));
+
                     SetNames.Clear();
                     SetNames.AddRange(uniqueSetNames.Select(s => new SetNameViewModel(this) { Name = s }));
 
@@ -955,6 +1140,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                     CardCollectionView = (CollectionView)CollectionViewSource.GetDefaultView(CardData);
                     CardCollectionView.Filter = CardFilterPredicate;
+
+                    CardImageCollectionView = (CollectionView)CollectionViewSource.GetDefaultView(CardImageData);
+                    CardImageCollectionView.Filter = CardImageFilterPredicate;
                 });
             }).ContinueWith((task) =>
             {

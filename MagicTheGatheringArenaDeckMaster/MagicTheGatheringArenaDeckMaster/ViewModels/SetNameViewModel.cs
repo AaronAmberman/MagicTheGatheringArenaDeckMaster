@@ -32,6 +32,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 isChecked = value;
 
                 Parent.CardCollectionView?.Refresh();
+                Parent.CardImageCollectionView?.Refresh();
                 Parent.VerifyStateOfSmallCheckBoxAndSet();
                 Parent.VerifyStateOfNormalCheckBoxAndSet();
                 Parent.VerifyStateOfLargeCheckBoxAndSet();

@@ -12,6 +12,7 @@
   <ItemGroup>
     <None Remove="DarkHighlightTheme.png" />
     <None Remove="Icon.png" />
+    <None Remove="NoImage.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +34,7 @@
 
   <ItemGroup>
     <Resource Include="Icon.png" />
+    <Resource Include="NoImage.png" />
   </ItemGroup>
 
 </Project>

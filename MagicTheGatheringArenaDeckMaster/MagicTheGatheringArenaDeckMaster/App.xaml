@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster"
              xmlns:converter="clr-namespace:MagicTheGatheringArena.Core.WPF.Converters;assembly=MagicTheGatheringArena.Core"
+             xmlns:con="clr-namespace:MagicTheGatheringArenaDeckMaster.Converters"
              StartupUri="MainWindow.xaml" 
              Startup="Application_Startup"
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
@@ -13,6 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converter:ArithmeticConverter x:Key="ArithmeticConverter" />
+            <con:CardImageSourceConverter x:Key="CardImageSourceConverter" />
 
             <!-- Custom Styles -->
             <Style x:Key="DarkThemeTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">

@@ -14,6 +14,12 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private bool downloadPngPicture;
         private bool downloadArtCropPicture;
         private bool downloadBorderCropPicture;
+        private string imagePathSmall;
+        private string imagePathNormal;
+        private string imagePathLarge;
+        private string imagePathPng;
+        private string imagePathArtCrop;
+        private string imagePathBorderCrop;
         private bool isInternallySettingValue = false;
         private MainWindowViewModel parent;
 
@@ -160,6 +166,66 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
+        public string ImagePathSmall
+        {
+            get => imagePathSmall;
+            set
+            {
+                imagePathSmall = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ImagePathNormal
+        {
+            get => imagePathNormal;
+            set
+            {
+                imagePathNormal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ImagePathLarge
+        {
+            get => imagePathLarge;
+            set
+            {
+                imagePathLarge = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ImagePathPng
+        {
+            get => imagePathPng;
+            set
+            {
+                imagePathPng = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ImagePathArtCrop
+        {
+            get => imagePathArtCrop;
+            set
+            {
+                imagePathArtCrop = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ImagePathBorderCrop
+        {
+            get => imagePathBorderCrop;
+            set
+            {
+                imagePathBorderCrop = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsInternallySettingValue
         {
             get => isInternallySettingValue;
@@ -187,6 +253,12 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         public UniqueArtTypeViewModel(UniqueArtType uat, MainWindowViewModel parent)
         {
             model = uat;
+            imagePathArtCrop = string.Empty;
+            imagePathBorderCrop = string.Empty; 
+            imagePathLarge = string.Empty;
+            imagePathNormal = string.Empty;
+            imagePathPng = string.Empty;
+            imagePathSmall = string.Empty;
             this.parent = parent;
         }
 
