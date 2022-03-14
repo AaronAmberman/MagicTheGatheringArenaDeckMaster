@@ -21,39 +21,21 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
     {
         #region Fields
 
-        private ICommand? aboutCommand;
-        private Visibility aboutBoxVisibility = Visibility.Collapsed;
-        private ICommand? browseCommand;
         private CollectionView? cardCollectionView;
         private ObservableCollection<UniqueArtTypeViewModel> cardData;
         private CollectionView? cardImageCollectionView;
         private ObservableCollection<UniqueArtTypeViewModel> cardImageData;
         private string? cardImageSearch;
         private string? cardNameSearch;
-        private int cardProgressValue;
-        private Visibility cardProgressVisibility = Visibility.Collapsed;
         private ICommand? downloadCardImagesCommand;
         private ICommand? downloadDataCommand;
-        private string fileLocation = string.Empty;
-        private bool hasDataPreviously;
+        private InternalDialogUserControlViewModel? internalDialogViewModel;
         private bool? isAllSmallChecked = false;
         private bool? isAllNormalChecked = false;
         private bool? isAllLargeChecked = false;
         private bool? isAllPngChecked = false;
         private bool? isAllArtCropChecked = false;
         private bool? isAllBorderCropChecked = false;
-        private MessageBoxButton messageBoxButton = MessageBoxButton.OK;
-        private MessageBoxInternalDialogImage messageBoxImage = MessageBoxInternalDialogImage.Information;
-        private bool messageBoxIsModal;
-        private string? messageBoxMessage;
-        private MessageBoxResult messageBoxResult;
-        private string? messageBoxTitle;
-        private Visibility messageBoxVisibility = Visibility.Collapsed;
-        private Visibility needDataVisibility = Visibility.Collapsed;
-        private ICommand? okDataCommand;
-        private Visibility progressDialogVisbility = Visibility.Collapsed;
-        private string? progressMessage;
-        private string? progressTitle;
         private int selectedImageCount;
         private CollectionView? setCollectionView;
         private ObservableCollection<SetNameViewModel> setNames;
@@ -62,27 +44,12 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private bool showOnlySetAllowedInMtgaStandard;
         private List<string>? standardOnlySets;
         private string? statusMessage;
-        private ICommand? useDataCommand;
         private string? version;
 
         #endregion
 
         #region Properties
-
-        public ICommand? AboutCommand => aboutCommand ??= new RelayCommand(About);
-
-        public Visibility AboutBoxVisibility
-        {
-            get => aboutBoxVisibility;
-            set 
-            { 
-                aboutBoxVisibility = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ICommand? BrowseCommand => browseCommand ??= new RelayCommand(BrowseForFile);
-
+        
         public CollectionView? CardCollectionView
         {
             get => cardCollectionView;
@@ -156,48 +123,18 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        public int CardProgressValue
-        {
-            get => cardProgressValue;
-            set
-            {
-                cardProgressValue = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Visibility CardProgressVisibility
-        {
-            get => cardProgressVisibility;
-            set
-            {
-                cardProgressVisibility = value;
-                OnPropertyChanged();
-            }
-        }
-
         public Dispatcher? Dispatcher { get; set; }
 
         public ICommand? DownloadCardImagesCommand => downloadCardImagesCommand ??= new RelayCommand(DownloadCardData, CanDownloadCardImages);
         
         public ICommand? DownloadDataCommand => downloadDataCommand ??= new RelayCommand(DownloadData);
 
-        public string FileLocation
+        public InternalDialogUserControlViewModel? InternalDialogViewModel
         {
-            get => fileLocation;
+            get => internalDialogViewModel;
             set
             {
-                fileLocation = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool HasDataPreviously
-        {
-            get => hasDataPreviously;
-            set 
-            { 
-                hasDataPreviously = value;
+                internalDialogViewModel = value;
                 OnPropertyChanged();
             }
         }
@@ -304,118 +241,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        public MessageBoxButton MessageBoxButton
-        {
-            get => messageBoxButton;
-            set 
-            { 
-                messageBoxButton = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public MessageBoxInternalDialogImage MessageBoxImage
-        {
-            get => messageBoxImage;
-            set
-            {
-                messageBoxImage = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool MessageBoxIsModal
-        {
-            get => messageBoxIsModal; 
-            set 
-            { 
-                messageBoxIsModal = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string? MessageBoxMessage
-        {
-            get => messageBoxMessage;
-            set 
-            { 
-                messageBoxMessage = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public MessageBoxResult MessageBoxResult
-        {
-            get => messageBoxResult;
-            set 
-            { 
-                messageBoxResult = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string? MessageBoxTitle
-        {
-            get => messageBoxTitle;
-            set
-            {
-                messageBoxTitle = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Visibility MessageBoxVisibility
-        {
-            get => messageBoxVisibility;
-            set
-            {
-                messageBoxVisibility = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Visibility NeedDataVisibility
-        {
-            get => needDataVisibility;
-            set
-            {
-                needDataVisibility = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ICommand? OkDataCommand => okDataCommand ??= new RelayCommand(OkData, CanOkdata);
-
-        public Visibility ProgressDialogVisbility
-        {
-            get => progressDialogVisbility;
-            set 
-            { 
-                progressDialogVisbility = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string? ProgressMessage
-        {
-            get => progressMessage;
-            set
-            {
-                progressMessage = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string? ProgressTitle
-        {
-            get => progressTitle;
-            set
-            {
-                progressTitle = value;
-                OnPropertyChanged();
-            }
-        }
-
         public int SelectedImageCount
         {
             get => selectedImageCount;
@@ -499,8 +324,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        public ICommand? UseDataCommand => useDataCommand ??= new RelayCommand(UseData);
-
         public string? Version
         {
             get => version;
@@ -526,13 +349,10 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         #region Methods
 
-        private void About()
-        {
-            AboutBoxVisibility = Visibility.Visible;
-        }
-
         private void BackupReferencedFile()
         {
+            if (InternalDialogViewModel == null) return;
+
             // copy on another thread so we don't block the UI...wait 5 seconds though so we can read the data first
             Task.Delay(5000).ContinueWith((task) =>
             {
@@ -545,27 +365,27 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     // there will only ever be one backup file
 
                     string existingFilename = Path.GetFileName(files[0]);
-                    string newFilename = Path.GetFileName(FileLocation);
+                    string newFilename = Path.GetFileName(InternalDialogViewModel.FileLocation);
 
-                    if ((existingFilename != newFilename) || existingFilename == newFilename && !HasDataPreviously)
+                    if ((existingFilename != newFilename) || existingFilename == newFilename && !InternalDialogViewModel.HasDataPreviously)
                     {
                         // either file names are not the same or they are but the user picked a new file with the same name, ok to delete old one
 
-                        string filename = Path.Combine(ServiceLocator.Instance.PathingService.BaseDataPath, Path.GetFileName(FileLocation));
+                        string filename = Path.Combine(ServiceLocator.Instance.PathingService.BaseDataPath, Path.GetFileName(InternalDialogViewModel.FileLocation));
 
-                        File.Copy(FileLocation, filename, true);
+                        File.Copy(InternalDialogViewModel.FileLocation, filename, true);
                         File.Delete(existingFilename);
                     }
-                    else if (existingFilename == newFilename && HasDataPreviously)
+                    else if (existingFilename == newFilename && InternalDialogViewModel.HasDataPreviously)
                     {
                         // leave the file alone because the user referenced this backed up file
                     }
                 }
                 else
                 {
-                    string filename = Path.Combine(ServiceLocator.Instance.PathingService.BaseDataPath, Path.GetFileName(FileLocation));
+                    string filename = Path.Combine(ServiceLocator.Instance.PathingService.BaseDataPath, Path.GetFileName(InternalDialogViewModel.FileLocation));
 
-                    File.Copy(FileLocation, filename);
+                    File.Copy(InternalDialogViewModel.FileLocation, filename);
                 }
 
                 StatusMessage = "Referenced file successfully backed up.";
@@ -589,44 +409,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         public void BeginInvokeOnDispatcher(Action action)
         {
             Dispatcher?.BeginInvoke(action, DispatcherPriority.Normal);
-        }
-
-        private void BrowseForFile()
-        {
-            try
-            {
-                OpenFileDialog ofd = new()
-                {
-                    AddExtension = true,
-                    CheckFileExists = true,
-                    Filter = "JSON files (*.json)|*.json",
-                    Multiselect = false,
-                    Title = "Select File for Processing"
-                };
-
-                bool? result = ofd.ShowDialog();
-
-                if (result.HasValue)
-                {
-                    if (result.Value)
-                    {
-                        string selectedFile = ofd.FileName;
-
-                        FileLocation = selectedFile;
-
-                        // even if there was previous data but the user picked a file still, then clear our flag
-                        HasDataPreviously = false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ServiceLocator.Instance.LoggerService.Error($"An error occurred attempting to load in file from file picker.{Environment.NewLine}{ex}");
-
-                MessageBoxTitle = "Browse Error";
-                MessageBoxMessage = $"An error occurred attempting to reference the file. {ex.Message}{Environment.NewLine}See the log for more details.";
-                MessageBoxVisibility = Visibility.Visible;
-            }
         }
 
         private bool CardFilterPredicate(object obj)
@@ -757,26 +539,28 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void DownloadCardData()
         {
-            MessageBoxTitle = "Confirm Download";
-            MessageBoxMessage = $"Are you sure you wish download {SelectedImageCount} images?";
-            MessageBoxImage = MessageBoxInternalDialogImage.Help;
-            MessageBoxIsModal = true;
-            MessageBoxButton = MessageBoxButton.YesNo;
-            MessageBoxVisibility = Visibility.Visible;
+            if (InternalDialogViewModel == null) return;
+
+            InternalDialogViewModel.MessageBoxTitle = "Confirm Download";
+            InternalDialogViewModel.MessageBoxMessage = $"Are you sure you wish download {SelectedImageCount} images?";
+            InternalDialogViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Help;
+            InternalDialogViewModel.MessageBoxIsModal = true;
+            InternalDialogViewModel.MessageBoxButton = MessageBoxButton.YesNo;
+            InternalDialogViewModel.MessageBoxVisibility = Visibility.Visible;
 
             // because it is shown modally this code will not execute until it is closed
-            MessageBoxTitle = string.Empty;
-            MessageBoxMessage = string.Empty;
-            MessageBoxImage = MessageBoxInternalDialogImage.Information;
-            MessageBoxIsModal = false;
-            MessageBoxButton = MessageBoxButton.OK;
+            InternalDialogViewModel.MessageBoxTitle = string.Empty;
+            InternalDialogViewModel.MessageBoxMessage = string.Empty;
+            InternalDialogViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
+            InternalDialogViewModel.MessageBoxIsModal = false;
+            InternalDialogViewModel.MessageBoxButton = MessageBoxButton.OK;
 
-            if (MessageBoxResult == MessageBoxResult.No)
+            if (InternalDialogViewModel.MessageBoxResult == MessageBoxResult.No)
             {
                 return;
             }
 
-            CardProgressVisibility = Visibility.Visible;
+            InternalDialogViewModel.CardProgressVisibility = Visibility.Visible;
 
             Task.Run(() => 
             {
@@ -888,14 +672,14 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                     ServiceLocator.Instance.ScryfallService.ImageProcessed -= ScryfallService_ImageProcessed;
 
-                    CardProgressVisibility = Visibility.Collapsed;
-                    CardProgressValue = 0;
+                    InternalDialogViewModel.CardProgressVisibility = Visibility.Collapsed;
+                    InternalDialogViewModel.CardProgressValue = 0;
 
                     StatusMessage = "Card images downloaded";
 
-                    MessageBoxTitle = "Card Images Downloaded";
-                    MessageBoxMessage = "The card images that could be downloaded have been downloaded. See please log for failures (if any).";
-                    MessageBoxVisibility = Visibility.Visible;
+                    InternalDialogViewModel.MessageBoxTitle = "Card Images Downloaded";
+                    InternalDialogViewModel.MessageBoxMessage = "The card images that could be downloaded have been downloaded. See please log for failures (if any).";
+                    InternalDialogViewModel.MessageBoxVisibility = Visibility.Visible;
 
                     InvokeOnDispatcher(() =>
                     {
@@ -912,14 +696,18 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void ScryfallService_ImageProcessed(object? sender, int e)
         {
-            CardProgressValue += e;
+            if (InternalDialogViewModel == null) return;
+
+            InternalDialogViewModel.CardProgressValue += e;
         }
 
         private void DownloadData()
         {
-            ProgressDialogVisbility = Visibility.Visible;
-            ProgressMessage = "Contacting Scryfall for information...";
-            ProgressTitle = "Downloading Data";
+            if (InternalDialogViewModel == null) return;
+
+            InternalDialogViewModel.ProgressDialogVisbility = Visibility.Visible;
+            InternalDialogViewModel.ProgressMessage = "Contacting Scryfall for information...";
+            InternalDialogViewModel.ProgressTitle = "Downloading Data";
 
             Task.Run(() =>
             {
@@ -932,16 +720,16 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                     if (result == null)
                     {
-                        ProgressDialogVisbility = Visibility.Collapsed;
-                        ProgressMessage = string.Empty;
-                        ProgressTitle = string.Empty;
-                        MessageBoxVisibility = Visibility.Visible;
-                        MessageBoxMessage = "Could not download information about unique artwork file from Scryfall.";
-                        MessageBoxTitle = "Download Failure";
+                        InternalDialogViewModel.ProgressDialogVisbility = Visibility.Collapsed;
+                        InternalDialogViewModel.ProgressMessage = string.Empty;
+                        InternalDialogViewModel.ProgressTitle = string.Empty;
+                        InternalDialogViewModel.MessageBoxVisibility = Visibility.Visible;
+                        InternalDialogViewModel.MessageBoxMessage = "Could not download information about unique artwork file from Scryfall.";
+                        InternalDialogViewModel.MessageBoxTitle = "Download Failure";
                     }
                     else
                     {
-                        ProgressMessage = "Information downloaded from Scryfall. Downloading unique artwork file...";
+                        InternalDialogViewModel.ProgressMessage = "Information downloaded from Scryfall. Downloading unique artwork file...";
 
                         string filename = result.download_uri.Substring(result.download_uri.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1);
                         string fullPath = Path.Combine(ServiceLocator.Instance.PathingService.BaseDataPath, filename);
@@ -958,9 +746,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                         if (File.Exists(fullPath))
                         {
-                            FileLocation = fullPath;
+                            InternalDialogViewModel.FileLocation = fullPath;
 
-                            ProgressMessage = "Information downloaded from Scryfall.";
+                            InternalDialogViewModel.ProgressMessage = "Information downloaded from Scryfall.";
 
                             // after 5 seconds hide the message
                             Task.Delay(5000).ContinueWith((delayTask) =>
@@ -970,12 +758,12 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                         }
                         else
                         {
-                            ProgressDialogVisbility = Visibility.Collapsed;
-                            ProgressMessage = string.Empty;
-                            ProgressTitle = string.Empty;
-                            MessageBoxVisibility = Visibility.Visible;
-                            MessageBoxMessage = "Unable to download file information from Scryfall. Please check internet connect, that Scryfall is currently online or look in the log to see if an error occurred.";
-                            MessageBoxTitle = "Download Failure";
+                            InternalDialogViewModel.ProgressDialogVisbility = Visibility.Collapsed;
+                            InternalDialogViewModel.ProgressMessage = string.Empty;
+                            InternalDialogViewModel.ProgressTitle = string.Empty;
+                            InternalDialogViewModel.MessageBoxVisibility = Visibility.Visible;
+                            InternalDialogViewModel.MessageBoxMessage = "Unable to download file information from Scryfall. Please check internet connect, that Scryfall is currently online or look in the log to see if an error occurred.";
+                            InternalDialogViewModel.MessageBoxTitle = "Download Failure";
                         }
                     }
                 }
@@ -985,12 +773,12 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 {
                     ServiceLocator.Instance.LoggerService.Error($"An error occurred attempting to load in file form browser.{Environment.NewLine}{task.Exception}");
 
-                    ProgressDialogVisbility = Visibility.Collapsed;
-                    ProgressMessage = string.Empty;
-                    ProgressTitle = string.Empty;
-                    MessageBoxVisibility = Visibility.Visible;
-                    MessageBoxMessage = $"An error occurred attempting to download the file. {task.Exception.Message}{Environment.NewLine}See the log for more details.";
-                    MessageBoxTitle = "Error Processing";
+                    InternalDialogViewModel.ProgressDialogVisbility = Visibility.Collapsed;
+                    InternalDialogViewModel.ProgressMessage = string.Empty;
+                    InternalDialogViewModel.ProgressTitle = string.Empty;
+                    InternalDialogViewModel.MessageBoxVisibility = Visibility.Visible;
+                    InternalDialogViewModel.MessageBoxMessage = $"An error occurred attempting to download the file. {task.Exception.Message}{Environment.NewLine}See the log for more details.";
+                    InternalDialogViewModel.MessageBoxTitle = "Error Processing";
                 }
             });
         }
@@ -1000,27 +788,19 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             Dispatcher?.Invoke(action, DispatcherPriority.Normal);
         }
 
-        private bool CanOkdata()
+        public void ProcessFileData()
         {
-            return !string.IsNullOrWhiteSpace(FileLocation);
-        }
+            if (InternalDialogViewModel == null) return;
 
-        private void OkData()
-        {
-            ProcessFileData();
-        }
-
-        private void ProcessFileData()
-        {
-            ProgressDialogVisbility = Visibility.Visible;
-            ProgressMessage = "Processing selected file...";
-            ProgressTitle = "Processing Data";
+            InternalDialogViewModel.ProgressDialogVisbility = Visibility.Visible;
+            InternalDialogViewModel.ProgressMessage = "Processing selected file...";
+            InternalDialogViewModel.ProgressTitle = "Processing Data";
 
             Task.Run(() =>
             {
                 BackupReferencedFile();
 
-                string text = File.ReadAllText(FileLocation);
+                string text = File.ReadAllText(InternalDialogViewModel.FileLocation);
 
                 List<UniqueArtType>? cards = JsonConvert.DeserializeObject<List<UniqueArtType>>(text);
 
@@ -1146,24 +926,25 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 });
             }).ContinueWith((task) =>
             {
-                ProgressMessage = string.Empty;
-                ProgressTitle = string.Empty;
-                ProgressDialogVisbility = Visibility.Collapsed;
-                MessageBoxVisibility = Visibility.Visible;
+                InternalDialogViewModel.ProgressMessage = string.Empty;
+                InternalDialogViewModel.ProgressTitle = string.Empty;
+                InternalDialogViewModel.ProgressDialogVisbility = Visibility.Collapsed;
+                InternalDialogViewModel.MessageBoxVisibility = Visibility.Visible;
+                InternalDialogViewModel.NeedDataVisibility = Visibility.Collapsed;
+                
                 StatusMessage = "Ready";
-                NeedDataVisibility = Visibility.Collapsed;
 
                 if (task.Exception != null)
                 {
                     ServiceLocator.Instance.LoggerService.Error($"An error occurred attempting to load in file form browser.{Environment.NewLine}{task.Exception}");
 
-                    MessageBoxMessage = $"An error occurred attempting to process the file. {task.Exception.Message}{Environment.NewLine}See the log for more details.";
-                    MessageBoxTitle = "Error Processing";
+                    InternalDialogViewModel.MessageBoxMessage = $"An error occurred attempting to process the file. {task.Exception.Message}{Environment.NewLine}See the log for more details.";
+                    InternalDialogViewModel.MessageBoxTitle = "Error Processing";
                 }
                 else
                 {
-                    MessageBoxMessage = "The file has been processed.";
-                    MessageBoxTitle = "File Processed";
+                    InternalDialogViewModel.MessageBoxMessage = "The file has been processed.";
+                    InternalDialogViewModel.MessageBoxTitle = "File Processed";
                 }
             });
         }
@@ -1211,11 +992,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 if (snvm.Name.IndexOf(SetNameSearch, StringComparison.OrdinalIgnoreCase) > -1) return true;
                 else return false;
             }
-        }
-
-        private void UseData()
-        {
-            ProcessFileData();
         }
 
         public void VerifyStateOfSmallCheckBoxAndSet()

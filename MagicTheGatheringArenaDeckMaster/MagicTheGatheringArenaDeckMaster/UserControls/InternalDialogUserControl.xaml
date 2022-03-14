@@ -1,0 +1,291 @@
+﻿<UserControl x:Class="MagicTheGatheringArenaDeckMaster.UserControls.InternalDialogUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster.UserControls"
+             xmlns:viewModels="clr-namespace:MagicTheGatheringArenaDeckMaster.ViewModels"
+             xmlns:id="clr-namespace:WPF.InternalDialogs;assembly=WPF.InternalDialogs"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100"
+             d:DataContext="{d:DesignInstance {x:Type viewModels:InternalDialogUserControlViewModel}}">
+    <Grid x:Name="rootGrid">
+        <id:MovableResizableInternalDialog x:Name="dataDialog" 
+                                           Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="1" 
+                                           TitleContent="Data" Foreground="White" CloseOnEscape="False"
+                                           TitleAreaBackground="#FF101010" AnswerAreaBackground="#FF2F2F2F" ContentBackground="#FF3F3F3F"
+                                           Visibility="{Binding NeedDataVisibility}"
+                                           FocusParent="{Binding ElementName=rootGrid}">
+            <id:MovableResizableInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Style>
+            </id:MovableResizableInternalDialog.CloseButtonStyle>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" TextWrapping="Wrap">
+                    This application needs data from Scryfall in order to scrape card data (which means we need an 
+                    <Underline>internet connection</Underline>). See read me for more information about Scryfall. We use the 
+                    <Bold>Unique Artwork</Bold> download under the bulk data section.
+            
+                    This data can be input into the application in two ways...<LineBreak /><LineBreak />
+                    1. You can download the <Bold>Unique Artwork</Bold> file yourself 
+                    (<Hyperlink>https://scryfall.com/docs/api/bulk-data</Hyperlink>) and point us to the file.<LineBreak />            
+                    2. We can download the data for you.<LineBreak /><LineBreak />
+                    We do make a back up of the file when you reference it or we download it.
+                </TextBlock>
+                <Grid Grid.Row="1" Margin="0,10,0,0">
+                    <TabControl x:Name="optionsTabControl">
+                        <TabItem Header="Option 1">
+                            <Grid Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" TextWrapping="Wrap">
+                                    Please browse to the file (as mentioned above) you have download.
+                                </TextBlock>
+                                <Grid Grid.Row="1" Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="File" Margin="0,0,5,0" />
+                                    <TextBox Grid.Column="1" Margin="0,0,5,0" IsReadOnly="True" 
+                                             Text="{Binding FileLocation, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Button Grid.Column="2" Content="Browse" Command="{Binding BrowseCommand}" />
+                                </Grid>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Option 2">
+                            <Grid Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" TextWrapping="Wrap">
+                                    Let us download the file for you. This file is over 100MB at this point so it may take a while to download. 
+                                    We reach out to <Hyperlink>https://api.scryfall.com/bulk-data</Hyperlink> to determine where to 
+                                    download the <Bold>Unique Artwork</Bold> file from.
+                                </TextBlock>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </Grid>
+            <id:MovableResizableInternalDialog.AnswerAreaContent>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1" Content="OK" Command="{Binding OkDataCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="MinWidth" Value="80" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=optionsTabControl, Path=SelectedIndex}" Value="1">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Grid.Column="2" Content="Download" Command="{Binding Parent.DownloadDataCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="MinWidth" Value="80" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=optionsTabControl, Path=SelectedIndex}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Grid.Column="4" Content="Use Current Data" Margin="5,0,0,0" Command="{Binding UseDataCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="MinWidth" Value="100" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasDataPreviously}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </id:MovableResizableInternalDialog.AnswerAreaContent>
+        </id:MovableResizableInternalDialog>
+        <!--<id:MovableResizableInternalDialog x:Name="settingDialog">
+                
+            </id:MovableResizableInternalDialog>-->
+        <id:MovableResizableInternalDialog x:Name="cardDownloadDialog" 
+                                           Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="1" 
+                                           TitleContent="Downloading Card Data" Foreground="White" CloseOnEscape="False"
+                                           TitleAreaBackground="#FF101010" AnswerAreaBackground="#FF3F3F3F" ContentBackground="#FF3F3F3F"
+                                           ResizeGripVisibility="Collapsed"
+                                           Visibility="{Binding CardProgressVisibility}"
+                                           FocusParent="{Binding ElementName=rootGrid}">
+            <id:MovableResizableInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Style>
+            </id:MovableResizableInternalDialog.CloseButtonStyle>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="We are downloading your card data for you. Please be patient." Margin="0,0,0,10" />
+                <ProgressBar Grid.Row="1" Height="20"
+                             Minimum="0" Maximum="{Binding Parent.SelectedImageCount}" Value="{Binding CardProgressValue}" />
+                <Grid Grid.Row="2" HorizontalAlignment="Right" Margin="0,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Downloaded " />
+                    <TextBlock Grid.Column="1" Text="{Binding CardProgressValue, StringFormat=#\,0}" />
+                    <TextBlock Grid.Column="2" Text=" of " />
+                    <TextBlock Grid.Column="3" Text="{Binding Parent.SelectedImageCount, StringFormat=#\,0}" />
+                </Grid>
+            </Grid>
+        </id:MovableResizableInternalDialog>
+        <id:ProgressInternalDialog x:Name="progressDialog" 
+                                   Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="1" CloseOnEscape="False"
+                                   ProgressDialogBackground="#FF2F2F2F" TitleAreaBackground="#FF101010" Foreground="White"
+                                   Visibility="{Binding ProgressDialogVisbility}" ProgressDialogMessage="{Binding ProgressMessage}"
+                                   Title="{Binding ProgressTitle}" ResizeGripVisibility="Collapsed"
+                                   FocusParent="{Binding ElementName=rootGrid}">
+            <id:ProgressInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Setter Property="Background" Value="#00000000" />
+                    <Setter Property="BorderBrush" Value="#00000000" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Rectangle Width="16" Height="16">
+                                <Rectangle.Fill>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M8.583,8L13,12.424 12.424,13 8,8.583 3.576,13 3,12.424 7.417,8 3,3.576 3.576,3 8,7.417 12.424,3 13,3.576z" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </id:ProgressInternalDialog.CloseButtonStyle>
+            <id:ProgressInternalDialog.ProgressBarStyle>
+                <Style TargetType="ProgressBar" BasedOn="{StaticResource {x:Type ProgressBar}}">
+                    <Setter Property="IsIndeterminate" Value="True" />
+                    <Setter Property="Height" Value="20" />
+                </Style>
+            </id:ProgressInternalDialog.ProgressBarStyle>
+        </id:ProgressInternalDialog>
+        <id:MovableResizableInternalDialog x:Name="aboutDialog"
+                                           Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="1"
+                                           Foreground="White" TitleContent="About MTGA Deck Master"
+                                           TitleAreaBackground="#FF101010" AnswerAreaBackground="#FF2F2F2F" ContentBackground="#FF3F3F3F"
+                                           Visibility="{Binding AboutBoxVisibility}"
+                                           FocusParent="{Binding ElementName=rootGrid}">
+            <id:MovableResizableInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Focusable" Value="False" />
+                    <Setter Property="Background" Value="#00000000" />
+                    <Setter Property="BorderBrush" Value="#00000000" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Rectangle Width="16" Height="16">
+                                <Rectangle.Fill>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M8.583,8L13,12.424 12.424,13 8,8.583 3.576,13 3,12.424 7.417,8 3,3.576 3.576,3 8,7.417 12.424,3 13,3.576z" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </id:MovableResizableInternalDialog.CloseButtonStyle>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <TextBlock TextWrapping="Wrap">
+                        <Italic Foreground="#FFAAAAAA">
+                            This application is unofficial content permitted under the Wizards of the Coast Fan Content Policy. The literal and graphical 
+                            information presented in this application about Magic: The Gathering, including card images, the mana symbols and card text, 
+                            is copyright Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. Magic The Gathering Arena Deck Master is not produced by, 
+                            endorsed by, supported by, or affiliated with Wizards of the Coast.
+                        </Italic>
+                        <LineBreak /><LineBreak />
+                        <Run Text="{Binding Parent.Version, Mode=OneWay, StringFormat=Version {0}}" />
+                </TextBlock>
+            </ScrollViewer>
+        </id:MovableResizableInternalDialog>
+        <id:MessageBoxInternalDialog x:Name="mbDialog"
+                                     Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="1" Foreground="White"
+                                     MessageBoxBackground="#FF2F2F2F" TitleAreaBackground="#FF101010" ButtonAreaBackground="#FF2F2F2F"
+                                     Visibility="{Binding MessageBoxVisibility}" Message="{Binding MessageBoxMessage}"
+                                     Title="{Binding MessageBoxTitle}" MessageBoxImage="{Binding MessageBoxImage}"
+                                     Result="{Binding MessageBoxResult, Mode=TwoWay}" IsModal="{Binding MessageBoxIsModal}"
+                                     MessageBoxButton="{Binding MessageBoxButton}"
+                                     FocusParent="{Binding ElementName=rootGrid}">
+            <id:MessageBoxInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Background" Value="#00000000" />
+                    <Setter Property="BorderBrush" Value="#00000000" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Rectangle Width="16" Height="16">
+                                <Rectangle.Fill>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M8.583,8L13,12.424 12.424,13 8,8.583 3.576,13 3,12.424 7.417,8 3,3.576 3.576,3 8,7.417 12.424,3 13,3.576z" />
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </id:MessageBoxInternalDialog.CloseButtonStyle>
+            <id:MessageBoxInternalDialog.ButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="MinWidth" Value="50" />
+                </Style>
+            </id:MessageBoxInternalDialog.ButtonStyle>
+        </id:MessageBoxInternalDialog>
+    </Grid>
+</UserControl>

@@ -17,12 +17,12 @@ namespace MagicTheGatheringArenaDeckMaster.Converters
             if (!string.IsNullOrWhiteSpace(uavm.ImagePathNormal)) return uavm.ImagePathNormal;
             if (!string.IsNullOrWhiteSpace(uavm.ImagePathLarge)) return uavm.ImagePathLarge;
 
-            return DependencyProperty.UnsetValue;
+            return string.Empty;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return DependencyProperty.UnsetValue;
+            return string.Empty;
         }
     }
 }
