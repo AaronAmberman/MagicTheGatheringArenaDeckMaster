@@ -542,7 +542,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             if (InternalDialogViewModel == null) return;
 
             InternalDialogViewModel.MessageBoxTitle = "Confirm Download";
-            InternalDialogViewModel.MessageBoxMessage = $"Are you sure you wish download {SelectedImageCount} images?";
+            InternalDialogViewModel.MessageBoxMessage = $"Are you sure you wish download {SelectedImageCount} images? Images already downloaded will not be downloaded again.";
             InternalDialogViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Help;
             InternalDialogViewModel.MessageBoxIsModal = true;
             InternalDialogViewModel.MessageBoxButton = MessageBoxButton.YesNo;
@@ -555,7 +555,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             InternalDialogViewModel.MessageBoxIsModal = false;
             InternalDialogViewModel.MessageBoxButton = MessageBoxButton.OK;
 
-            if (InternalDialogViewModel.MessageBoxResult == MessageBoxResult.No)
+            if (InternalDialogViewModel.MessageBoxResult != MessageBoxResult.Yes)
             {
                 return;
             }
