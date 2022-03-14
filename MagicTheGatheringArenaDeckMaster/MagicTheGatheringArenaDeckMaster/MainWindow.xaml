@@ -17,10 +17,16 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TabControl Grid.Column="1" Grid.Row="0" Margin="1,6,5,5">
+            <TextBlock Grid.Column="1" Grid.Row="0" TextWrapping="Wrap" FontSize="14" Margin="5,5,5,0"
+                       Style="{StaticResource DarkThemeTextBlockStyle}">
+                To start, open the Set &amp; Set Filters then select the sets you would like to see card data and images for. 
+                This makes card data available for all the tabs.
+            </TextBlock>
+            <TabControl Grid.Column="1" Grid.Row="1" Margin="1,6,5,5">
                 <TabItem Header="Scryfall Card Data">
                     <userControls:CardDataUserControl />
                 </TabItem>
@@ -31,7 +37,8 @@
 
                 </TabItem>
             </TabControl>
-            <Expander x:Name="expander" Grid.Column="0" Grid.Row="0" ExpandDirection="Right" VerticalAlignment="Top" Header="Sets &amp; Set Filters" Margin="0,5,0,0"
+            <Expander x:Name="expander" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                      ExpandDirection="Right" VerticalAlignment="Top" Header="Sets &amp; Set Filters" Margin="0,5,0,0"
                       Style="{StaticResource DarkThemeHighlightExpanderStyleOverride}">
                 <Grid x:Name="expanderInnderGrid">
                     <Grid.RowDefinitions>
@@ -91,7 +98,7 @@
                     </ScrollViewer>
                 </Grid>
             </Expander>
-            <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+            <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2">
                 <StatusBarItem>
                     <Button x:Name="aboutButton" Grid.Column="0" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" 
                             Margin="0,0,0,0" BorderThickness="0" Focusable="False" Background="Transparent"
@@ -138,7 +145,7 @@
                     <TextBlock Text="{Binding StatusMessage}" />
                 </StatusBarItem>                
             </StatusBar>
-            <userControls:InternalDialogUserControl Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
+            <userControls:InternalDialogUserControl Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2"
                                                     DataContext="{Binding InternalDialogViewModel}" />
         </Grid>
     </Grid>
