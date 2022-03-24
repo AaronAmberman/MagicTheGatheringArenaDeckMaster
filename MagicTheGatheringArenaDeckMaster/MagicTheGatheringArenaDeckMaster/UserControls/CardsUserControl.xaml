@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster.UserControls"
              xmlns:viewModels="clr-namespace:MagicTheGatheringArenaDeckMaster.ViewModels" 
              xmlns:con="clr-namespace:MagicTheGatheringArenaDeckMaster.Converters"
+             xmlns:virtual="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}">
     <UserControl.Resources>
@@ -44,7 +45,8 @@
                     </TextBlock.Style>
                 </TextBlock>
             </Grid>
-            <ListView x:Name="CardImageListView" Grid.Row="1" ItemsSource="{Binding CardImageData}" Margin="5">
+            <ListView x:Name="CardImageListView" Grid.Row="1" Margin="5" PreviewMouseWheel="CardImageListView_PreviewMouseWheel"
+                      ItemsSource="{Binding CardImageData}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel IsItemsHost="True" Orientation="Horizontal" Margin="2,5"
@@ -57,10 +59,35 @@
                         <Grid>
                             <Image Margin="5" Width="146" Height="204" 
                                    Source="{Binding Converter={StaticResource CardImageSourceConverter}}" />
+                            <!--<Image Margin="5" Width="146" Height="204">
+                                <Image.Source>
+                                    <BitmapImage DecodePixelWidth="146" 
+                                                 UriSource="{Binding Converter={StaticResource CardImageSourceConverter}}" />
+                                </Image.Source>
+                            </Image>-->
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <!--<ListView x:Name="CardImageListView" Grid.Row="1" Margin="5" PreviewMouseWheel="CardImageListView_PreviewMouseWheel"
+                      ItemsSource="{Binding CardImageData}"
+                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Item">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <virtual:VirtualizingWrapPanel IsItemsHost="True" Orientation="Vertical" SpacingMode="None" StretchItems="False"
+                                                       Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualWidth, 
+                                                                       Converter={StaticResource ArithmeticConverter}, ConverterParameter=-25}" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Image Margin="5" Width="146" Height="204" 
+                                   Source="{Binding Converter={StaticResource CardImageSourceConverter}}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>-->
         </Grid>
     </Grid>
 </UserControl>
