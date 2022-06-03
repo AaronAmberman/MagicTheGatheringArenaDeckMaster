@@ -45,7 +45,7 @@
                     </TextBlock.Style>
                 </TextBlock>
             </Grid>
-            <ListView x:Name="CardImageListView" Grid.Row="1" Margin="5" PreviewMouseWheel="CardImageListView_PreviewMouseWheel"
+            <!--<ListView x:Name="CardImageListView" Grid.Row="1" Margin="5" PreviewMouseWheel="CardImageListView_PreviewMouseWheel"
                       ItemsSource="{Binding CardImageData}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -59,17 +59,17 @@
                         <Grid>
                             <Image Margin="5" Width="146" Height="204" 
                                    Source="{Binding Converter={StaticResource CardImageSourceConverter}}" />
-                            <!--<Image Margin="5" Width="146" Height="204">
+                            --><!--<Image Margin="5" Width="146" Height="204">
                                 <Image.Source>
                                     <BitmapImage DecodePixelWidth="146" 
                                                  UriSource="{Binding Converter={StaticResource CardImageSourceConverter}}" />
                                 </Image.Source>
-                            </Image>-->
+                            </Image>--><!--
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
-            <!--<ListView x:Name="CardImageListView" Grid.Row="1" Margin="5" PreviewMouseWheel="CardImageListView_PreviewMouseWheel"
+            </ListView>-->
+            <ListView x:Name="CardImageListView" Grid.Row="1" Margin="5" PreviewMouseWheel="CardImageListView_PreviewMouseWheel"
                       ItemsSource="{Binding CardImageData}"
                       VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Item">
                 <ListView.ItemsPanel>
@@ -87,7 +87,7 @@
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>-->
+            </ListView>
         </Grid>
     </Grid>
 </UserControl>

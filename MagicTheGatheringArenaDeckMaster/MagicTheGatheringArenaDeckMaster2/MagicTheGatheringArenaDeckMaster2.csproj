@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="1.5.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MagicTheGatheringArena.Core\MagicTheGatheringArena.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WPF.CustomControls">
+      <HintPath>..\dependencies\WPF.CustomControls\WPF.CustomControls.dll</HintPath>
+    </Reference>
+    <Reference Include="WPF.InternalDialogs">
+      <HintPath>..\dependencies\WPF.InternalDialogs\WPF.InternalDialogs.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
