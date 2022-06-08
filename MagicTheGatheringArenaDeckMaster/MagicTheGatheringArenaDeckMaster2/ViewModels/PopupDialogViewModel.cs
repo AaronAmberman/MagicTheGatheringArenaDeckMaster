@@ -6,6 +6,7 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
     {
         #region Fields
 
+        private AddSetToSettingsViewModel addSetToSettingsViewModel;
         private AboutDialogViewModel aboutDialogViewModel;
         private DataViewModel dataViewModel;
         private MessageBoxViewModel messageBoxViewModel;
@@ -16,6 +17,16 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
         #endregion
 
         #region Properties
+
+        public AddSetToSettingsViewModel AddSetToSettingsViewModel
+        {
+            get => addSetToSettingsViewModel;
+            set
+            {
+                addSetToSettingsViewModel = value;
+                OnPropertyChanged();
+            }
+        }
 
         public AboutDialogViewModel AboutDialogViewModel
         {

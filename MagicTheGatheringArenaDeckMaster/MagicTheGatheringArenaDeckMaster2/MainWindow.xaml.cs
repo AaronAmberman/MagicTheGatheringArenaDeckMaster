@@ -26,6 +26,7 @@ namespace MagicTheGatheringArenaDeckMaster2
             {
                 PopupDialogViewModel = new PopupDialogViewModel
                 {
+                    AddSetToSettingsViewModel = new AddSetToSettingsViewModel(),
                     AboutDialogViewModel = new AboutDialogViewModel(),
                     DataViewModel = new DataViewModel(),
                     MessageBoxViewModel = new MessageBoxViewModel(),

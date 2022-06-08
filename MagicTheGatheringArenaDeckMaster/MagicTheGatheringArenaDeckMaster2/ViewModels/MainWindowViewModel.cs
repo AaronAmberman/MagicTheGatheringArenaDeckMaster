@@ -2,6 +2,8 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows;
+using WPF.InternalDialogs;
 
 namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 {
@@ -72,6 +74,27 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
         #endregion
 
         #region Methods
+
+        public void ClearOutProgressDialog()
+        {
+            PopupDialogViewModel.ProgressViewModel.ProgressDialogVisbility = Visibility.Collapsed;
+            PopupDialogViewModel.ProgressViewModel.ProgressIsIndeterminate = false;
+            PopupDialogViewModel.ProgressViewModel.ProgressMessage = string.Empty;
+            PopupDialogViewModel.ProgressViewModel.ProgressTitle = string.Empty;
+            PopupDialogViewModel.ProgressViewModel.ProgressValue = 0.0;
+            PopupDialogViewModel.ProgressViewModel.ProgressMax = 1.0;
+            PopupDialogViewModel.ProgressViewModel.ProgressMin = 0.0;
+        }
+
+        public void ClearOutMessageBoxDialog()
+        {
+            PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = string.Empty;
+            PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = string.Empty;
+            PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = false;
+            PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+            PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
+            PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Collapsed;
+        }
 
         public void ResetStatusMessage10Seconds()
         {

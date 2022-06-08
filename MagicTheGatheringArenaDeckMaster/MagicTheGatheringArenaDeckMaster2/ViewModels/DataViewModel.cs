@@ -54,27 +54,6 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 
         #region Methods
 
-        private void ClearOutProgressDialog()
-        {
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.ProgressViewModel.ProgressDialogVisbility = Visibility.Collapsed;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.ProgressViewModel.ProgressIsIndeterminate = false;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.ProgressViewModel.ProgressMessage = string.Empty;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.ProgressViewModel.ProgressTitle = string.Empty;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.ProgressViewModel.ProgressValue = 0.0;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.ProgressViewModel.ProgressMax = 1.0;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.ProgressViewModel.ProgressMin = 0.0;
-        }
-
-        private void ClearOutMessageBoxDialog()
-        {
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = string.Empty;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = string.Empty;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = false;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
-            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Collapsed;
-        }
-
         private void DownloadData()
         {
             Visibility = Visibility.Collapsed;
@@ -100,14 +79,14 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
                         ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Error downloading data.";
                         ServiceLocator.Instance.MainWindowViewModel.ResetStatusMessage10Seconds();
 
-                        ClearOutProgressDialog();
+                        ServiceLocator.Instance.MainWindowViewModel.ClearOutProgressDialog();
 
                         ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "Could not download information from Scryfall.com. See log for details.";
                         ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Download Failure";
                         ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
                         ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
 
-                        ClearOutMessageBoxDialog();
+                        ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
                         // show the need data screen again
                         ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.DataViewModel.Visibility = Visibility.Visible;
@@ -121,11 +100,11 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 
                         ServiceLocator.Instance.ScryfallService.DownloadUniqueArtworkFile(result, ServiceLocator.Instance.PathingService.CardDataFile);
 
-                        ClearOutProgressDialog();
+                        ServiceLocator.Instance.MainWindowViewModel.ClearOutProgressDialog();
 
                         if (File.Exists(ServiceLocator.Instance.PathingService.CardDataFile)) // successful downloaded
                         {
-                            ClearOutMessageBoxDialog();
+                            ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
                             ProcessFile();
                         }
@@ -138,7 +117,7 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
                             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
                             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
 
-                            ClearOutMessageBoxDialog();
+                            ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
                             // show the need data screen again
                             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.DataViewModel.Visibility = Visibility.Visible;
@@ -154,14 +133,14 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 
                     ServiceLocator.Instance.LoggerService.Error($"An error occurred downloaded data from Scryfall.com.{Environment.NewLine}{task.Exception}");
 
-                    ClearOutProgressDialog();
+                    ServiceLocator.Instance.MainWindowViewModel.ClearOutProgressDialog();
 
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = $"An error occurred downloading data from Scryfall.com. {task.Exception.Message}{Environment.NewLine}See the log for more details.";
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Error Downloading";
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
 
-                    ClearOutMessageBoxDialog();
+                    ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
                     // show the need data screen again
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.DataViewModel.Visibility = Visibility.Visible;
@@ -262,22 +241,22 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 
                     ServiceLocator.Instance.LoggerService.Error($"An error occurred processing data from Scryfall.com.{Environment.NewLine}{task.Exception}");
 
-                    ClearOutProgressDialog();
+                    ServiceLocator.Instance.MainWindowViewModel.ClearOutProgressDialog();
 
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = $"An error occurred processing data from Scryfall.com. {task.Exception.Message}{Environment.NewLine}See the log for more details.";
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Error Processing";
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
 
-                    ClearOutMessageBoxDialog();
+                    ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
                     // show the need data screen again
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.DataViewModel.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    ClearOutProgressDialog();
-                    ClearOutMessageBoxDialog();
+                    ServiceLocator.Instance.MainWindowViewModel.ClearOutProgressDialog();
+                    ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
                     ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Data has been processed.";
                     ServiceLocator.Instance.MainWindowViewModel.ResetStatusMessage10Seconds();

@@ -6,7 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using WPF.InternalDialogs;
 
 namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 {
@@ -14,8 +17,14 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
     {
         #region Fields
 
+        private ICommand addAlchemySetCommand;
+        private ICommand addHistoricSetCommand;
+        private ICommand addStandardSetCommand;
         private ICommand cancelCommand;
         private ICommand okCommand;
+        private ICommand removeAlchemySetCommand;
+        private ICommand removeHistoricSetCommand;
+        private ICommand removeStandardSetCommand;
         private MessageBoxResult result;
         private ICommand showSettingsCommand;
         private Visibility visibility = Visibility.Collapsed;
@@ -114,13 +123,25 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
             }
         }
 
+        public ICommand AddAlchemySetCommand => addAlchemySetCommand ??= new RelayCommand(AddAlchemySet);
+
+        public ICommand AddHistoricSetCommand => addHistoricSetCommand ??= new RelayCommand(AddHistoricSet);
+
+        public ICommand AddStandardSetCommand => addStandardSetCommand ??= new RelayCommand(AddStandardSet);
+
         public ICommand CancelCommand => cancelCommand ??= new RelayCommand(Cancel);
 
         public ICommand OkCommand => okCommand ??= new RelayCommand(Ok);
 
-        public MessageBoxResult Result 
-        { 
-            get => result; 
+        public ICommand RemoveAlchemySetCommand => removeAlchemySetCommand ??= new RelayCommand(RemoveAlchemySet);
+
+        public ICommand RemoveHistoricSetCommand => removeHistoricSetCommand ??= new RelayCommand(RemoveHistoricSet);
+
+        public ICommand RemoveStandardSetCommand => removeStandardSetCommand ??= new RelayCommand(RemoveStandardSet);
+
+        public MessageBoxResult Result
+        {
+            get => result;
             set
             {
                 result = value;
@@ -140,9 +161,68 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
             }
         }
 
+        // set on load of PopupDialogUserControl
+        public ListBox AlchemyListBox { get; set; }
+        public ListBox HistoricListBox { get; set; }
+        public ListBox StandardListBox { get; set; }
+
         #endregion
 
         #region Methods
+
+        private void AddAlchemySet()
+        {
+            if (ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNames == null)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNames =
+                    new ObservableCollection<string>(ServiceLocator.Instance.MainWindowViewModel.SetNames.ToList());
+
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNamesCollectionView =
+                    (CollectionView)CollectionViewSource.GetDefaultView(ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNames);
+            }
+
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.SettingSetNames =
+                new ObservableCollection<string>(ArenaAlchemyOnlySetNames.ToList());
+
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Title = "Add Set To Settings (Alchemy)";
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Visibility = Visibility.Visible;
+        }
+
+        private void AddHistoricSet()
+        {
+            if (ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNames == null)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNames =
+                    new ObservableCollection<string>(ServiceLocator.Instance.MainWindowViewModel.SetNames.ToList());
+
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNamesCollectionView =
+                    (CollectionView)CollectionViewSource.GetDefaultView(ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNames);
+            }
+
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.SettingSetNames =
+                new ObservableCollection<string>(ArenaHistoricOnlySetNames.ToList());
+
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Title = "Add Set To Settings (Historic)";
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Visibility = Visibility.Visible;
+        }
+
+        private void AddStandardSet()
+        {
+            if (ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNames == null)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNames =
+                    new ObservableCollection<string>(ServiceLocator.Instance.MainWindowViewModel.SetNames.ToList());
+
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNamesCollectionView =
+                    (CollectionView)CollectionViewSource.GetDefaultView(ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.AllSetNames);
+            }
+
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.SettingSetNames =
+                new ObservableCollection<string>(ArenaStandardOnlySetNames.ToList());
+
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Title = "Add Set To Settings (Standard)";
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Visibility = Visibility.Visible;
+        }
 
         private void Cancel()
         {
@@ -156,6 +236,106 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
             Result = MessageBoxResult.OK;
 
             Visibility = Visibility.Collapsed;
+        }
+
+        private void RemoveAlchemySet()
+        {
+            if (AlchemyListBox.SelectedItems.Count == 0)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Missing Selection";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "Please select one or more items from the alchemy list to remove.";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true; // set blocking
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+            }
+
+            List<string> selectedItems = AlchemyListBox.SelectedItems.Cast<string>().ToList();
+
+            foreach (string setName in selectedItems)
+            {
+                foreach (string sn in ArenaAlchemyOnlySetNames)
+                {
+                    if (sn == setName)
+                    {
+                        ArenaAlchemyOnlySetNames.Remove(sn);
+
+                        // we found our match, iterate the next outer loop
+                        break;
+                    }
+                }
+            }
+
+            // todo : persist changes to data source
+        }
+
+        private void RemoveHistoricSet()
+        {
+            if (HistoricListBox.SelectedItems.Count == 0)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Missing Selection";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "Please select one or more items from the historic list to remove.";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true; // set blocking
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+            }
+
+            List<string> selectedItems = HistoricListBox.SelectedItems.Cast<string>().ToList();
+
+            foreach (string setName in HistoricListBox.SelectedItems)
+            {
+                foreach (string sn in ArenaHistoricOnlySetNames)
+                {
+                    if (sn == setName)
+                    {
+                        ArenaHistoricOnlySetNames.Remove(sn);
+
+                        // we found our match, iterate the next outer loop
+                        break;
+                    }
+                }
+            }
+
+            // todo : persist changes to data source
+        }
+
+        private void RemoveStandardSet()
+        {
+            if (StandardListBox.SelectedItems.Count == 0)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Missing Selection";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "Please select one or more items from the standard list to remove.";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true; // set blocking
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+            }
+
+            List<string> selectedItems = StandardListBox.SelectedItems.Cast<string>().ToList();
+
+            foreach (string setName in StandardListBox.SelectedItems)
+            {
+                foreach (string sn in ArenaStandardOnlySetNames)
+                {
+                    if (sn == setName)
+                    {
+                        ArenaStandardOnlySetNames.Remove(sn);
+
+                        // we found our match, iterate the next outer loop
+                        break;
+                    }
+
+                }
+            }
+
+            // todo : persist changes to data source
         }
 
         private void ShowSettings()

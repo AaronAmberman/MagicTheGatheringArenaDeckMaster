@@ -7,9 +7,11 @@
              xmlns:viewModels="clr-namespace:MagicTheGatheringArenaDeckMaster2.ViewModels"
              xmlns:id="clr-namespace:WPF.InternalDialogs;assembly=WPF.InternalDialogs"
              xmlns:base="clr-namespace:MagicTheGatheringArenaDeckMaster2"
+             xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100"
-             d:DataContext="{d:DesignInstance {x:Type viewModels:PopupDialogViewModel}}">
+             d:DataContext="{d:DesignInstance {x:Type viewModels:PopupDialogViewModel}}"
+             Loaded="UserControl_Loaded">
     <Grid x:Name="rootGrid">
         <id:MovableResizableInternalDialog x:Name="setFilterDialog"
                                            ResizableDefaultHeight="768" ResizableDefaultWidth="1024" 
@@ -67,28 +69,31 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" FontSize="18" Text="Sets allowed in MTG Arena Standard" />
-                        <ListBox Grid.Row="1"
-                                 ItemsSource="{Binding SettingsViewModel.ArenaStandardOnlySetNames}" />                        
+                        <ListBox x:Name="arenaStandardSets" Grid.Row="1" SelectionMode="Extended"
+                                 ItemsSource="{Binding SettingsViewModel.ArenaStandardOnlySetNames}" />
                         <Grid Grid.Row="2" Margin="0,5,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Column="1" Content="Add Set" Margin="0,0,5,0" />
-                            <Button Grid.Column="2" Content="Remove Selected Set" />
+                            <Button Grid.Column="1" Content="Add Set(s)" Margin="0,0,5,0" Command="{Binding SettingsViewModel.AddStandardSetCommand}" />
+                            <Button Grid.Column="2" Content="Remove Selected Set(s)" Command="{Binding SettingsViewModel.RemoveStandardSetCommand}" />
                         </Grid>
+                        <Border Grid.Row="3" Style="{StaticResource DarkThemeBorderStyle}" Height="1" Margin="25,10" />
                     </Grid>
                     <Grid Grid.Row="1" Margin="0,0,5,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" FontSize="18" Text="Sets allowed in MTG Arena Alchemy" />
-                        <ListBox Grid.Row="1"
+                        <ListBox x:Name="arenaAlchemySets" Grid.Row="1" SelectionMode="Extended"
                                  ItemsSource="{Binding SettingsViewModel.ArenaAlchemyOnlySetNames}" />
                         <Grid Grid.Row="2" Margin="0,5,0,0">
                             <Grid.ColumnDefinitions>
@@ -96,18 +101,20 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Column="1" Content="Add Set" Margin="0,0,5,0" />
-                            <Button Grid.Column="2" Content="Remove Selected Set" />
+                            <Button Grid.Column="1" Content="Add Set(s)" Margin="0,0,5,0" Command="{Binding SettingsViewModel.AddAlchemySetCommand}" />
+                            <Button Grid.Column="2" Content="Remove Selected Set(s)" Command="{Binding SettingsViewModel.RemoveAlchemySetCommand}" />
                         </Grid>
+                        <Border Grid.Row="3" Style="{StaticResource DarkThemeBorderStyle}" Height="1" Margin="25,10" />
                     </Grid>
                     <Grid Grid.Row="2" Margin="0,0,5,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" FontSize="18" Text="Sets allowed in MTG Arena Historic" />
-                        <ListBox Grid.Row="1"
+                        <ListBox x:Name="arenaHistoricSets" Grid.Row="1" SelectionMode="Extended"
                                  ItemsSource="{Binding SettingsViewModel.ArenaHistoricOnlySetNames}" />
                         <Grid Grid.Row="2" Margin="0,5,0,0">
                             <Grid.ColumnDefinitions>
@@ -115,15 +122,16 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Column="1" Content="Add Set" Margin="0,0,5,0" />
-                            <Button Grid.Column="2" Content="Remove Selected Set" />
+                            <Button Grid.Column="1" Content="Add Set(s)" Margin="0,0,5,0" Command="{Binding SettingsViewModel.AddHistoricSetCommand}" />
+                            <Button Grid.Column="2" Content="Remove Selected Set(s)" Command="{Binding SettingsViewModel.RemoveHistoricSetCommand}" />
                         </Grid>
+                        <Border Grid.Row="3" Style="{StaticResource DarkThemeBorderStyle}" Height="1" Margin="25,10" />
                     </Grid>
                     <TextBlock Grid.Row="3" TextWrapping="Wrap" Margin="0,10,0,0"
                                Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualWidth, 
                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=-10}">
                             <Italic>This is managed by you, the user, because this is an ever changing list of sets and there is no online service the development team is aware of to tell 
-                            us what sets are allowed in Magic the Gathering Arena. Please manage these list of sets yourself. See the Magic the Gathering Arena game itself for more 
+                            us what sets are allowed in Magic The Gathering Arena. Please manage these list of sets yourself. See the Magic The Gathering Arena game itself for more 
                             information.</Italic>
                     </TextBlock>
                 </Grid>
@@ -142,6 +150,83 @@
                 </Grid>
             </id:MovableResizableInternalDialog.AnswerAreaContent>
         </id:MovableResizableInternalDialog>
+        <id:MovableResizableInternalDialog x:Name="addSetToSettingsDialog"
+                                           ResizableDefaultHeight="512" ResizableDefaultWidth="768" 
+                                           ResizableMinHeight="256" ResizableMinWidth="512" ResizableMaxHeight="768" ResizableMaxWidth="1024"
+                                           TitleContent="{Binding AddSetToSettingsViewModel.Title}" Foreground="White" CloseOnEscape="False"
+                                           TitleAreaBackground="#FF101010" AnswerAreaBackground="#FF2F2F2F" ContentBackground="#FF3F3F3F"
+                                           Visibility="{Binding AddSetToSettingsViewModel.Visibility}"
+                                           Result="{Binding AddSetToSettingsViewModel.Result, Mode=OneWayToSource}"
+                                           FocusParent="{Binding ElementName=rootGrid}">
+            <id:MovableResizableInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Style>
+            </id:MovableResizableInternalDialog.CloseButtonStyle>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap">
+                        You can drag and drop from the list on the left to the right (one or more). Or, you can select whatever items you want (one or more) from the list on the left and click "Add Set(s)". 
+                        You can also select items (one or more) from the list on the right and remove them by clicking "Remove Selected Set(s)".
+                    </TextBlock>
+                </Grid>
+                <Grid Grid.Column="0" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Search" Margin="0,0,5,0" />
+                        <customControls:WatermarkTextBox Grid.Column="1" Watermark="Search" 
+                                                         Text="{Binding AddSetToSettingsViewModel.SetSearchText, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <ListBox x:Name="addSetsSetsListBox" Grid.Row="1" Margin="0,5,0,0" SelectionMode="Extended" AllowDrop="False"
+                             ItemsSource="{Binding AddSetToSettingsViewModel.AllSetNames}"
+                             MouseLeftButtonDown="addSetsSetsListBox_MouseLeftButtonDown" MouseMove="addSetsSetsListBox_MouseMove" />
+                </Grid>
+                <Button Grid.Column="1" Grid.Row="1" Content="Add Set(s)" Margin="10,0" VerticalAlignment="Center" Padding="5"
+                        Command="{Binding AddSetToSettingsViewModel.AddSetsCommand}" />
+                <Grid Grid.Column="2" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Content="Remove Selected Set(s)" HorizontalAlignment="Right"
+                            Command="{Binding AddSetToSettingsViewModel.RemoveSetsCommand}" />
+                    <ListBox x:Name="addSetsSettingsListBox" Grid.Row="1" Margin="0,5,0,0" SelectionMode="Extended" AllowDrop="True"
+                             ItemsSource="{Binding AddSetToSettingsViewModel.SettingSetNames}"
+                             DragEnter="addSetsSettingsListBox_DragEnter" DragLeave="addSetsSettingsListBox_DragLeave" DragOver="addSetsSettingsListBox_DragOver"
+                             Drop="addSetsSettingsListBox_Drop"/>
+                </Grid>
+            </Grid>
+            <id:MovableResizableInternalDialog.AnswerAreaContent>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1" Content="OK" Margin="0,0,5,0" MinWidth="50"
+                            Command="{Binding AddSetToSettingsViewModel.OkCommand}" />
+                    <Button Grid.Column="2" Content="Cancel" MinWidth="50"
+                            Command="{Binding AddSetToSettingsViewModel.CancelCommand}" />
+                </Grid>
+            </id:MovableResizableInternalDialog.AnswerAreaContent>
+        </id:MovableResizableInternalDialog>
         <id:MovableResizableInternalDialog x:Name="dataDialog"
                                            TitleContent="Data" Foreground="White" CloseOnEscape="False"
                                            TitleAreaBackground="#FF101010" AnswerAreaBackground="#FF2F2F2F" ContentBackground="#FF3F3F3F"
@@ -154,14 +239,14 @@
             </id:MovableResizableInternalDialog.CloseButtonStyle>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <TextBlock TextWrapping="Wrap">
-                    This software needs data from <Span Foreground="Green"><Bold>Scryfall.com</Bold></Span> in order to function properly (more than 100MB). As such, it requires 
+                    This software needs data from Scryfall.com in order to function properly (more than 100MB). As such, it requires 
                     an <Bold>internet connection</Bold>. 
                     <LineBreak /><LineBreak />
                     After data is <Italic>downloaded one time</Italic> there will be no more need to go online to get data but that data <Italic>will eventually get 
                     old</Italic> and become <Underline>out of date</Underline>. Please use an active internet connection every session or <Italic><Bold>connect it every 
                     so often to get new data</Bold></Italic>. An "Offline Mode" button will appear when this feature is available.
                     <LineBreak /><LineBreak />
-                    Use the "Download Data" button to get up to date data from <Span Foreground="Green"><Bold>Scryfall.com</Bold></Span>.
+                    Use the "Download Data" button to get up to date data from Scryfall.com.
                 </TextBlock>
             </ScrollViewer>
             <id:MovableResizableInternalDialog.AnswerAreaContent>
