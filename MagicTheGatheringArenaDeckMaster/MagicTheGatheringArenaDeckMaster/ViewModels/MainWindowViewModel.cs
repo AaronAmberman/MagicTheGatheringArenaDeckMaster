@@ -648,7 +648,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                         }
                     }
 
-                    ServiceLocator.Instance.ScryfallService.ImageProcessed += ScryfallService_ImageProcessed;
+                    //ServiceLocator.Instance.ScryfallService.ImageProcessed += ScryfallService_ImageProcessed;
 
                     StatusMessage = "Downloading image files...";
 
@@ -661,8 +661,8 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                         if (!Directory.Exists(setPath))
                             Directory.CreateDirectory(setPath);
 
-                        ServiceLocator.Instance.ScryfallService.DownloadArtworkFiles(card.Model, card.DownloadSmallPicture, card.DownloadNormalPicture,
-                            card.DownloadLargePicture, card.DownloadPngPicture, card.DownloadArtCropPicture, card.DownloadBorderCropPicture, setPath);
+                        //ServiceLocator.Instance.ScryfallService.DownloadArtworkFiles(card.Model, card.DownloadSmallPicture, card.DownloadNormalPicture,
+                        //    card.DownloadLargePicture, card.DownloadPngPicture, card.DownloadArtCropPicture, card.DownloadBorderCropPicture, setPath);
                     });
 
                     // check to see if we have already downloaded cards
@@ -737,7 +737,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                         }
                     }
 
-                    ServiceLocator.Instance.ScryfallService.ImageProcessed -= ScryfallService_ImageProcessed;
+                    //ServiceLocator.Instance.ScryfallService.ImageProcessed -= ScryfallService_ImageProcessed;
 
                     InternalDialogViewModel.CardProgressVisibility = Visibility.Collapsed;
                     InternalDialogViewModel.CardProgressValue = 0;

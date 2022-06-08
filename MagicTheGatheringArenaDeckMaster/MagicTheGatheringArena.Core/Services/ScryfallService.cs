@@ -12,7 +12,7 @@ namespace MagicTheGatheringArena.Core.Services
         private readonly LoggerService logger;
         private readonly PathingService pathing;
 
-        public event EventHandler<int> ImageProcessed;
+        public event EventHandler<string> ImageProcessed;
 
         public ScryfallService(LoggerService loggerService, PathingService pathingService)
         {
@@ -74,194 +74,35 @@ namespace MagicTheGatheringArena.Core.Services
             }
         }
 
-        public void DownloadArtworkFiles(UniqueArtType uniqueDataType, bool small, bool normal, bool large, bool png, bool artCrop, bool borderCrop, string setPath)
+        public void DownloadArtworkFile(UniqueArtType uniqueDataType, string setPath)
         {
             try
             {
                 // nothing to download
                 if (uniqueDataType.image_uris == null) return;
 
-                if (small)
+                string name = uniqueDataType.name_field.ReplaceBadWindowsCharacters();
+                string fullName = name + ".png";
+                string fullPath = Path.Combine(setPath, name);
+                string absolutePathToFile = Path.Combine(fullPath, fullName);
+
+                // only download the image if we don't have it
+                if (!File.Exists(absolutePathToFile))
                 {
-                    int index = uniqueDataType.image_uris.small.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1;
-                    int index2 = uniqueDataType.image_uris.small.LastIndexOf("?", StringComparison.OrdinalIgnoreCase);
-                    int count = index2 - index;
+                    HttpClient client = new HttpClient();
 
-                    //string name = uniqueDataType.image_uris.small.Substring(index, count).Replace(".jpg", "");
-                    string name = uniqueDataType.name_field.ReplaceBadWindowsCharacters();
-                    string fullName = name + "-small.jpg";
-                    string fullPath = Path.Combine(setPath, name);
-                    string absolutePathToFile = Path.Combine(fullPath, fullName);
+                    HttpResponseMessage response = client.GetAsync(uniqueDataType.image_uris.png, HttpCompletionOption.ResponseHeadersRead).Result;
+                    response.EnsureSuccessStatusCode();
 
-                    // only download the image if we don't have it
-                    if (!File.Exists(absolutePathToFile))
-                    {
-                        HttpClient client = new HttpClient();
+                    byte[] imageBytes = response.Content.ReadAsByteArrayAsync().Result;
 
-                        HttpResponseMessage response = client.GetAsync(uniqueDataType.image_uris.small, HttpCompletionOption.ResponseHeadersRead).Result;
-                        response.EnsureSuccessStatusCode();
+                    // make sure our directory exists
+                    if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
 
-                        byte[] imageBytes = response.Content.ReadAsByteArrayAsync().Result;
-
-                        // make sure our directory exists
-                        if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
-
-                        File.WriteAllBytes(absolutePathToFile, imageBytes);
-                    }
-
-                    ImageProcessed?.Invoke(this, 1); // we processed one image so just send 1 along
+                    File.WriteAllBytes(absolutePathToFile, imageBytes);
                 }
 
-                if (normal)
-                {
-                    int index = uniqueDataType.image_uris.normal.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1;
-                    int index2 = uniqueDataType.image_uris.normal.LastIndexOf("?", StringComparison.OrdinalIgnoreCase);
-                    int count = index2 - index;
-
-                    //string name = uniqueDataType.image_uris.normal.Substring(index, count).Replace(".jpg", "");
-                    string name = uniqueDataType.name_field.ReplaceBadWindowsCharacters();
-                    string fullName = name + "-normal.jpg";
-                    string fullPath = Path.Combine(setPath, name);
-                    string absolutePathToFile = Path.Combine(fullPath, fullName);
-
-                    // only download the image if we don't have it
-                    if (!File.Exists(absolutePathToFile))
-                    {
-                        HttpClient client = new HttpClient();
-
-                        HttpResponseMessage response = client.GetAsync(uniqueDataType.image_uris.normal, HttpCompletionOption.ResponseHeadersRead).Result;
-                        response.EnsureSuccessStatusCode();
-
-                        byte[] imageBytes = response.Content.ReadAsByteArrayAsync().Result;
-
-                        // make sure our directory exists
-                        if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
-
-                        File.WriteAllBytes(absolutePathToFile, imageBytes);
-                    }
-
-                    ImageProcessed?.Invoke(this, 1); // we processed one image so just send 1 along
-                }
-
-                if (large)
-                {
-                    int index = uniqueDataType.image_uris.large.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1;
-                    int index2 = uniqueDataType.image_uris.large.LastIndexOf("?", StringComparison.OrdinalIgnoreCase);
-                    int count = index2 - index;
-
-                    string name = uniqueDataType.name_field.ReplaceBadWindowsCharacters();
-                    string fullName = name + "-large.jpg";
-                    string fullPath = Path.Combine(setPath, name);
-                    string absolutePathToFile = Path.Combine(fullPath, fullName);
-
-                    // only download the image if we don't have it
-                    if (!File.Exists(absolutePathToFile))
-                    {
-                        HttpClient client = new HttpClient();
-
-                        HttpResponseMessage response = client.GetAsync(uniqueDataType.image_uris.large, HttpCompletionOption.ResponseHeadersRead).Result;
-                        response.EnsureSuccessStatusCode();
-
-                        byte[] imageBytes = response.Content.ReadAsByteArrayAsync().Result;
-
-                        // make sure our directory exists
-                        if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
-
-                        File.WriteAllBytes(absolutePathToFile, imageBytes);
-                    }
-
-                    ImageProcessed?.Invoke(this, 1); // we processed one image so just send 1 along
-                }
-
-                if (png)
-                {
-                    int index = uniqueDataType.image_uris.png.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1;
-                    int index2 = uniqueDataType.image_uris.png.LastIndexOf("?", StringComparison.OrdinalIgnoreCase);
-                    int count = index2 - index;
-
-                    string name = uniqueDataType.name_field.ReplaceBadWindowsCharacters();
-                    string fullName = name + "-PNG.png";
-                    string fullPath = Path.Combine(setPath, name);
-                    string absolutePathToFile = Path.Combine(fullPath, fullName);
-
-                    // only download the image if we don't have it
-                    if (!File.Exists(absolutePathToFile))
-                    {
-                        HttpClient client = new HttpClient();
-
-                        HttpResponseMessage response = client.GetAsync(uniqueDataType.image_uris.png, HttpCompletionOption.ResponseHeadersRead).Result;
-                        response.EnsureSuccessStatusCode();
-
-                        byte[] imageBytes = response.Content.ReadAsByteArrayAsync().Result;
-
-                        // make sure our directory exists
-                        if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
-
-                        File.WriteAllBytes(absolutePathToFile, imageBytes);
-                    }
-
-                    ImageProcessed?.Invoke(this, 1); // we processed one image so just send 1 along
-                }
-
-                if (artCrop)
-                {
-                    int index = uniqueDataType.image_uris.art_crop.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1;
-                    int index2 = uniqueDataType.image_uris.art_crop.LastIndexOf("?", StringComparison.OrdinalIgnoreCase);
-                    int count = index2 - index;
-
-                    string name = uniqueDataType.name_field.ReplaceBadWindowsCharacters();
-                    string fullName = name + "-artCrop.jpg";
-                    string fullPath = Path.Combine(setPath, name);
-                    string absolutePathToFile = Path.Combine(fullPath, fullName);
-
-                    // only download the image if we don't have it
-                    if (!File.Exists(absolutePathToFile))
-                    {
-                        HttpClient client = new HttpClient();
-
-                        HttpResponseMessage response = client.GetAsync(uniqueDataType.image_uris.art_crop, HttpCompletionOption.ResponseHeadersRead).Result;
-                        response.EnsureSuccessStatusCode();
-
-                        byte[] imageBytes = response.Content.ReadAsByteArrayAsync().Result;
-
-                        // make sure our directory exists
-                        if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
-
-                        File.WriteAllBytes(absolutePathToFile, imageBytes);
-                    }
-
-                    ImageProcessed?.Invoke(this, 1); // we processed one image so just send 1 along
-                }
-
-                if (borderCrop)
-                {
-                    int index = uniqueDataType.image_uris.border_crop.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1;
-                    int index2 = uniqueDataType.image_uris.border_crop.LastIndexOf("?", StringComparison.OrdinalIgnoreCase);
-                    int count = index2 - index;
-
-                    string name = uniqueDataType.name_field.ReplaceBadWindowsCharacters();
-                    string fullName = name + "-borderCrop.jpg";
-                    string fullPath = Path.Combine(setPath, name);
-                    string absolutePathToFile = Path.Combine(fullPath, fullName);
-
-                    // only download the image if we don't have it
-                    if (!File.Exists(absolutePathToFile))
-                    {
-                        HttpClient client = new HttpClient();
-
-                        HttpResponseMessage response = client.GetAsync(uniqueDataType.image_uris.border_crop, HttpCompletionOption.ResponseHeadersRead).Result;
-                        response.EnsureSuccessStatusCode();
-
-                        byte[] imageBytes = response.Content.ReadAsByteArrayAsync().Result;
-
-                        // make sure our directory exists
-                        if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
-
-                        File.WriteAllBytes(absolutePathToFile, imageBytes);
-                    }
-
-                    ImageProcessed?.Invoke(this, 1); // we processed one image so just send 1 along
-                }
+                ImageProcessed?.Invoke(this, absolutePathToFile);
             }
             catch (Exception ex)
             {

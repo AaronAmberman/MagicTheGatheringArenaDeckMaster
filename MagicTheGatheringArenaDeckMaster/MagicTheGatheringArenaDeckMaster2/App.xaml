@@ -13,6 +13,15 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converter:ArithmeticConverter x:Key="ArithmeticConverter" />
+
+            <!-- Custom Styles -->
+            <Style x:Key="DarkThemeTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="Foreground" Value="White" />
+            </Style>
+            <Style x:Key="DarkThemeBorderStyle" TargetType="Border">
+                <Setter Property="BorderBrush" Value="White" />
+                <Setter Property="BorderThickness" Value="1" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

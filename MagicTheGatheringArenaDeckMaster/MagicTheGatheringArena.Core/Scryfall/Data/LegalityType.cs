@@ -7,6 +7,7 @@
         public string historic { get; set; }
         public string gladiator { get; set; }
         public string pioneer { get; set; }
+        public string explorer { get; set; }
         public string modern { get; set; }
         public string legacy { get; set; }
         public string pauper { get; set; }

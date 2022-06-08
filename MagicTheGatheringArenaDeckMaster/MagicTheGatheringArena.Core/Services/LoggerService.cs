@@ -7,7 +7,10 @@ namespace MagicTheGatheringArena.Core.Services
     {
         private bool logRolled = false;
 
+        /// <summary>Gets or sets the absolute path for the log file.</summary>
         public string LogFile { get; set; }
+
+        /// <summary>Gets or sets the log file size, in bytes, limit before the log file is rolled.</summary>
         public long LogRollSize { get; set; } = 102400; // 100 MB by default
 
         public LoggerService()
