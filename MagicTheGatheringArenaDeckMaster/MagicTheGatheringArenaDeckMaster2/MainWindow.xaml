@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster2"
         xmlns:viewModels="clr-namespace:MagicTheGatheringArenaDeckMaster2.ViewModels" 
         xmlns:userControls="clr-namespace:MagicTheGatheringArenaDeckMaster2.UserControls"
+        xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
+        xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         mc:Ignorable="d"
         Title="MTG Arena Deck Master" Height="960" Width="1280" WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/Icon.ico"        
@@ -89,9 +91,71 @@
                         </Button>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <!-- 
-                            Do I use a TabControl or do a master content view setup?
-                        -->
+                        <TabControl Margin="0,10,0,0">
+                            <TabItem Header="Card Collection">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <TextBlock Text="Something something filter" />
+                                    </Grid>
+                                    <customControls:ZoomableListBox Grid.Row="1" Margin="0,5,0,0" Background="#FF202020"
+                                                                    ItemsSource="{Binding CardCollectionViewModel.Cards}"
+                                                                    VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Pixel">
+                                        <customControls:ZoomableListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <vwp:VirtualizingWrapPanel IsItemsHost="True" Orientation="Vertical" SpacingMode="None" StretchItems="False" />
+                                            </ItemsPanelTemplate>
+                                        </customControls:ZoomableListBox.ItemsPanel>
+                                        <customControls:ZoomableListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <!--<Image Margin="5" Width="146" Height="204" Source="{Binding ImagePath}" />-->
+                                                    <Image Margin="5" Width="146" Height="204">
+                                                        <Image.Source>
+                                                            <BitmapImage DecodePixelWidth="146" UriSource="{Binding ImagePath}" />
+                                                        </Image.Source>
+                                                    </Image>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </customControls:ZoomableListBox.ItemTemplate>
+                                    </customControls:ZoomableListBox>
+                                    <!--<customControls:ZoomableListBox Grid.Row="1" Margin="0,5,0,0" Background="#FF202020"
+                                                                    ItemsSource="{Binding CardCollectionViewModel.Cards}"
+                                                                    VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard" VirtualizingPanel.ScrollUnit="Pixel">
+                                        <customControls:ZoomableListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <vwp:VirtualizingWrapPanel IsItemsHost="True" Orientation="Vertical" SpacingMode="None" StretchItems="False" />
+                                            </ItemsPanelTemplate>
+                                        </customControls:ZoomableListBox.ItemsPanel>
+                                        <customControls:ZoomableListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Image Margin="5" Width="146" Height="204" Source="{Binding ImagePath}" />
+                                                    --><!--<Image Margin="5" Width="146" Height="204">
+                                                        <Image.Source>
+                                                            <BitmapImage DecodePixelWidth="146" UriSource="{Binding ImagePath}" />
+                                                        </Image.Source>
+                                                    </Image>--><!--
+                                                </Grid>
+                                            </DataTemplate>
+                                        </customControls:ZoomableListBox.ItemTemplate>
+                                    </customControls:ZoomableListBox>-->
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="Decks">
+                                
+                            </TabItem>
+                        </TabControl>
+                        <Border Background="#50000000" Margin="0,5,0,0" Visibility="{Binding SetFilterMessageVisibility, FallbackValue=Collapsed, TargetNullValue=Collapsed}">
+                            <Border BorderBrush="White" BorderThickness="2" CornerRadius="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock FontSize="24" Padding="50" Style="{StaticResource DarkThemeTextBlockStyle}">
+                                    Please select one or more sets from the "Set Filter" at the top left of the window.
+                                </TextBlock>
+                            </Border>
+                        </Border>
                     </Grid>
                 </Grid>
             </Grid>

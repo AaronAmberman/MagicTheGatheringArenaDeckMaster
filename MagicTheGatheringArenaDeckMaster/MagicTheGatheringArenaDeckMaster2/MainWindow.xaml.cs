@@ -24,10 +24,13 @@ namespace MagicTheGatheringArenaDeckMaster2
 
             viewModel = new MainWindowViewModel
             {
+                Dispatcher = Dispatcher,
+                CardCollectionViewModel = new CardCollectionViewModel(),
                 PopupDialogViewModel = new PopupDialogViewModel
                 {
                     AddSetToSettingsViewModel = new AddSetToSettingsViewModel(),
                     AboutDialogViewModel = new AboutDialogViewModel(),
+                    CardDownloadViewModel = new CardDownloadViewModel(),
                     DataViewModel = new DataViewModel(),
                     MessageBoxViewModel = new MessageBoxViewModel(),
                     ProgressViewModel = new ProgressViewModel(),

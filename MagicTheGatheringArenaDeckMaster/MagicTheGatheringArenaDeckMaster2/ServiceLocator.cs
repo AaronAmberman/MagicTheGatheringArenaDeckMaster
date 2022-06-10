@@ -40,7 +40,7 @@ namespace MagicTheGatheringArenaDeckMaster2
         {
             LoggerService = new LoggerService();
             PathingService = new ApplicationPathingService();
-            ScryfallService = new ScryfallService(LoggerService, PathingService);
+            ScryfallService = new ScryfallService(LoggerService);
         }
 
         #endregion

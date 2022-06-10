@@ -5,9 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicTheGatheringArena.Core", "MagicTheGatheringArena.Core\MagicTheGatheringArena.Core.csproj", "{7CA150F5-6625-4FF9-BAF7-DC56D2747861}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicTheGatheringArenaDeckMaster", "MagicTheGatheringArenaDeckMaster\MagicTheGatheringArenaDeckMaster.csproj", "{C1693AD8-178A-4312-A357-1A9CAD6F599E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicTheGatheringArenaDeckMaster2", "MagicTheGatheringArenaDeckMaster2\MagicTheGatheringArenaDeckMaster2.csproj", "{04CB29C9-AAA5-4120-B24E-026805D0C136}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicTheGatheringArenaDeckMaster2", "MagicTheGatheringArenaDeckMaster2\MagicTheGatheringArenaDeckMaster2.csproj", "{04CB29C9-AAA5-4120-B24E-026805D0C136}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		{7CA150F5-6625-4FF9-BAF7-DC56D2747861}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CA150F5-6625-4FF9-BAF7-DC56D2747861}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CA150F5-6625-4FF9-BAF7-DC56D2747861}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1693AD8-178A-4312-A357-1A9CAD6F599E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1693AD8-178A-4312-A357-1A9CAD6F599E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1693AD8-178A-4312-A357-1A9CAD6F599E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1693AD8-178A-4312-A357-1A9CAD6F599E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04CB29C9-AAA5-4120-B24E-026805D0C136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04CB29C9-AAA5-4120-B24E-026805D0C136}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04CB29C9-AAA5-4120-B24E-026805D0C136}.Release|Any CPU.ActiveCfg = Release|Any CPU

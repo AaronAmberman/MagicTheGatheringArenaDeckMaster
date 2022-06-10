@@ -1,8 +1,11 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
+using MagicTheGatheringArenaDeckMaster2.Collections;
+using MagicTheGatheringArenaDeckMaster2.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using WPF.InternalDialogs;
 
 namespace MagicTheGatheringArenaDeckMaster2.ViewModels
@@ -11,8 +14,11 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
     {
         #region Fields
 
-        private ObservableCollection<UniqueArtTypeViewModel> cards;
+        private CardCollectionViewModel cardCollectionViewModel;
+        private CardCollection cards;
+        private ObservableCollection<SetFilter> filterSetNames;
         private PopupDialogViewModel popupDialogViewModel;
+        private Visibility setFilterMessageVisibility = Visibility.Collapsed;
         private ObservableCollection<string> setNames;
         private ObservableCollection<string> standardOnlySetNames;
         private string statusMessage = "Ready";
@@ -21,12 +27,34 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 
         #region Properties
 
-        public ObservableCollection<UniqueArtTypeViewModel> Cards
+        public CardCollectionViewModel CardCollectionViewModel
+        {
+            get => cardCollectionViewModel;
+            set
+            {
+                cardCollectionViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardCollection Cards
         {
             get => cards;
             set
             {
                 cards = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Dispatcher Dispatcher { get; set; }
+
+        public ObservableCollection<SetFilter> FilterSetNames
+        {
+            get => filterSetNames;
+            set
+            {
+                filterSetNames = value;
                 OnPropertyChanged();
             }
         }
@@ -37,6 +65,16 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
             set
             {
                 popupDialogViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Visibility SetFilterMessageVisibility
+        {
+            get => setFilterMessageVisibility;
+            set
+            {
+                setFilterMessageVisibility = value;
                 OnPropertyChanged();
             }
         }
@@ -69,6 +107,15 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
                 statusMessage = value;
                 OnPropertyChanged();
             }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        public MainWindowViewModel()
+        {
+            FilterSetNames = new ObservableCollection<SetFilter>();
         }
 
         #endregion

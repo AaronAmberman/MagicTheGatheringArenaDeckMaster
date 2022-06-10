@@ -27,7 +27,127 @@
                 </Style>
             </id:MovableResizableInternalDialog.CloseButtonStyle>
             <Grid>
-                <TextBlock Text="Filter" />
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Style="{StaticResource DarkThemeTextBlockStyle}">
+                        You can drag and drop from the list on the left to the right (one or more). Or, you can select whatever items you want (one or more) from the list on the left and click "Add Set(s)". 
+                        You can also select items (one or more) from the list on the right and remove them by clicking "Remove Selected Set(s)".
+                    </TextBlock>
+                </Grid>
+                <Grid Grid.Column="0" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="0,0,0,5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <RadioButton Grid.Row="0" Content="Show all sets" GroupName="SetSelection" 
+                                     IsChecked="{Binding SetFilterViewModel.IsAllChecked}" />
+                        <RadioButton Grid.Row="1" Content="Show only sets allowed in MTGA Standard" GroupName="SetSelection" 
+                                     IsChecked="{Binding SetFilterViewModel.IsStandardChecked}" />
+                        <RadioButton Grid.Row="2" Content="Show only sets allowed in MTGA Alchemy" GroupName="SetSelection" 
+                                     IsChecked="{Binding SetFilterViewModel.IsAlchemyChecked}" />
+                        <RadioButton Grid.Row="3" Content="Show only sets allowed in MTGA Historic" GroupName="SetSelection" 
+                                     IsChecked="{Binding SetFilterViewModel.IsHistoricChecked}" />
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Search" Margin="0,0,5,0" Style="{StaticResource DarkThemeTextBlockStyle}" />
+                        <customControls:WatermarkTextBox Grid.Column="1" Watermark="Search" 
+                                                         Text="{Binding SetFilterViewModel.SetSearchText, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <ListBox x:Name="setsFilterSetsListBox" Grid.Row="2" Margin="0,5,0,0" SelectionMode="Extended" AllowDrop="False"
+                             ItemsSource="{Binding SetFilterViewModel.AllSetNames}"
+                             MouseLeftButtonDown="setsFilterSetsListBox_MouseLeftButtonDown" MouseMove="setsFilterSetsListBox_MouseMove" />
+                    <TextBlock Grid.Row="3" FontSize="10" FontStyle="Italic" TextWrapping="Wrap"
+                               Style="{StaticResource DarkThemeTextBlockStyle}">
+                        Note: Some of the sets in Arena Historic mode are not listed in the data from Scryfall.com.
+                    </TextBlock>
+                </Grid>
+                <Button Grid.Column="1" Grid.Row="1" Content="Add Set(s)" Margin="10,0" VerticalAlignment="Center" Padding="5"
+                        Command="{Binding SetFilterViewModel.AddSetsCommand}" />
+                <Grid Grid.Column="2" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" TextWrapping="Wrap" FontSize="18" FontWeight="Bold" Margin="0,0,0,5" Style="{StaticResource DarkThemeTextBlockStyle}">
+                        Active Set Filter
+                    </TextBlock>
+                    <Button Grid.Row="1" Content="Remove Selected Set(s)" HorizontalAlignment="Right"
+                            Command="{Binding SetFilterViewModel.RemoveSetsCommand}" />
+                    <ListView x:Name="setsFilterListBox" Grid.Row="2" Margin="0,5,0,0" SelectionMode="Extended" AllowDrop="True"
+                             ItemsSource="{Binding SetFilterViewModel.FilterSetNames}"
+                             DragEnter="setsFilterSettingsListBox_DragEnter" DragLeave="setsFilterSettingsListBox_DragLeave" DragOver="setsFilterSettingsListBox_DragOver"
+                             Drop="setsFilterSettingsListBox_Drop">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"
+                                                Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=ActualWidth, 
+                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/2|-20}" />
+                                <GridViewColumn Header="Card Images"
+                                                Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=ActualWidth, 
+                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/2|-20}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock>
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="Red" />
+                                                            <Setter Property="Text" Value="Images not downloaded" />
+                                                            <Style.Triggers>
+                                                                <MultiDataTrigger>
+                                                                    <MultiDataTrigger.Conditions>
+                                                                        <Condition Binding="{Binding Exists}" Value="True" />
+                                                                        <Condition Binding="{Binding AllImagesExistInSet}" Value="True" />
+                                                                    </MultiDataTrigger.Conditions>
+                                                                    <Setter Property="Foreground" Value="Green" />
+                                                                    <Setter Property="Text" Value="Images downloaded" />
+                                                                </MultiDataTrigger>
+                                                                <MultiDataTrigger>
+                                                                    <MultiDataTrigger.Conditions>
+                                                                        <Condition Binding="{Binding Exists}" Value="True" />
+                                                                        <Condition Binding="{Binding AllImagesExistInSet}" Value="False" />
+                                                                    </MultiDataTrigger.Conditions>
+                                                                    <Setter Property="Foreground" Value="Orange" />
+                                                                    <Setter Property="Text" Value="Partial set downloaded" />
+                                                                </MultiDataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <TextBlock Grid.Row="3" TextWrapping="Wrap" FontSize="10" FontStyle="Italic" Style="{StaticResource DarkThemeTextBlockStyle}">
+                        Images for sets that have not been downloaded will be downloaded when OK is clicked.
+                    </TextBlock>
+                </Grid>
             </Grid>
             <id:MovableResizableInternalDialog.AnswerAreaContent>
                 <Grid>
@@ -42,6 +162,84 @@
                             Command="{Binding SetFilterViewModel.CancelCommand}" />
                 </Grid>
             </id:MovableResizableInternalDialog.AnswerAreaContent>
+        </id:MovableResizableInternalDialog>
+        <id:MovableResizableInternalDialog x:Name="cardDownloadDialog"
+                                           ResizableDefaultHeight="210" ResizableDefaultWidth="400" ResizeGripVisibility="Collapsed"
+                                           TitleContent="Image Retrieval" Foreground="White" CloseOnEscape="False"
+                                           TitleAreaBackground="#FF101010" AnswerAreaBackground="#FF2F2F2F" ContentBackground="#FF3F3F3F"
+                                           Visibility="{Binding CardDownloadViewModel.Visibility}"
+                                           FocusParent="{Binding ElementName=rootGrid}">
+            <id:MovableResizableInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Style>
+            </id:MovableResizableInternalDialog.CloseButtonStyle>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Downloading..." FontSize="18" Margin="0,0,0,10"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Set : " Margin="10,0,5,0" FontSize="14"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Column="1" Text="{Binding CardDownloadViewModel.ActiveSet}" FontSize="14" TextTrimming="CharacterEllipsis"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Card : " Margin="10,0,5,0" FontSize="14"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Column="1" Text="{Binding CardDownloadViewModel.ActiveCard}" FontSize="14" TextTrimming="CharacterEllipsis"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                </Grid>
+                <ProgressBar Grid.Row="3" Height="20" Margin="0,10" 
+                             Maximum="{Binding CardDownloadViewModel.SetDownloadTotal}" Value="{Binding CardDownloadViewModel.SetDownloadCount}" />
+                <Grid Grid.Row="4" HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding CardDownloadViewModel.SetDownloadCount}"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Column="1" Text="of" Margin="5,0"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Column="2" Text="{Binding CardDownloadViewModel.SetDownloadTotal}"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Column="3" Text="cards in the set downloaded" Margin="5,0,0,0"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                </Grid>
+                <Grid Grid.Row="5" HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding CardDownloadViewModel.DownloadCount}"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Column="1" Text="of" Margin="5,0"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Column="2" Text="{Binding CardDownloadViewModel.DownloadTotal}"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Column="3" Text="total cards downloaded" Margin="5,0,0,0"
+                           Style="{StaticResource DarkThemeTextBlockStyle}" />
+                </Grid>
+            </Grid>
         </id:MovableResizableInternalDialog>
         <id:MovableResizableInternalDialog x:Name="settingsDialog"
                                            ResizableDefaultHeight="768" ResizableDefaultWidth="1024" 
@@ -71,7 +269,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" FontSize="18" Text="Sets allowed in MTG Arena Standard" />
+                        <TextBlock Grid.Row="0" FontSize="18" Text="Sets allowed in MTG Arena Standard" Style="{StaticResource DarkThemeTextBlockStyle}" />
                         <ListBox x:Name="arenaStandardSets" Grid.Row="1" SelectionMode="Extended"
                                  ItemsSource="{Binding SettingsViewModel.ArenaStandardOnlySetNames}" />
                         <Grid Grid.Row="2" Margin="0,5,0,0">
@@ -92,7 +290,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" FontSize="18" Text="Sets allowed in MTG Arena Alchemy" />
+                        <TextBlock Grid.Row="0" FontSize="18" Text="Sets allowed in MTG Arena Alchemy" Style="{StaticResource DarkThemeTextBlockStyle}" />
                         <ListBox x:Name="arenaAlchemySets" Grid.Row="1" SelectionMode="Extended"
                                  ItemsSource="{Binding SettingsViewModel.ArenaAlchemyOnlySetNames}" />
                         <Grid Grid.Row="2" Margin="0,5,0,0">
@@ -113,7 +311,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" FontSize="18" Text="Sets allowed in MTG Arena Historic" />
+                        <TextBlock Grid.Row="0" FontSize="18" Text="Sets allowed in MTG Arena Historic" Style="{StaticResource DarkThemeTextBlockStyle}" />
                         <ListBox x:Name="arenaHistoricSets" Grid.Row="1" SelectionMode="Extended"
                                  ItemsSource="{Binding SettingsViewModel.ArenaHistoricOnlySetNames}" />
                         <Grid Grid.Row="2" Margin="0,5,0,0">
@@ -127,7 +325,7 @@
                         </Grid>
                         <Border Grid.Row="3" Style="{StaticResource DarkThemeBorderStyle}" Height="1" Margin="25,10" />
                     </Grid>
-                    <TextBlock Grid.Row="3" TextWrapping="Wrap" Margin="0,10,0,0"
+                    <TextBlock Grid.Row="3" TextWrapping="Wrap" Margin="0,10,0,0" Style="{StaticResource DarkThemeTextBlockStyle}"
                                Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualWidth, 
                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=-10}">
                             <Italic>This is managed by you, the user, because this is an ever changing list of sets and there is no online service the development team is aware of to tell 
@@ -174,7 +372,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="0,0,0,10">
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap">
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Style="{StaticResource DarkThemeTextBlockStyle}">
                         You can drag and drop from the list on the left to the right (one or more). Or, you can select whatever items you want (one or more) from the list on the left and click "Add Set(s)". 
                         You can also select items (one or more) from the list on the right and remove them by clicking "Remove Selected Set(s)".
                     </TextBlock>
@@ -190,7 +388,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Search" Margin="0,0,5,0" />
+                        <TextBlock Grid.Column="0" Text="Search" Margin="0,0,5,0" Style="{StaticResource DarkThemeTextBlockStyle}" />
                         <customControls:WatermarkTextBox Grid.Column="1" Watermark="Search" 
                                                          Text="{Binding AddSetToSettingsViewModel.SetSearchText, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
@@ -238,7 +436,7 @@
                 </Style>
             </id:MovableResizableInternalDialog.CloseButtonStyle>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <TextBlock TextWrapping="Wrap">
+                <TextBlock TextWrapping="Wrap" Style="{StaticResource DarkThemeTextBlockStyle}">
                     This software needs data from Scryfall.com in order to function properly (more than 100MB). As such, it requires 
                     an <Bold>internet connection</Bold>. 
                     <LineBreak /><LineBreak />
@@ -317,7 +515,7 @@
                 </Style>
             </id:MovableResizableInternalDialog.CloseButtonStyle>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <TextBlock TextWrapping="Wrap">
+                <TextBlock TextWrapping="Wrap" Style="{StaticResource DarkThemeTextBlockStyle}">
                         <Italic Foreground="#FFAAAAAA">
                             This application is unofficial content permitted under the Wizards of the Coast Fan Content Policy. The literal and graphical 
                             information presented in this application about Magic: The Gathering, including card images, the mana symbols and card text, 

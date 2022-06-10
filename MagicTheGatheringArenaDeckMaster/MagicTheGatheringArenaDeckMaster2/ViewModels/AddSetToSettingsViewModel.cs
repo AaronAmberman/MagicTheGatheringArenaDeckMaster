@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,19 +16,19 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
         #region Fields
 
         private ICommand addSetsCommand;
+        private ListBox allSetsListBox;
         private ObservableCollection<string> allSetNames;
         private CollectionView allSetNamesCollectionView;
         private ICommand cancelCommand;
         private ICommand okCommand;
         private MessageBoxResult result;
         private ICommand removeSetsCommand;
+        private string setSearchText;
+        private ListBox settingsSetsListBox;
         private ObservableCollection<string> settingSetNames;
         private ICommand showAddSetToSettingsCommand;
-        private Visibility visibility = Visibility.Collapsed;
         private string title;
-        private string setSearchText;
-        private ListBox allSetsListBox;
-        private ListBox settingsSetsListBox;
+        private Visibility visibility = Visibility.Collapsed;
 
         #endregion
 
@@ -67,6 +65,8 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
         public ICommand CancelCommand => cancelCommand ??= new RelayCommand(Cancel);
 
         public ICommand OkCommand => okCommand ??= new RelayCommand(Ok);
+
+        public int Mode { get; set; }
 
         public MessageBoxResult Result
         {
@@ -184,34 +184,13 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 
         private void Cancel()
         {
-            // reset the collection of set names for the setting if the user cancel (this throws away any changes they may have made)
-            if (Title.Contains("Alchemy", StringComparison.OrdinalIgnoreCase))
-            {
-                SettingSetNames.Clear();
-
-                foreach (string set in ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaAlchemyOnlySetNames)
-                {
-                    SettingSetNames.Add(set);
-                }
-            }
-            else if (Title.Contains("Historic", StringComparison.OrdinalIgnoreCase))
-            {
-                SettingSetNames.Clear();
-
-                foreach (string set in ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaHistoricOnlySetNames)
-                {
-                    SettingSetNames.Add(set);
-                }
-            }
-            else if (Title.Contains("Standard", StringComparison.OrdinalIgnoreCase))
-            {
-                SettingSetNames.Clear();
-
-                foreach (string set in ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaStandardOnlySetNames)
-                {
-                    SettingSetNames.Add(set);
-                }
-            }
+            // reset the collection of set names for the setting if the user cancels (this throws away any changes they may have made)
+            if (Mode == 0)
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.AlchemySetsFromAdding.Clear();
+            else if (Mode == 1)
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.HistoricSetsFromAdding.Clear();
+            else if (Mode == 3)
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.StandardSetsFromAdding.Clear();
 
             Result = MessageBoxResult.Cancel;
 
@@ -237,35 +216,39 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 
         private void Ok()
         {
-            if (Title.Contains("Alchemy", StringComparison.OrdinalIgnoreCase))
+            if (Mode == 0)
             {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.AlchemySetsFromAdding.Clear();
                 ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaAlchemyOnlySetNames.Clear();
 
                 foreach (string set in SettingSetNames)
                 {
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.AlchemySetsFromAdding.Add(set);
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaAlchemyOnlySetNames.Add(set);
                 }
             }
-            else if (Title.Contains("Historic", StringComparison.OrdinalIgnoreCase))
+            else if (Mode == 1)
             {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.HistoricSetsFromAdding.Clear();
                 ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaHistoricOnlySetNames.Clear();
 
                 foreach (string set in SettingSetNames)
                 {
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.HistoricSetsFromAdding.Add(set);
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaHistoricOnlySetNames.Add(set);
                 }
             }
-            else if (Title.Contains("Standard", StringComparison.OrdinalIgnoreCase))
+            else if (Mode == 2)
             {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.StandardSetsFromAdding.Clear();
                 ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaStandardOnlySetNames.Clear();
 
                 foreach (string set in SettingSetNames)
                 {
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.StandardSetsFromAdding.Add(set);
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaStandardOnlySetNames.Add(set);
                 }
             }
-
-            // todo : persist changes to data source
 
             Result = MessageBoxResult.OK;
 

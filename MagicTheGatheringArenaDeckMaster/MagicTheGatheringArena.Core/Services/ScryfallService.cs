@@ -10,14 +10,10 @@ namespace MagicTheGatheringArena.Core.Services
     public class ScryfallService
     {
         private readonly LoggerService logger;
-        private readonly PathingService pathing;
 
-        public event EventHandler<string> ImageProcessed;
-
-        public ScryfallService(LoggerService loggerService, PathingService pathingService)
+        public ScryfallService(LoggerService loggerService)
         {
             logger = loggerService;
-            pathing = pathingService;
         }
 
         public BulkDataType GetUniqueArtworkUri()
@@ -74,39 +70,42 @@ namespace MagicTheGatheringArena.Core.Services
             }
         }
 
-        public void DownloadArtworkFile(UniqueArtType uniqueDataType, string setPath)
+        public bool DownloadArtworkFile(UniqueArtType uniqueArtType, string setPath)
         {
             try
             {
                 // nothing to download
-                if (uniqueDataType.image_uris == null) return;
+                if (uniqueArtType.image_uris == null) return false;
 
-                string name = uniqueDataType.name_field.ReplaceBadWindowsCharacters();
+                string name = uniqueArtType.name_field.ReplaceBadWindowsCharacters();
                 string fullName = name + ".png";
-                string fullPath = Path.Combine(setPath, name);
-                string absolutePathToFile = Path.Combine(fullPath, fullName);
+                string absolutePathToFile = Path.Combine(setPath, fullName);
 
                 // only download the image if we don't have it
                 if (!File.Exists(absolutePathToFile))
                 {
                     HttpClient client = new HttpClient();
+                    client.Timeout = new TimeSpan(0, 0, 30);
 
-                    HttpResponseMessage response = client.GetAsync(uniqueDataType.image_uris.png, HttpCompletionOption.ResponseHeadersRead).Result;
+                    HttpResponseMessage response = client.GetAsync(uniqueArtType.image_uris.png, HttpCompletionOption.ResponseHeadersRead).Result;
                     response.EnsureSuccessStatusCode();
 
                     byte[] imageBytes = response.Content.ReadAsByteArrayAsync().Result;
 
                     // make sure our directory exists
-                    if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
+                    if (!Directory.Exists(setPath)) Directory.CreateDirectory(setPath);
 
                     File.WriteAllBytes(absolutePathToFile, imageBytes);
-                }
 
-                ImageProcessed?.Invoke(this, absolutePathToFile);
+                    return true;
+                }
+                else return true; // we already have it
             }
             catch (Exception ex)
             {
-                logger.Error($"An error occurred attempting to download the unique artwork file for {uniqueDataType.name_field}.{Environment.NewLine}{ex}");
+                logger.Error($"An error occurred attempting to download the unique artwork file for {uniqueArtType.name_field}.{Environment.NewLine}{ex}");
+
+                return false;
             }
         }
     }

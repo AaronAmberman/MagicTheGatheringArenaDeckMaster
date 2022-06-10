@@ -8,6 +8,7 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 
         private AddSetToSettingsViewModel addSetToSettingsViewModel;
         private AboutDialogViewModel aboutDialogViewModel;
+        private CardDownloadViewModel cardDownloadViewModel;
         private DataViewModel dataViewModel;
         private MessageBoxViewModel messageBoxViewModel;
         private ProgressViewModel progressViewModel;
@@ -34,6 +35,16 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
             set
             {
                 aboutDialogViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardDownloadViewModel CardDownloadViewModel
+        {
+            get => cardDownloadViewModel;
+            set
+            {
+                cardDownloadViewModel = value;
                 OnPropertyChanged();
             }
         }

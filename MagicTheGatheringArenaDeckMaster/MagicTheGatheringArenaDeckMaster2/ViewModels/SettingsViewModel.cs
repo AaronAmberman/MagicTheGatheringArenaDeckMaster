@@ -1,10 +1,7 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -29,10 +26,9 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
         private ICommand showSettingsCommand;
         private Visibility visibility = Visibility.Collapsed;
 
-        private ObservableCollection<string> arenaStandardOnlySetNames = new ObservableCollection<string>
+        private ObservableCollection<string> arenaStandardOnlySetNamesOrig = new ObservableCollection<string>
         {
-            // add to a database later
-
+            // these should be whatever is in the database (or this list if the database is null)
             "Adventures in the Forgotten Realms",
             "Innistrad: Crimson Vow",
             "Innistrad: Midnight Hunt",
@@ -43,10 +39,9 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
             "Streets of New Capenna"
         };
 
-        private ObservableCollection<string> arenaAlchemyOnlySetNames = new ObservableCollection<string>
+        private ObservableCollection<string> arenaAlchemyOnlySetNamesOrig = new ObservableCollection<string>
         {
-            // add to a database later
-
+            // these should be whatever is in the database (or this list if the database is null)
             "Alchemy: Innistrad",
             "Alchemy: Kamigawa",
             "Alchemy: New Capenna",
@@ -62,11 +57,10 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
             "Streets of New Capenna"
         };
 
-        private ObservableCollection<string> arenaHistoricOnlySetNames = new ObservableCollection<string>
+        private ObservableCollection<string> arenaHistoricOnlySetNamesOrig = new ObservableCollection<string>
         {
-            // add to a database later
-
-            "Core 2021",
+            // these should be whatever is in the database (or this list if the database is null)
+            "Core Set 2021",
             "Ikoria Lair of Behemoths",
             "Theros Beyond Death",
             "Theros of Eldraine",
@@ -88,6 +82,10 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
             "Jumpstart: Historic Horizons",
             "Mystical Archive"
         };
+
+        private ObservableCollection<string> arenaStandardOnlySetNames;
+        private ObservableCollection<string> arenaAlchemyOnlySetNames;
+        private ObservableCollection<string> arenaHistoricOnlySetNames;
 
         #endregion
 
@@ -166,6 +164,21 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
         public ListBox HistoricListBox { get; set; }
         public ListBox StandardListBox { get; set; }
 
+        public List<string> AlchemySetsFromAdding { get; set; } = new List<string>();
+        public List<string> HistoricSetsFromAdding { get; set; } = new List<string>();
+        public List<string> StandardSetsFromAdding { get; set; } = new List<string>();
+
+        #endregion
+
+        #region Constructors
+
+        public SettingsViewModel()
+        {
+            arenaStandardOnlySetNames = new ObservableCollection<string>(arenaStandardOnlySetNamesOrig);
+            arenaAlchemyOnlySetNames = new ObservableCollection<string>(arenaAlchemyOnlySetNamesOrig);
+            arenaHistoricOnlySetNames = new ObservableCollection<string>(arenaHistoricOnlySetNamesOrig);
+        }
+
         #endregion
 
         #region Methods
@@ -185,6 +198,7 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
                 new ObservableCollection<string>(ArenaAlchemyOnlySetNames.ToList());
 
             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Title = "Add Set To Settings (Alchemy)";
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Mode = 0;
             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Visibility = Visibility.Visible;
         }
 
@@ -203,6 +217,7 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
                 new ObservableCollection<string>(ArenaHistoricOnlySetNames.ToList());
 
             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Title = "Add Set To Settings (Historic)";
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Mode = 1;
             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Visibility = Visibility.Visible;
         }
 
@@ -221,11 +236,26 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
                 new ObservableCollection<string>(ArenaStandardOnlySetNames.ToList());
 
             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Title = "Add Set To Settings (Standard)";
+            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Mode = 2;
             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.AddSetToSettingsViewModel.Visibility = Visibility.Visible;
         }
 
         private void Cancel()
         {
+            // clear changes to set collections
+            AlchemySetsFromAdding.Clear();
+            HistoricSetsFromAdding.Clear();
+            StandardSetsFromAdding.Clear();
+
+            ArenaStandardOnlySetNames.Clear();
+            ArenaStandardOnlySetNames.AddRange(arenaStandardOnlySetNamesOrig.ToList());
+
+            ArenaAlchemyOnlySetNames.Clear();
+            ArenaAlchemyOnlySetNames.AddRange(arenaAlchemyOnlySetNamesOrig.ToList());
+
+            ArenaHistoricOnlySetNames.Clear();
+            ArenaHistoricOnlySetNames.AddRange(arenaHistoricOnlySetNamesOrig.ToList());
+
             Result = MessageBoxResult.Cancel;
 
             Visibility = Visibility.Collapsed;
@@ -233,6 +263,38 @@ namespace MagicTheGatheringArenaDeckMaster2.ViewModels
 
         private void Ok()
         {
+            if (AlchemySetsFromAdding.Count > 0)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaAlchemyOnlySetNames.Clear();
+
+                foreach (string set in AlchemySetsFromAdding)
+                {
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaAlchemyOnlySetNames.Add(set);
+                }
+            }
+
+            if (HistoricSetsFromAdding.Count > 0)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaHistoricOnlySetNames.Clear();
+
+                foreach (string set in HistoricSetsFromAdding)
+                {
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaHistoricOnlySetNames.Add(set);
+                }
+            }
+
+            if (StandardSetsFromAdding.Count > 0)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaStandardOnlySetNames.Clear();
+
+                foreach (string set in StandardSetsFromAdding)
+                {
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaStandardOnlySetNames.Add(set);
+                }
+            }
+
+            // todo : persist changes to data source
+
             Result = MessageBoxResult.OK;
 
             Visibility = Visibility.Collapsed;
