@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicTheGatheringArena.Core", "MagicTheGatheringArena.Core\MagicTheGatheringArena.Core.csproj", "{7CA150F5-6625-4FF9-BAF7-DC56D2747861}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicTheGatheringArenaDeckMaster", "MagicTheGatheringArenaDeckMaster2\MagicTheGatheringArenaDeckMaster.csproj", "{04CB29C9-AAA5-4120-B24E-026805D0C136}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicTheGatheringArenaDeckMaster", "MagicTheGatheringArenaDeckMaster\MagicTheGatheringArenaDeckMaster.csproj", "{04CB29C9-AAA5-4120-B24E-026805D0C136}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
