@@ -8,7 +8,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using WPF.InternalDialogs;
 
-namespace MagicTheGatheringArenaDeckMaster2.ViewModels
+namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
     internal class SettingsViewModel : ViewModelBase
     {

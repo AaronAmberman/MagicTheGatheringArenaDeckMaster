@@ -1,10 +1,11 @@
-﻿using MagicTheGatheringArenaDeckMaster2.ViewModels;
+﻿using MagicTheGatheringArenaDeckMaster.ViewModels;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagicTheGatheringArenaDeckMaster2.Collections
+namespace MagicTheGatheringArenaDeckMaster.Collections
 {
+    /// <summary>A special collection for cards that can pull cards out by sets.</summary>
     internal class CardCollection : IEnumerable<IEnumerable<UniqueArtTypeViewModel>>
     {
         #region Fields

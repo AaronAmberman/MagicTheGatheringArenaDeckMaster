@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-namespace MagicTheGatheringArenaDeckMaster2.Models
+namespace MagicTheGatheringArenaDeckMaster.Models
 {
+    /// <summary>Represents a runtime set filter.</summary>
     internal class SetFilter
     {
         public bool AllImagesExistInSet

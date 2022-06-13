@@ -1,9 +1,10 @@
 ﻿using MagicTheGatheringArena.Core.Services;
-using MagicTheGatheringArenaDeckMaster2.Services;
-using MagicTheGatheringArenaDeckMaster2.ViewModels;
+using MagicTheGatheringArenaDeckMaster.Services;
+using MagicTheGatheringArenaDeckMaster.ViewModels;
 
-namespace MagicTheGatheringArenaDeckMaster2
+namespace MagicTheGatheringArenaDeckMaster
 {
+    /// <summary>ServiceLocator to hold runtime references.</summary>
     internal class ServiceLocator
     {
         #region Fields

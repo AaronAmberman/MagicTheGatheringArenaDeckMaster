@@ -1,6 +1,6 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
-using MagicTheGatheringArenaDeckMaster2.Collections;
-using MagicTheGatheringArenaDeckMaster2.Models;
+using MagicTheGatheringArenaDeckMaster.Collections;
+using MagicTheGatheringArenaDeckMaster.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Threading;
 using WPF.InternalDialogs;
 
-namespace MagicTheGatheringArenaDeckMaster2.ViewModels
+namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
     internal class MainWindowViewModel : ViewModelBase
     {

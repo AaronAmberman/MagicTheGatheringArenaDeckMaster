@@ -9,6 +9,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\black.png" />
+    <None Remove="Images\blue.png" />
+    <None Remove="Images\colorless.png" />
+    <None Remove="Images\green.png" />
+    <None Remove="Images\land.png" />
+    <None Remove="Images\multicolor.png" />
+    <None Remove="Images\red.png" />
+    <None Remove="Images\white.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\black.png" />
+    <Resource Include="Images\blue.png" />
+    <Resource Include="Images\colorless.png" />
+    <Resource Include="Images\green.png" />
+    <Resource Include="Images\land.png" />
+    <Resource Include="Images\multicolor.png" />
+    <Resource Include="Images\red.png" />
+    <Resource Include="Images\white.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Icon.ico" />
   </ItemGroup>
 

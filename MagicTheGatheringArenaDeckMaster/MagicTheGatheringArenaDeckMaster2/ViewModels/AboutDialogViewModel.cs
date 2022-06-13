@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace MagicTheGatheringArenaDeckMaster2.ViewModels
+namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
     internal class AboutDialogViewModel : ViewModelBase
     {

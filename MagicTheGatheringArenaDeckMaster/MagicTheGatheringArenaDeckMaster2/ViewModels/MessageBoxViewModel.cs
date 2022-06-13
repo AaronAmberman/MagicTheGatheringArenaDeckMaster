@@ -2,7 +2,7 @@
 using System.Windows;
 using WPF.InternalDialogs;
 
-namespace MagicTheGatheringArenaDeckMaster2.ViewModels
+namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
     internal class MessageBoxViewModel : ViewModelBase
     {

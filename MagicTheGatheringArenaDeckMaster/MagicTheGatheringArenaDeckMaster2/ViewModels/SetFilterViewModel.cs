@@ -1,5 +1,5 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
-using MagicTheGatheringArenaDeckMaster2.Models;
+using MagicTheGatheringArenaDeckMaster.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +10,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using WPF.InternalDialogs;
 
-namespace MagicTheGatheringArenaDeckMaster2.ViewModels
+namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
     internal class SetFilterViewModel : ViewModelBase
     {

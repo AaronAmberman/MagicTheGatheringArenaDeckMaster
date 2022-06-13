@@ -1,4 +1,4 @@
-﻿using MagicTheGatheringArenaDeckMaster2.ViewModels;
+﻿using MagicTheGatheringArenaDeckMaster.ViewModels;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Windows;
 using WPF.InternalDialogs;
 
-namespace MagicTheGatheringArenaDeckMaster2
+namespace MagicTheGatheringArenaDeckMaster
 {
     public partial class MainWindow : Window
     {

@@ -1,7 +1,7 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
 using MagicTheGatheringArena.Core.Scryfall.Data;
 
-namespace MagicTheGatheringArenaDeckMaster2.ViewModels
+namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
     internal class UniqueArtTypeViewModel : ViewModelBase
     {

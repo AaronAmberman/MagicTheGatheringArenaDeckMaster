@@ -1,7 +1,7 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
 using System.Windows;
 
-namespace MagicTheGatheringArenaDeckMaster2.ViewModels
+namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
     internal class ProgressViewModel : ViewModelBase
     {

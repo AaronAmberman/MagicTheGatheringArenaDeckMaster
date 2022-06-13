@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace MagicTheGatheringArenaDeckMaster2
+namespace MagicTheGatheringArenaDeckMaster
 {
     public partial class App : Application
     {

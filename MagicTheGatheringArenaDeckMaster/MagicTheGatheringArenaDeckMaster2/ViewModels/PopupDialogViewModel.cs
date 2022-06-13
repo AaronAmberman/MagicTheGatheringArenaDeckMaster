@@ -1,6 +1,6 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
 
-namespace MagicTheGatheringArenaDeckMaster2.ViewModels
+namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
     internal class PopupDialogViewModel : ViewModelBase
     {

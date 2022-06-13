@@ -1,11 +1,11 @@
-﻿<Window x:Class="MagicTheGatheringArenaDeckMaster2.MainWindow"
+﻿<Window x:Class="MagicTheGatheringArenaDeckMaster.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster2"
-        xmlns:viewModels="clr-namespace:MagicTheGatheringArenaDeckMaster2.ViewModels" 
-        xmlns:userControls="clr-namespace:MagicTheGatheringArenaDeckMaster2.UserControls"
+        xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster"
+        xmlns:viewModels="clr-namespace:MagicTheGatheringArenaDeckMaster.ViewModels" 
+        xmlns:userControls="clr-namespace:MagicTheGatheringArenaDeckMaster.UserControls"
         xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
         xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         mc:Ignorable="d"
@@ -98,10 +98,58 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <TextBlock Text="Something something filter" />
+                                    <Grid Grid.Row="0" Margin="5,5,5,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Search" FontSize="16" Margin="0,0,5,0" Style="{StaticResource DarkThemeTextBlockStyle}" VerticalAlignment="Center" />
+                                        <customControls:WatermarkTextBox Grid.Column="1" Watermark="Search" FontSize="16" Width="250" VerticalContentAlignment="Center" />
+                                        <customControls:RoundableToggleButton Grid.Column="2" Style="{StaticResource ManaSymbolButtonRound}"
+                                                                              IsChecked="{Binding CardCollectionViewModel.IsWhiteChecked}">
+                                            <Image Source="pack://application:,,,/Images/white.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </customControls:RoundableToggleButton>
+                                        <customControls:RoundableToggleButton Grid.Column="3" Style="{StaticResource ManaSymbolButtonRound}"
+                                                                              IsChecked="{Binding CardCollectionViewModel.IsBlueChecked}">
+                                            <Image Source="pack://application:,,,/Images/blue.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </customControls:RoundableToggleButton>
+                                        <customControls:RoundableToggleButton Grid.Column="4" Style="{StaticResource ManaSymbolButtonRound}"
+                                                                              IsChecked="{Binding CardCollectionViewModel.IsBlackChecked}">
+                                            <Image Source="pack://application:,,,/Images/black.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </customControls:RoundableToggleButton>
+                                        <customControls:RoundableToggleButton Grid.Column="5" Style="{StaticResource ManaSymbolButtonRound}"
+                                                                              IsChecked="{Binding CardCollectionViewModel.IsRedChecked}">
+                                            <Image Source="pack://application:,,,/Images/red.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </customControls:RoundableToggleButton>
+                                        <customControls:RoundableToggleButton Grid.Column="6" Style="{StaticResource ManaSymbolButtonRound}"
+                                                                              IsChecked="{Binding CardCollectionViewModel.IsGreenChecked}">
+                                            <Image Source="pack://application:,,,/Images/green.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </customControls:RoundableToggleButton>
+                                        <customControls:RoundableToggleButton Grid.Column="7" Style="{StaticResource ManaSymbolButtonRound}"
+                                                                              IsChecked="{Binding CardCollectionViewModel.IsColorlessChecked}">
+                                            <Image Source="pack://application:,,,/Images/colorless.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </customControls:RoundableToggleButton>
+                                        <customControls:RoundableToggleButton Grid.Column="8" Style="{StaticResource ManaSymbolButtonRound}"
+                                                                              IsChecked="{Binding CardCollectionViewModel.IsMulticolorChecked}">
+                                            <Image Source="pack://application:,,,/Images/multicolor.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </customControls:RoundableToggleButton>
+                                        <customControls:RoundableToggleButton Grid.Column="9" Style="{StaticResource ManaSymbolButtonRound}"
+                                                                              IsChecked="{Binding CardCollectionViewModel.IsLandChecked}">
+                                            <Image Source="pack://application:,,,/Images/land.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </customControls:RoundableToggleButton>
+                                        <Button Grid.Column="10" Content="Advanced" Margin="5,0,0,0" ToolTip="Advanced filter" />
                                     </Grid>
-                                    <customControls:ZoomableListBox Grid.Row="1" Margin="0,5,0,0" Background="#FF202020"
+                                    <!--<customControls:ZoomableListBox Grid.Row="1" Margin="0,5,0,0" Background="#FF202020"
                                                                     ItemsSource="{Binding CardCollectionViewModel.Cards}"
                                                                     VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Pixel">
                                         <customControls:ZoomableListBox.ItemsPanel>
@@ -112,8 +160,8 @@
                                         <customControls:ZoomableListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid>
-                                                    <!--<Image Margin="5" Width="146" Height="204" Source="{Binding ImagePath}" />-->
-                                                    <Image Margin="5" Width="146" Height="204">
+                                                    --><!--<Image Margin="5" Width="146" Height="204" Source="{Binding ImagePath}" />--><!--
+                                                    <Image Margin="5" Width="146" Height="204" RenderOptions.BitmapScalingMode="NearestNeighbor">
                                                         <Image.Source>
                                                             <BitmapImage DecodePixelWidth="146" UriSource="{Binding ImagePath}" />
                                                         </Image.Source>
@@ -121,8 +169,8 @@
                                                 </Grid>
                                             </DataTemplate>
                                         </customControls:ZoomableListBox.ItemTemplate>
-                                    </customControls:ZoomableListBox>
-                                    <!--<customControls:ZoomableListBox Grid.Row="1" Margin="0,5,0,0" Background="#FF202020"
+                                    </customControls:ZoomableListBox>-->
+                                    <customControls:ZoomableListBox Grid.Row="1" Margin="0,5,0,0" Background="#FF202020"
                                                                     ItemsSource="{Binding CardCollectionViewModel.Cards}"
                                                                     VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard" VirtualizingPanel.ScrollUnit="Pixel">
                                         <customControls:ZoomableListBox.ItemsPanel>
@@ -133,16 +181,16 @@
                                         <customControls:ZoomableListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid>
-                                                    <Image Margin="5" Width="146" Height="204" Source="{Binding ImagePath}" />
-                                                    --><!--<Image Margin="5" Width="146" Height="204">
+                                                    <!--<Image Margin="5" Width="146" Height="204" Source="{Binding ImagePath}" />-->
+                                                    <Image Margin="5" Width="146" Height="204" RenderOptions.BitmapScalingMode="NearestNeighbor">
                                                         <Image.Source>
                                                             <BitmapImage DecodePixelWidth="146" UriSource="{Binding ImagePath}" />
                                                         </Image.Source>
-                                                    </Image>--><!--
+                                                    </Image>
                                                 </Grid>
                                             </DataTemplate>
                                         </customControls:ZoomableListBox.ItemTemplate>
-                                    </customControls:ZoomableListBox>-->
+                                    </customControls:ZoomableListBox>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="Decks">

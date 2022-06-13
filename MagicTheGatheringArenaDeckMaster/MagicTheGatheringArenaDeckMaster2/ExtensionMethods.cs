@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace MagicTheGatheringArenaDeckMaster2
+namespace MagicTheGatheringArenaDeckMaster
 {
     public static class ExtensionMethods
     {

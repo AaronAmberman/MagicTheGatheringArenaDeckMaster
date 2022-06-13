@@ -6,8 +6,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace MagicTheGatheringArenaDeckMaster2.UserControls
+namespace MagicTheGatheringArenaDeckMaster.UserControls
 {
+    /// <summary>UserControl that holds all of the popup dialogs for the software.</summary>
     public partial class PopupDialogUserControl : UserControl
     {
         #region Fields

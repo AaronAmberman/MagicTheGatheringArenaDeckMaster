@@ -1,5 +1,5 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
-using MagicTheGatheringArenaDeckMaster2.Models;
+using MagicTheGatheringArenaDeckMaster.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using WPF.InternalDialogs;
 
-namespace MagicTheGatheringArenaDeckMaster2.ViewModels
+namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
     internal class CardDownloadViewModel : ViewModelBase
     {

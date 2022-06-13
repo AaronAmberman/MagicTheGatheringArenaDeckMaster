@@ -1,6 +1,6 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
 using MagicTheGatheringArena.Core.Scryfall.Data;
-using MagicTheGatheringArenaDeckMaster2.Collections;
+using MagicTheGatheringArenaDeckMaster.Collections;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Input;
 using WPF.InternalDialogs;
 
-namespace MagicTheGatheringArenaDeckMaster2.ViewModels
+namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
     internal class DataViewModel : ViewModelBase
     {
