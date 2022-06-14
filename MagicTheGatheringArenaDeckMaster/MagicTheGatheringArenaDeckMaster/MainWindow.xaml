@@ -240,27 +240,6 @@
                                         <Button Grid.Column="10" Content="Advanced" Margin="5,0,0,0" ToolTip="Advanced filter"
                                                 Command="{Binding CardCollectionViewModel.AdvancedFilterCommand}" />
                                     </Grid>
-                                    <!--<customControls:ZoomableListBox x:Name="cardListBox" Grid.Row="1" Margin="0,5,0,0" Background="#FF202020" Foreground="#FFFFFFFF"
-                                                                    ItemsSource="{Binding CardCollectionViewModel.Cards}"
-                                                                    VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Pixel">
-                                        <customControls:ZoomableListBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <vwp:VirtualizingWrapPanel IsItemsHost="True" Orientation="Vertical" SpacingMode="None" StretchItems="False" />
-                                            </ItemsPanelTemplate>
-                                        </customControls:ZoomableListBox.ItemsPanel>
-                                        <customControls:ZoomableListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    --><!--<Image Margin="5" Width="146" Height="204" Source="{Binding ImagePath}" />--><!--
-                                                    <Image Margin="5" Width="146" Height="204" RenderOptions.BitmapScalingMode="NearestNeighbor">
-                                                        <Image.Source>
-                                                            <BitmapImage DecodePixelWidth="146" UriSource="{Binding ImagePath}" />
-                                                        </Image.Source>
-                                                    </Image>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </customControls:ZoomableListBox.ItemTemplate>
-                                    </customControls:ZoomableListBox>-->
                                     <customControls:ZoomableListBox x:Name="cardListBox" Grid.Row="1" Margin="0,5,0,0" Background="#FF202020" Foreground="#FFFFFFFF"
                                                                     ItemsSource="{Binding CardCollectionViewModel.Cards}"
                                                                     VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard" VirtualizingPanel.ScrollUnit="Pixel">
@@ -272,10 +251,9 @@
                                         <customControls:ZoomableListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid>
-                                                    <!--<Image Margin="5" Width="146" Height="204" Source="{Binding ImagePath}" />-->
-                                                    <Image Margin="5" Width="146" Height="204" RenderOptions.BitmapScalingMode="NearestNeighbor">
+                                                    <Image Margin="5" Width="219" Height="306" RenderOptions.BitmapScalingMode="HighQuality">
                                                         <Image.Source>
-                                                            <BitmapImage DecodePixelWidth="146" UriSource="{Binding ImagePath}" />
+                                                            <BitmapImage DecodePixelWidth="219" UriSource="{Binding ImagePath}" />
                                                         </Image.Source>
                                                     </Image>
                                                 </Grid>
