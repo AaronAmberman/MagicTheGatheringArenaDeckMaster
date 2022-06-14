@@ -184,23 +184,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     if (IsMulticolorChecked && uavm.Model.colors.Count >= 2 && GetNumberOfSelectedColors() > 1)
                     {
                         List<string> colors = GetSelectedColors();
-                        List<string> colorsOnCard = uavm.Model.mana_cost.Split("{", StringSplitOptions.RemoveEmptyEntries).ToList();
-                        List<bool> matchedColors = new List<bool>();
-
-                        foreach (string color in colorsOnCard)
-                        {
-                            string temp = color.Replace("}", "");
-
-                            foreach (string color2 in colors)
-                            {
-                                if (temp == color2)
-                                {
-                                    matchedColors.Add(true);
-
-                                    break; // onto the next color
-                                }
-                            }
-                        }
+                        List<bool> matchedColors = GetMatchedColors(uavm, colors);
 
                         if (matchedColors.Count == colors.Count && matchedColors.All(val => val)) return true;
                         else return false;
@@ -266,23 +250,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     if (IsMulticolorChecked && uavm.Model.colors.Count >= 2 && GetNumberOfSelectedColors() > 1)
                     {
                         List<string> colors = GetSelectedColors();
-                        List<string> colorsOnCard = uavm.Model.mana_cost.Split("{", StringSplitOptions.RemoveEmptyEntries).ToList();
-                        List<bool> matchedColors = new List<bool>();
-
-                        foreach (string color in colorsOnCard)
-                        {
-                            string temp = color.Replace("}", "");
-
-                            foreach (string color2 in colors)
-                            {
-                                if (temp == color2)
-                                {
-                                    matchedColors.Add(true);
-
-                                    break; // onto the next color
-                                }
-                            }
-                        }
+                        List<bool> matchedColors = GetMatchedColors(uavm, colors);
 
                         if (matchedColors.Count == colors.Count && matchedColors.All(val => val) && textMatch) return true;
                         else return false;
@@ -328,6 +296,29 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     }
                 }
             }
+        }
+
+        private List<bool> GetMatchedColors(UniqueArtTypeViewModel uavm, List<string> colors)
+        {
+            List<string> colorsOnCard = uavm.Model.mana_cost.Split("{", StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<bool> matchedColors = new List<bool>();
+
+            foreach (string color in colorsOnCard)
+            {
+                string temp = color.Replace("}", "");
+
+                foreach (string color2 in colors)
+                {
+                    if (temp == color2)
+                    {
+                        matchedColors.Add(true);
+
+                        break; // onto the next color
+                    }
+                }
+            }
+
+            return matchedColors;
         }
 
         private int GetNumberOfSelectedColors()
