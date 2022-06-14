@@ -19,13 +19,16 @@ namespace MagicTheGatheringArenaDeckMaster
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ServiceLocator.Instance.LoggerService.LogFile = System.IO.Path.Combine(ServiceLocator.Instance.PathingService.BaseDataPath, "Logs", "DeckMaster.log");
+            ServiceLocator.Instance.LoggerService.LogFile = Path.Combine(ServiceLocator.Instance.PathingService.BaseDataPath, "Logs", "DeckMaster.log");
             ServiceLocator.Instance.LoggerService.LogRollSize = 10240; // 10 MB
 
             viewModel = new MainWindowViewModel
             {
                 Dispatcher = Dispatcher,
-                CardCollectionViewModel = new CardCollectionViewModel(),
+                CardCollectionViewModel = new CardCollectionViewModel
+                {
+                    CardListBox = cardListBox
+                },
                 PopupDialogViewModel = new PopupDialogViewModel
                 {
                     AddSetToSettingsViewModel = new AddSetToSettingsViewModel(),

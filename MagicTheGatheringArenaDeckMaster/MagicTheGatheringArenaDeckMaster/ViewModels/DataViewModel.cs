@@ -218,7 +218,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 // build our vm representations
                 ServiceLocator.Instance.MainWindowViewModel.Cards = new CardCollection();
                 ServiceLocator.Instance.MainWindowViewModel.Cards.AddMany(cardVerificationCollection);
-                ServiceLocator.Instance.MainWindowViewModel.Cards.SortAll();
 
                 // check to see if we have already downloaded cards
                 List<string> setPaths = Directory.GetDirectories(ServiceLocator.Instance.PathingService.CardImagePath).ToList();

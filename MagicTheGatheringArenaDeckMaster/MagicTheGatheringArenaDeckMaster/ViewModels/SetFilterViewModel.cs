@@ -334,7 +334,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                     foreach (SetFilter setFilter in setsExisting)
                     {
-                        ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name]);
+                        ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.Clear();
+                        ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, false]);
+                        //ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, true]);
                     }
 
                     Visibility = Visibility.Collapsed;

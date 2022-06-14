@@ -113,41 +113,132 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="Search" FontSize="16" Margin="0,0,5,0" Style="{StaticResource DarkThemeTextBlockStyle}" VerticalAlignment="Center" />
-                                        <customControls:WatermarkTextBox Grid.Column="1" Watermark="Search" FontSize="16" Width="250" VerticalContentAlignment="Center" />
+                                        <TextBlock Grid.Column="0" Text="Search" FontSize="16" Margin="0,0,5,0" VerticalAlignment="Center"
+                                                   Style="{StaticResource DarkThemeTextBlockStyle}" />
+                                        <customControls:WatermarkTextBox Grid.Column="1" Watermark="Search" FontSize="16" Width="250" VerticalContentAlignment="Center"
+                                                                         Text="{Binding CardCollectionViewModel.SearchText, UpdateSourceTrigger=PropertyChanged}" />
                                         <customControls:RoundableToggleButton Grid.Column="2" Style="{StaticResource ManaSymbolButtonRound}"
                                                                               IsChecked="{Binding CardCollectionViewModel.IsWhiteChecked}">
-                                            <Image Source="pack://application:,,,/Images/white.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <Image Source="pack://application:,,,/Images/white.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding CardCollectionViewModel.IsWhiteChecked}" Value="True">
+                                                                <Setter Property="Opacity" Value="1.0" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                         </customControls:RoundableToggleButton>
                                         <customControls:RoundableToggleButton Grid.Column="3" Style="{StaticResource ManaSymbolButtonRound}"
                                                                               IsChecked="{Binding CardCollectionViewModel.IsBlueChecked}">
-                                            <Image Source="pack://application:,,,/Images/blue.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <Image Source="pack://application:,,,/Images/blue.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding CardCollectionViewModel.IsBlueChecked}" Value="True">
+                                                                <Setter Property="Opacity" Value="1.0" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                         </customControls:RoundableToggleButton>
                                         <customControls:RoundableToggleButton Grid.Column="4" Style="{StaticResource ManaSymbolButtonRound}"
                                                                               IsChecked="{Binding CardCollectionViewModel.IsBlackChecked}">
-                                            <Image Source="pack://application:,,,/Images/black.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <Image Source="pack://application:,,,/Images/black.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding CardCollectionViewModel.IsBlackChecked}" Value="True">
+                                                                <Setter Property="Opacity" Value="1.0" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                         </customControls:RoundableToggleButton>
                                         <customControls:RoundableToggleButton Grid.Column="5" Style="{StaticResource ManaSymbolButtonRound}"
                                                                               IsChecked="{Binding CardCollectionViewModel.IsRedChecked}">
-                                            <Image Source="pack://application:,,,/Images/red.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <Image Source="pack://application:,,,/Images/red.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding CardCollectionViewModel.IsRedChecked}" Value="True">
+                                                                <Setter Property="Opacity" Value="1.0" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                         </customControls:RoundableToggleButton>
                                         <customControls:RoundableToggleButton Grid.Column="6" Style="{StaticResource ManaSymbolButtonRound}"
                                                                               IsChecked="{Binding CardCollectionViewModel.IsGreenChecked}">
-                                            <Image Source="pack://application:,,,/Images/green.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <Image Source="pack://application:,,,/Images/green.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding CardCollectionViewModel.IsGreenChecked}" Value="True">
+                                                                <Setter Property="Opacity" Value="1.0" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                         </customControls:RoundableToggleButton>
                                         <customControls:RoundableToggleButton Grid.Column="7" Style="{StaticResource ManaSymbolButtonRound}"
                                                                               IsChecked="{Binding CardCollectionViewModel.IsColorlessChecked}">
-                                            <Image Source="pack://application:,,,/Images/colorless.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <Image Source="pack://application:,,,/Images/colorless.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding CardCollectionViewModel.IsColorlessChecked}" Value="True">
+                                                                <Setter Property="Opacity" Value="1.0" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                         </customControls:RoundableToggleButton>
                                         <customControls:RoundableToggleButton Grid.Column="8" Style="{StaticResource ManaSymbolButtonRound}"
                                                                               IsChecked="{Binding CardCollectionViewModel.IsMulticolorChecked}">
-                                            <Image Source="pack://application:,,,/Images/multicolor.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <Image Source="pack://application:,,,/Images/multicolor.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding CardCollectionViewModel.IsMulticolorChecked}" Value="True">
+                                                                <Setter Property="Opacity" Value="1.0" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                         </customControls:RoundableToggleButton>
                                         <customControls:RoundableToggleButton Grid.Column="9" Style="{StaticResource ManaSymbolButtonRound}"
                                                                               IsChecked="{Binding CardCollectionViewModel.IsLandChecked}">
-                                            <Image Source="pack://application:,,,/Images/land.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality" />
+                                            <Image Source="pack://application:,,,/Images/land.png" Width="24" RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding CardCollectionViewModel.IsLandChecked}" Value="True">
+                                                                <Setter Property="Opacity" Value="1.0" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                         </customControls:RoundableToggleButton>
-                                        <Button Grid.Column="10" Content="Advanced" Margin="5,0,0,0" ToolTip="Advanced filter" />
+                                        <Button Grid.Column="10" Content="Advanced" Margin="5,0,0,0" ToolTip="Advanced filter"
+                                                Command="{Binding CardCollectionViewModel.AdvancedFilterCommand}" />
                                     </Grid>
                                     <!--<customControls:ZoomableListBox Grid.Row="1" Margin="0,5,0,0" Background="#FF202020"
                                                                     ItemsSource="{Binding CardCollectionViewModel.Cards}"
@@ -170,7 +261,7 @@
                                             </DataTemplate>
                                         </customControls:ZoomableListBox.ItemTemplate>
                                     </customControls:ZoomableListBox>-->
-                                    <customControls:ZoomableListBox Grid.Row="1" Margin="0,5,0,0" Background="#FF202020"
+                                    <customControls:ZoomableListBox x:Name="cardListBox" Grid.Row="1" Margin="0,5,0,0" Background="#FF202020"
                                                                     ItemsSource="{Binding CardCollectionViewModel.Cards}"
                                                                     VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard" VirtualizingPanel.ScrollUnit="Pixel">
                                         <customControls:ZoomableListBox.ItemsPanel>
