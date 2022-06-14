@@ -1,6 +1,8 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -179,20 +181,50 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 }
                 else
                 {
-                    if (IsBlackChecked && uavm.Model.mana_cost.Contains("{B}"))
+                    if (IsMulticolorChecked && uavm.Model.colors.Count >= 2 && GetNumberOfSelectedColors() > 1)
                     {
-                        return true;
+                        List<string> colors = GetSelectedColors();
+                        List<string> colorsOnCard = uavm.Model.mana_cost.Split("{", StringSplitOptions.RemoveEmptyEntries).ToList();
+                        List<bool> matchedColors = new List<bool>();
+
+                        foreach (string color in colorsOnCard)
+                        {
+                            string temp = color.Replace("}", "");
+
+                            foreach (string color2 in colors)
+                            {
+                                if (temp == color2)
+                                {
+                                    matchedColors.Add(true);
+
+                                    break; // onto the next color
+                                }
+                            }
+                        }
+
+                        if (matchedColors.Count == colors.Count && matchedColors.All(val => val)) return true;
+                        else return false;
                     }
-                    else if (IsBlueChecked && uavm.Model.mana_cost.Contains("{U}"))
+                    else if (IsMulticolorChecked && uavm.Model.colors.Count >= 2 && !IsBlackChecked && !IsBlueChecked && !IsColorlessChecked &&
+                        !IsGreenChecked && !IsLandChecked && !IsRedChecked && !IsWhiteChecked)
                     {
                         return true;
                     }
                     else if (IsColorlessChecked && !uavm.Model.mana_cost.Contains("{B}") && !uavm.Model.mana_cost.Contains("{U}") &&
-                        !uavm.Model.mana_cost.Contains("{G}") && !uavm.Model.mana_cost.Contains("{R}") && !uavm.Model.mana_cost.Contains("{W}"))
+                        !uavm.Model.mana_cost.Contains("{G}") && !uavm.Model.mana_cost.Contains("{R}") && !uavm.Model.mana_cost.Contains("{W}") &&
+                        uavm.Model.type_line.Contains("Artifact"))
                     {
                         return true;
                     }
-                    else if (IsGreenChecked && uavm.Model.mana_cost.Contains("{G}"))
+                    else if (IsBlackChecked && uavm.Model.mana_cost.Contains("{B}") && !IsMulticolorChecked)
+                    {
+                        return true;
+                    }
+                    else if (IsBlueChecked && uavm.Model.mana_cost.Contains("{U}") && !IsMulticolorChecked)
+                    {
+                        return true;
+                    }
+                    else if (IsGreenChecked && uavm.Model.mana_cost.Contains("{G}") && !IsMulticolorChecked)
                     {
                         return true;
                     }
@@ -200,15 +232,11 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     {
                         return true;
                     }
-                    else if (IsMulticolorChecked && uavm.Model.colors.Count >= 2)
+                    else if (IsRedChecked && uavm.Model.mana_cost.Contains("{R}") && !IsMulticolorChecked)
                     {
                         return true;
                     }
-                    else if (IsRedChecked && uavm.Model.mana_cost.Contains("{R}"))
-                    {
-                        return true;
-                    }
-                    else if (IsWhiteChecked && uavm.Model.mana_cost.Contains("{W}"))
+                    else if (IsWhiteChecked && uavm.Model.mana_cost.Contains("{W}") && !IsMulticolorChecked)
                     {
                         return true;
                     }
@@ -220,14 +248,112 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
             else
             {
-                if (uavm.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) return true;
-                else if (!string.IsNullOrWhiteSpace(uavm.Model.oracle_text) && uavm.Model.oracle_text.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) return true;
-                else if (!string.IsNullOrWhiteSpace(uavm.Model.flavor_text) && uavm.Model.flavor_text.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) return true;
-                else if (!string.IsNullOrWhiteSpace(uavm.Model.type_line) && uavm.Model.type_line.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) return true;
-                else if (!string.IsNullOrWhiteSpace(uavm.Model.rarity) && uavm.Model.rarity.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) return true;
+                bool textMatch = false;
 
-                return false;
+                if (uavm.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) textMatch = true;
+                else if (!string.IsNullOrWhiteSpace(uavm.Model.oracle_text) && uavm.Model.oracle_text.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) textMatch = true;
+                else if (!string.IsNullOrWhiteSpace(uavm.Model.flavor_text) && uavm.Model.flavor_text.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) textMatch = true;
+                else if (!string.IsNullOrWhiteSpace(uavm.Model.type_line) && uavm.Model.type_line.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) textMatch = true;
+                else if (!string.IsNullOrWhiteSpace(uavm.Model.rarity) && uavm.Model.rarity.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) textMatch = true;
+
+                if (!IsBlackChecked && !IsBlueChecked && !IsColorlessChecked && !IsGreenChecked &&
+                    !IsLandChecked && !IsMulticolorChecked && !IsRedChecked && !IsWhiteChecked && textMatch)
+                {
+                    return true;
+                }
+                else
+                {
+                    if (IsMulticolorChecked && uavm.Model.colors.Count >= 2 && GetNumberOfSelectedColors() > 1)
+                    {
+                        List<string> colors = GetSelectedColors();
+                        List<string> colorsOnCard = uavm.Model.mana_cost.Split("{", StringSplitOptions.RemoveEmptyEntries).ToList();
+                        List<bool> matchedColors = new List<bool>();
+
+                        foreach (string color in colorsOnCard)
+                        {
+                            string temp = color.Replace("}", "");
+
+                            foreach (string color2 in colors)
+                            {
+                                if (temp == color2)
+                                {
+                                    matchedColors.Add(true);
+
+                                    break; // onto the next color
+                                }
+                            }
+                        }
+
+                        if (matchedColors.Count == colors.Count && matchedColors.All(val => val) && textMatch) return true;
+                        else return false;
+                    }
+                    else if (IsMulticolorChecked && uavm.Model.colors.Count >= 2 && !IsBlackChecked && !IsBlueChecked && !IsColorlessChecked &&
+                        !IsGreenChecked && !IsLandChecked && !IsRedChecked && !IsWhiteChecked && textMatch)
+                    {
+                        return true;
+                    }
+                    else if (IsColorlessChecked && !uavm.Model.mana_cost.Contains("{B}") && !uavm.Model.mana_cost.Contains("{U}") &&
+                        !uavm.Model.mana_cost.Contains("{G}") && !uavm.Model.mana_cost.Contains("{R}") && !uavm.Model.mana_cost.Contains("{W}") &&
+                        uavm.Model.type_line.Contains("Artifact") && textMatch)
+                    {
+                        return true;
+                    }
+                    else if (IsBlackChecked && uavm.Model.mana_cost.Contains("{B}") && !IsMulticolorChecked && textMatch)
+                    {
+                        return true;
+                    }
+                    else if (IsBlueChecked && uavm.Model.mana_cost.Contains("{U}") && !IsMulticolorChecked && textMatch)
+                    {
+                        return true;
+                    }
+                    else if (IsGreenChecked && uavm.Model.mana_cost.Contains("{G}") && !IsMulticolorChecked && textMatch)
+                    {
+                        return true;
+                    }
+                    else if (IsLandChecked && uavm.Model.type_line.Contains("Land") && textMatch)
+                    {
+                        return true;
+                    }
+                    else if (IsRedChecked && uavm.Model.mana_cost.Contains("{R}") && !IsMulticolorChecked && textMatch)
+                    {
+                        return true;
+                    }
+                    else if (IsWhiteChecked && uavm.Model.mana_cost.Contains("{W}") && !IsMulticolorChecked && textMatch)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
             }
+        }
+
+        private int GetNumberOfSelectedColors()
+        {
+            int count = 0;
+
+            if (IsBlackChecked) count++;
+            if (IsBlueChecked) count++;
+            if (IsGreenChecked) count++;
+            if (IsRedChecked) count++;
+            if (IsWhiteChecked) count++;
+
+            return count;
+        }
+
+        private List<string> GetSelectedColors()
+        {
+            List<string> colors = new List<string>();
+
+            if (IsBlackChecked) colors.Add("B");
+            if (IsBlueChecked) colors.Add("U");
+            if (IsGreenChecked) colors.Add("G");
+            if (IsRedChecked) colors.Add("R");
+            if (IsWhiteChecked) colors.Add("W");
+
+            return colors;
         }
 
         private void SetupOrRefreshFilter()
