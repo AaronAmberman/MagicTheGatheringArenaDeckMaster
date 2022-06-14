@@ -282,6 +282,8 @@
                                             </DataTemplate>
                                         </customControls:ZoomableListBox.ItemTemplate>
                                     </customControls:ZoomableListBox>
+                                    <TextBlock Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,5"
+                                               Text="{Binding ElementName=cardListBox, Path=Items.Count, StringFormat=0 total cards}" />
                                 </Grid>
                             </TabItem>
                             <TabItem Header="Decks">
