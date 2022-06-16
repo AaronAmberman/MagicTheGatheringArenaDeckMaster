@@ -42,6 +42,8 @@ namespace MagicTheGatheringArenaDeckMaster
                 }
             };
 
+            ServiceLocator.Instance.MainWindowViewModel = viewModel;
+
             try
             {
                 viewModel.PopupDialogViewModel.AboutDialogViewModel.Version = Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString();
@@ -72,23 +74,41 @@ namespace MagicTheGatheringArenaDeckMaster
 
             if (!ServiceLocator.Instance.PathingService.EnsureDirectories(ServiceLocator.Instance.LoggerService))
             {
-                // output error when message box UI is implemented (show blocking message box)
                 viewModel.StatusMessage = "Error. Exiting application";
                 viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Needed Directories Missing";
                 viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "Could not create the needed directories for the application to run. Exiting.";
                 viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
                 viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.CriticalError;
                 viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
+                viewModel.PopupDialogViewModel.MessageBoxViewModel.CloseAction = () => 
+                {
+                    Application.Current.Shutdown(-1);
+                };
                 viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
 
-                Application.Current.Shutdown(-1);
-            }
-            else
-            {
-                viewModel.PopupDialogViewModel.DataViewModel.Visibility = Visibility.Visible;
+                return;
             }
 
-            ServiceLocator.Instance.MainWindowViewModel = viewModel;
+            ServiceLocator.Instance.DatabaseService.ConnectionString = $"Data Source={ServiceLocator.Instance.PathingService.DatabaseFile}";
+
+            if (!ServiceLocator.Instance.DatabaseService.EnsureDatabase(ServiceLocator.Instance.LoggerService))
+            {
+                viewModel.StatusMessage = "Error. Exiting application";
+                viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Database Initialization Error";
+                viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "Unable to ensure the existence of the database or create the tables. Exiting.";
+                viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.CriticalError;
+                viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
+                viewModel.PopupDialogViewModel.MessageBoxViewModel.CloseAction = () =>
+                {
+                    Application.Current.Shutdown(-1);
+                };
+                viewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                return;
+            }
+
+            viewModel.PopupDialogViewModel.DataViewModel.Visibility = Visibility.Visible;
         }
     }
 }

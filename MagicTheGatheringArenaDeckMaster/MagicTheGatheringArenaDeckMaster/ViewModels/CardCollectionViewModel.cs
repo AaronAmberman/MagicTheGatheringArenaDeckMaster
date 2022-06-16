@@ -1,4 +1,5 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
+using MagicTheGatheringArena.Core.Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,6 +28,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private bool isRedChecked;
         private bool isWhiteChecked;
         private string searchText;
+        private SingleShotTimer timer;
 
         #endregion
 
@@ -349,15 +351,29 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void SetupOrRefreshFilter()
         {
-            if (cardCollectionView == null)
+            if (timer == null)
             {
-                cardCollectionView = (CollectionView)CollectionViewSource.GetDefaultView(Cards);
-                cardCollectionView.Filter = FilterCards; // this calls the filter for the first time;
+                timer = new SingleShotTimer
+                {
+                    Interval = 1500
+                };
             }
-            else
+
+            timer.Start(() =>
             {
-                cardCollectionView.Refresh();
-            }
+                ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() =>
+                {
+                    if (cardCollectionView == null)
+                    {
+                        cardCollectionView = (CollectionView)CollectionViewSource.GetDefaultView(Cards);
+                        cardCollectionView.Filter = FilterCards; // this calls the filter for the first time;
+                    }
+                    else
+                    {
+                        cardCollectionView.Refresh();
+                    }
+                });
+            });
         }
 
         private void ShowAdvancedFilterDialog()

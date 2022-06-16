@@ -18,7 +18,7 @@ namespace MagicTheGatheringArenaDeckMaster.Models
                     {
                         int setCount = ServiceLocator.Instance.MainWindowViewModel.Cards[Name].Count;
 
-                        List<string> imagesOnDisk = Directory.GetFiles(Path.Combine(ServiceLocator.Instance.PathingService.CardImagePath, Name)).ToList();
+                        List<string> imagesOnDisk = Directory.GetFiles(Path.Combine(ServiceLocator.Instance.PathingService.CardImagePath, Name.ReplaceBadWindowsCharacters())).ToList();
 
                         if (setCount == imagesOnDisk.Count) return true;
                         else return false;
@@ -40,7 +40,7 @@ namespace MagicTheGatheringArenaDeckMaster.Models
             {
                 try
                 {
-                    if (Directory.Exists(Path.Combine(ServiceLocator.Instance.PathingService.CardImagePath, Name)))
+                    if (Directory.Exists(Path.Combine(ServiceLocator.Instance.PathingService.CardImagePath, Name.ReplaceBadWindowsCharacters())))
                     {
                         return true;
                     }

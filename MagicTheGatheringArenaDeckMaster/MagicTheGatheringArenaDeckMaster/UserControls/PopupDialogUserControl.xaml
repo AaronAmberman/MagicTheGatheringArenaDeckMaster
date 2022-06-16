@@ -516,19 +516,21 @@
             </id:MovableResizableInternalDialog.CloseButtonStyle>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <TextBlock TextWrapping="Wrap" Style="{StaticResource DarkThemeTextBlockStyle}">
-                        <Italic Foreground="#FFAAAAAA">
-                            This application is unofficial content permitted under the Wizards of the Coast Fan Content Policy. The literal and graphical 
-                            information presented in this application about Magic: The Gathering, including card images, the mana symbols and card text, 
-                            is © (copyright) Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. Magic The Gathering Arena Deck Master is not produced by, 
-                            endorsed by, supported by, or affiliated with Wizards of the Coast.
-                        </Italic>
-                        <LineBreak /><LineBreak />
-                        <Run Text="{Binding AboutDialogViewModel.Version, Mode=OneWay, StringFormat=Version {0}}" />                    
-                        <LineBreak /><LineBreak />
-                        Shout out to <Italic><Bold>s.baeumlisberger</Bold></Italic> for VirtualizingWrapPanel...
-                        <LineBreak />
-                        <Hyperlink NavigateUri="https://www.nuget.org/packages/VirtualizingWrapPanel/">https://www.nuget.org/packages/VirtualizingWrapPanel/</Hyperlink><LineBreak />
-                        <Hyperlink NavigateUri="https://github.com/sbaeumlisberger/VirtualizingWrapPanel">https://github.com/sbaeumlisberger/VirtualizingWrapPanel</Hyperlink><LineBreak />
+                    <Italic Foreground="#FFAAAAAA">
+                        This application is unofficial content permitted under the Wizards of the Coast Fan Content Policy. The literal and graphical 
+                        information presented in this application about Magic: The Gathering, including card images, the mana symbols and card text, 
+                        is © (copyright) Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. Magic The Gathering Arena Deck Master is not produced by, 
+                        endorsed by, supported by, or affiliated with Wizards of the Coast.
+                    </Italic>
+                    <LineBreak /><LineBreak />
+                    Thanks to the folks over at Scryfall.com for all the awesome content they put together and for making an API we can query. 
+                    <LineBreak /><LineBreak />
+                    <Run Text="{Binding AboutDialogViewModel.Version, Mode=OneWay, StringFormat=Version {0}}" />                    
+                    <LineBreak /><LineBreak />
+                    Shout out to <Italic><Bold>s.baeumlisberger</Bold></Italic> for VirtualizingWrapPanel...
+                    <LineBreak />
+                    <Hyperlink NavigateUri="https://www.nuget.org/packages/VirtualizingWrapPanel/">https://www.nuget.org/packages/VirtualizingWrapPanel/</Hyperlink><LineBreak />
+                    <Hyperlink NavigateUri="https://github.com/sbaeumlisberger/VirtualizingWrapPanel">https://github.com/sbaeumlisberger/VirtualizingWrapPanel</Hyperlink><LineBreak />
                 </TextBlock>
             </ScrollViewer>
         </id:MovableResizableInternalDialog>

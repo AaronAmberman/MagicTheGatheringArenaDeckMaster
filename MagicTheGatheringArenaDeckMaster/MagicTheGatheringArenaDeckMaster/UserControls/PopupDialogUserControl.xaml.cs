@@ -22,6 +22,19 @@ namespace MagicTheGatheringArenaDeckMaster.UserControls
         public PopupDialogUserControl()
         {
             InitializeComponent();
+
+            mbDialog.VisibilityChanged += MessageBoxDialog_VisibilityChanged;
+        }
+
+        private void MessageBoxDialog_VisibilityChanged(object sender, RoutedEventArgs e)
+        {
+            if (mbDialog.Visibility == Visibility.Collapsed)
+            {
+                if (ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.CloseAction != null)
+                {
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.CloseAction();
+                }
+            }
         }
 
         #endregion

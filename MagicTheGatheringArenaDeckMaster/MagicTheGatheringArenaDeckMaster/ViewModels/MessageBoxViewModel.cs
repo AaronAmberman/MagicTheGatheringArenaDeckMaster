@@ -1,4 +1,5 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
+using System;
 using System.Windows;
 using WPF.InternalDialogs;
 
@@ -19,6 +20,8 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         #endregion
 
         #region Properties
+
+        public Action CloseAction { get; set; }
 
         public MessageBoxButton MessageBoxButton
         {

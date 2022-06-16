@@ -242,7 +242,8 @@
                                     </Grid>
                                     <customControls:ZoomableListBox x:Name="cardListBox" Grid.Row="1" Margin="0,5,0,0" Background="#FF202020" Foreground="#FFFFFFFF"
                                                                     ItemsSource="{Binding CardCollectionViewModel.Cards}"
-                                                                    VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard" VirtualizingPanel.ScrollUnit="Pixel">
+                                                                    VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard" 
+                                                                    VirtualizingPanel.ScrollUnit="Pixel">
                                         <customControls:ZoomableListBox.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <vwp:VirtualizingWrapPanel IsItemsHost="True" Orientation="Vertical" SpacingMode="None" StretchItems="False" />

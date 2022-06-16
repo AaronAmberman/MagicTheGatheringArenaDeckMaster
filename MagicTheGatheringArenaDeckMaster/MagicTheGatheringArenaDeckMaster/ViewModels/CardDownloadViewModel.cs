@@ -175,7 +175,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     {
                         ActiveCard = card.Name;
 
-                        string setPath = Path.Combine(ServiceLocator.Instance.PathingService.CardImagePath, card.Set);
+                        string setPath = Path.Combine(ServiceLocator.Instance.PathingService.CardImagePath, card.Set.ReplaceBadWindowsCharacters());
 
                         // lets check to see if the card exists and if it does then don't download it
                         string cardPath = Path.Combine(setPath, card.Name.ReplaceBadWindowsCharacters() + ".png");
@@ -224,9 +224,10 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     SetFilters.Clear();
                     Visibility = Visibility.Collapsed;
 
+                    ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.Clear();
+
                     foreach (SetFilter setFilter in SetFilters)
                     {
-                        ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.Clear();
                         ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, false]);
                         //ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, true]);
                     }

@@ -330,11 +330,12 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 // we need to show a custom progress window that shows how many card have been downloaded of X
                 if (setsNotExisting.Count == 0)
                 {
+                    ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.Clear();
+
                     List<SetFilter> setsExisting = FilterSetNames.Where(sf => sf.Exists && sf.AllImagesExistInSet).ToList();
 
                     foreach (SetFilter setFilter in setsExisting)
                     {
-                        ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.Clear();
                         ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, false]);
                         //ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, true]);
                     }

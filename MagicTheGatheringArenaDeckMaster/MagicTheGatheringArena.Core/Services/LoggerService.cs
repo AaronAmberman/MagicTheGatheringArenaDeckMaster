@@ -65,7 +65,7 @@ namespace MagicTheGatheringArena.Core.Services
                 }
                 else
                 {
-                    fs = new FileStream(LogFile, FileMode.OpenOrCreate, FileAccess.Write);
+                    fs = new FileStream(LogFile, FileMode.Append, FileAccess.Write);
                 }
 
                 StreamWriter writer = new StreamWriter(fs);

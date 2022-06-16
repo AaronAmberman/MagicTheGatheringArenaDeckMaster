@@ -12,6 +12,9 @@ namespace MagicTheGatheringArena.Core.Services
         public string CardImagePath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTGA-DeckMaster", "CardImages");
 
+        public string DatabasePath =>
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTGA-DeckMaster", "Database");
+
         public string LogPath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTGA-DeckMaster", "Logs");
 
@@ -32,6 +35,13 @@ namespace MagicTheGatheringArena.Core.Services
                     Directory.CreateDirectory(CardImagePath);
 
                     loggerService.Info($"Created {CardImagePath}");
+                }
+
+                if (!Directory.Exists(DatabasePath))
+                {
+                    Directory.CreateDirectory(DatabasePath);
+
+                    loggerService.Info($"Created {DatabasePath}");
                 }
 
                 if (!Directory.Exists(LogPath))

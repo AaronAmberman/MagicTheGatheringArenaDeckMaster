@@ -1,4 +1,5 @@
-﻿using MagicTheGatheringArena.Core.Services;
+﻿using MagicTheGatheringArena.Core.Database;
+using MagicTheGatheringArena.Core.Services;
 using MagicTheGatheringArenaDeckMaster.Services;
 using MagicTheGatheringArenaDeckMaster.ViewModels;
 
@@ -29,6 +30,7 @@ namespace MagicTheGatheringArenaDeckMaster
 
         public MainWindowViewModel MainWindowViewModel { get; set; }
 
+        public SQLiteDatabase DatabaseService { get; set; }
         public LoggerService LoggerService { get; set; }
         public ApplicationPathingService PathingService { get; set; }
         public ScryfallService ScryfallService { get; set; }
@@ -39,6 +41,7 @@ namespace MagicTheGatheringArenaDeckMaster
 
         private ServiceLocator()
         {
+            DatabaseService = new SQLiteDatabase();
             LoggerService = new LoggerService();
             PathingService = new ApplicationPathingService();
             ScryfallService = new ScryfallService(LoggerService);
