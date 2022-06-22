@@ -213,7 +213,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 else
                 {
                     ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "All cards have been downloaded. For any errors please see the log file.";
-                    ServiceLocator.Instance.MainWindowViewModel.ResetStatusMessage10Seconds();
+                    ServiceLocator.Instance.MainWindowViewModel.SetStatusMessageOnDelay("Viewing card collection", 7000);
 
                     ActiveCard = string.Empty;
                     ActiveSet = string.Empty;
@@ -226,11 +226,20 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                     ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.Clear();
 
+                    List<UniqueArtTypeViewModel> cards = new List<UniqueArtTypeViewModel>();
+
                     foreach (SetFilter setFilter in SetFilters)
                     {
-                        ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, false]);
+                        cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, false]);
+
+                        //ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, false]);
                         //ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, true]);
                     }
+
+                    // sort the collection going to the UI
+                    cards = cards.OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList();
+
+                    ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(cards);
                 }
             });
         }

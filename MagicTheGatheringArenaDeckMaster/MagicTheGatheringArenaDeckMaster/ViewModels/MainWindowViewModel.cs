@@ -3,6 +3,7 @@ using MagicTheGatheringArenaDeckMaster.Collections;
 using MagicTheGatheringArenaDeckMaster.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -14,10 +15,15 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
     {
         #region Fields
 
+        private CancellationTokenSource cts = new CancellationTokenSource();
         private CardCollectionViewModel cardCollectionViewModel;
         private CardCollection cards;
+        private DeckBuilderViewModel deckBuilderViewModel;
+        private DeckCollectionViewModel deckCollectionViewModel;
         private ObservableCollection<SetFilter> filterSetNames;
+        private bool isDeckTabEnabled = true;
         private PopupDialogViewModel popupDialogViewModel;
+        private int selectedTabControlIndex;
         private Visibility setFilterMessageVisibility = Visibility.Collapsed;
         private ObservableCollection<string> setNames;
         private ObservableCollection<string> standardOnlySetNames;
@@ -47,6 +53,26 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
+        public DeckBuilderViewModel DeckBuilderViewModel
+        {
+            get => deckBuilderViewModel;
+            set
+            {
+                deckBuilderViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DeckCollectionViewModel DeckCollectionViewModel
+        {
+            get => deckCollectionViewModel;
+            set
+            {
+                deckCollectionViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
         public Dispatcher Dispatcher { get; set; }
 
         public ObservableCollection<SetFilter> FilterSetNames
@@ -59,12 +85,32 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
+        public bool IsDeckTabEnabled 
+        { 
+            get => isDeckTabEnabled; 
+            set
+            {
+                isDeckTabEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
         public PopupDialogViewModel PopupDialogViewModel
         {
             get => popupDialogViewModel;
             set
             {
                 popupDialogViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int SelectedTabControlIndex
+        {
+            get => selectedTabControlIndex;
+            set
+            {
+                selectedTabControlIndex = value;
                 OnPropertyChanged();
             }
         }
@@ -105,6 +151,13 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             set
             {
                 statusMessage = value;
+
+                if (cts != null)
+                {
+                    cts.Cancel(); // cancel previous action
+                    cts = null;
+                }
+
                 OnPropertyChanged();
             }
         }
@@ -143,15 +196,20 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Collapsed;
         }
 
-        public void ResetStatusMessage10Seconds()
+        public void SetStatusMessageOnDelay(string message, int millisecondDelay)
         {
-            // wait 10 seconds then set back to "Ready"
-            Task.Delay(10000).ContinueWith(task =>
+            if (cts != null)
             {
-                if (!StatusMessage.Equals("Ready", StringComparison.OrdinalIgnoreCase))
-                {
-                    StatusMessage = "Ready";
-                }
+                cts.Cancel(); // cancel previous action
+                cts = null;
+            }
+
+            cts = new CancellationTokenSource();
+
+            Task.Delay(millisecondDelay, cts.Token).ContinueWith(task =>
+            {
+                if (!task.IsCanceled)
+                    StatusMessage = message;
             });
         }
 

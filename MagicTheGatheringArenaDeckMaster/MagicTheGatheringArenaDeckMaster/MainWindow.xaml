@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster"
+        xmlns:id="clr-namespace:WPF.InternalDialogs;assembly=WPF.InternalDialogs"
         xmlns:viewModels="clr-namespace:MagicTheGatheringArenaDeckMaster.ViewModels" 
         xmlns:userControls="clr-namespace:MagicTheGatheringArenaDeckMaster.UserControls"
         xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
@@ -12,7 +13,7 @@
         Title="MTG Arena Deck Master" Height="960" Width="1280" WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/Icon.ico"        
         d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid x:Name="mainRootGrid" Background="#FF1F1F1F">
         <Grid x:Name="mainInnerGrid">
             <Grid.RowDefinitions>
@@ -91,9 +92,10 @@
                         </Button>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <TabControl Margin="0,10,0,0">
+                        <TabControl x:Name="tabControl" Margin="0,10,0,0" SelectedIndex="{Binding SelectedTabControlIndex}"
+                                    SelectionChanged="TabControl_SelectionChanged">
                             <TabItem Header="Card Collection">
-                                <Grid>
+                                <Grid x:Name="cardCollectionMainGrid">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />
@@ -111,6 +113,7 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="Search" FontSize="16" Margin="0,0,5,0" VerticalAlignment="Center"
@@ -239,6 +242,18 @@
                                         </customControls:RoundableToggleButton>
                                         <Button Grid.Column="10" Content="Advanced" Margin="5,0,0,0" ToolTip="Advanced filter"
                                                 Command="{Binding CardCollectionViewModel.AdvancedFilterCommand}" />
+                                        <TextBlock Grid.Column="12" Text="Creating Deck" FontSize="18" VerticalAlignment="Center" Foreground="Yellow">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsDeckTabEnabled}" Value="False">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
                                     </Grid>
                                     <customControls:ZoomableListBox x:Name="cardListBox" Grid.Row="1" Margin="0,5,0,0" Background="#FF202020" Foreground="#FFFFFFFF"
                                                                     ItemsSource="{Binding CardCollectionViewModel.Cards}"
@@ -263,19 +278,87 @@
                                     </customControls:ZoomableListBox>
                                     <TextBlock Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,5"
                                                Text="{Binding ElementName=cardListBox, Path=Items.Count, StringFormat=0 total cards}" />
+                                    <id:InternalDialog Grid.Row="0" Grid.RowSpan="2" CloseOnEscape="False" Background="#45000000"
+                                                       FocusParent="{Binding ElementName=cardCollectionMainGrid}"
+                                                       Visibility="{Binding SetFilterMessageVisibility, FallbackValue=Collapsed, TargetNullValue=Collapsed}">
+                                        <Border BorderBrush="White" BorderThickness="2" CornerRadius="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <TextBlock FontSize="24" Padding="50" Style="{StaticResource DarkThemeTextBlockStyle}">
+                                                Please select one or more sets from the "Set Filter" at the top left of the window.
+                                            </TextBlock>
+                                        </Border>
+                                    </id:InternalDialog>
                                 </Grid>
                             </TabItem>
-                            <TabItem Header="Decks">
-                                
+                            <TabItem Header="Decks" IsEnabled="{Binding IsDeckTabEnabled}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Margin="5,5,5,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Search" Margin="0,0,5,0" FontSize="16" VerticalAlignment="Center" />
+                                        <customControls:WatermarkTextBox Grid.Column="1" Watermark="Search" FontSize="16" Width="250" 
+                                                                         Margin="0,0,5,0" VerticalContentAlignment="Center"
+                                                                         Text="{Binding DeckCollectionViewModel.SearchText}" />
+                                        <Button Grid.Column="2" Margin="0,0,5,0" Height="28" ToolTip="Add" Command="{Binding DeckCollectionViewModel.AddCommand}"
+                                                Content="{StaticResource Add}" Style="{StaticResource DeckHeaderButton}" />
+                                        <Button Grid.Column="3" Margin="0,0,5,0" ToolTip="Remove" Command="{Binding DeckCollectionViewModel.RemoveCommand}"
+                                                Content="{StaticResource Remove}" Style="{StaticResource DeckHeaderButton}"/>
+                                        <Button Grid.Column="4" Margin="0,0,5,0" ToolTip="Edit" Command="{Binding DeckCollectionViewModel.EditCommand}"
+                                                Content="{StaticResource Edit}" Style="{StaticResource DeckHeaderButton}"/>
+                                        <Button Grid.Column="5" Margin="0,0,5,0" ToolTip="Copy" Command="{Binding DeckCollectionViewModel.CopyCommand}"
+                                                Content="{StaticResource Copy}" Style="{StaticResource DeckHeaderButton}"/>
+                                        <Button Grid.Column="6" Margin="0,0,5,0" ToolTip="Import" Command="{Binding DeckCollectionViewModel.ImportCommand}"
+                                                Content="{StaticResource Import}" Style="{StaticResource DeckHeaderButton}"/>
+                                        <Button Grid.Column="7" Margin="0,0,5,0" ToolTip="Export" Command="{Binding DeckCollectionViewModel.ExportCommand}"
+                                                Content="{StaticResource Export}" Style="{StaticResource DeckHeaderButton}"/>
+                                    </Grid>
+                                    <ListView x:Name="decksListView" Grid.Row="1" Margin="0,5,0,0" ItemsSource="{Binding DeckCollectionViewModel.Decks}">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn Header="Name"
+                                                                Width="{Binding ElementName=decksListView, Path=ActualWidth, 
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/4}" />
+                                                <GridViewColumn Header="Colors"
+                                                                Width="{Binding ElementName=decksListView, Path=ActualWidth, 
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/8}" />
+                                                <GridViewColumn Header="# Creatures"
+                                                                Width="{Binding ElementName=decksListView, Path=ActualWidth, 
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/17}" />
+                                                <GridViewColumn Header="# Instants"
+                                                                Width="{Binding ElementName=decksListView, Path=ActualWidth, 
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}" />
+                                                <GridViewColumn Header="# Soceries"
+                                                                Width="{Binding ElementName=decksListView, Path=ActualWidth, 
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}" />
+                                                <GridViewColumn Header="# Enchantments" 
+                                                                Width="{Binding ElementName=decksListView, Path=ActualWidth, 
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/13}" />
+                                                <GridViewColumn Header="# Artifacts" 
+                                                                Width="{Binding ElementName=decksListView, Path=ActualWidth, 
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}" />
+                                                <GridViewColumn Header="# Lands" 
+                                                                Width="{Binding ElementName=decksListView, Path=ActualWidth, 
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/22}" />
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                    <TextBlock Grid.Row="2" Margin="5,4.5"
+                                               Text="{Binding ElementName=decksListView, Path=Items.Count, StringFormat=0 decks}" />
+                                </Grid>
                             </TabItem>
                         </TabControl>
-                        <Border Background="#50000000" Margin="0,5,0,0" Visibility="{Binding SetFilterMessageVisibility, FallbackValue=Collapsed, TargetNullValue=Collapsed}">
-                            <Border BorderBrush="White" BorderThickness="2" CornerRadius="5" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock FontSize="24" Padding="50" Style="{StaticResource DarkThemeTextBlockStyle}">
-                                    Please select one or more sets from the "Set Filter" at the top left of the window.
-                                </TextBlock>
-                            </Border>
-                        </Border>
                     </Grid>
                 </Grid>
             </Grid>

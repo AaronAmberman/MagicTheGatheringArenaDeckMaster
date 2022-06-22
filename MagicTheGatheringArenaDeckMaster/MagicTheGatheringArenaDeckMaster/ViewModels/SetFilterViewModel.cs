@@ -334,13 +334,24 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                     List<SetFilter> setsExisting = FilterSetNames.Where(sf => sf.Exists && sf.AllImagesExistInSet).ToList();
 
+                    List<UniqueArtTypeViewModel> cards = new List<UniqueArtTypeViewModel>();
+
                     foreach (SetFilter setFilter in setsExisting)
                     {
-                        ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, false]);
+                        cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, false]);
+
+                        //ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, false]);
                         //ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, true]);
                     }
 
+                    // sort the collection going to the UI
+                    cards = cards.OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList();
+
+                    ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(cards);
+
                     Visibility = Visibility.Collapsed;
+
+                    ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing card collection";
 
                     return;
                 }

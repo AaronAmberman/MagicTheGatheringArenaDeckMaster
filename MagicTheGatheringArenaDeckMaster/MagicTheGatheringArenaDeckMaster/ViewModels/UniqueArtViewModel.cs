@@ -51,11 +51,25 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 {
                     score += 5;
                 }
-                else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") && 
+                else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
                     model.type_line.Contains("Artifact") && !model.type_line.Contains("Land"))
                 {
-                    // isolate artifacts that are colorless and not artifact lands
                     score = 16;
+                }
+                else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
+                    model.type_line.Contains("Artifact Land"))
+                {
+                    score = 16;
+                }
+                else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
+                    model.type_line.Contains("Lesson") && model.colors.Count == 0)
+                {
+                    score = 16;
+                }
+                else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
+                    !model.type_line.Contains("Artifact") && model.type_line.Contains("Land"))
+                {
+                    score = 17;
                 }
 
                 return score;
@@ -122,6 +136,37 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 {
                     // there aren't actually 6 colors but this will put artifacts at the end of the list
                     return 6;
+                }                
+                else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
+                    model.type_line.Contains("Artifact Land"))
+                {
+                    // there aren't actually 6 colors but this will put lands at the end of the list
+                    return 6;
+                }
+                else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
+                    model.type_line.Contains("Lesson") && model.colors.Count == 0)
+                {
+                    // there aren't actually 6 colors but this will put lands at the end of the list
+                    return 6;
+                }
+                else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
+                    !model.type_line.Contains("Artifact") && model.type_line.Contains("Land"))
+                {
+                    if (model.type_line.Contains("Basic Land"))
+                    {
+                        // there aren't actually 7 colors but this will put lands at the end of the list
+                        return 7;
+                    }
+                    else if (model.type_line.Contains("Basic Snow Land"))
+                    {
+                        // there aren't actually 8 colors but this will put lands at the end of the list
+                        return 8;
+                    }
+                    else
+                    {
+                        // there aren't actually 9 colors but this will put lands at the end of the list
+                        return 9;
+                    }
                 }
                 else
                 {

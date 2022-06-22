@@ -1,9 +1,11 @@
 ﻿using MagicTheGatheringArenaDeckMaster.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using WPF.InternalDialogs;
 
 namespace MagicTheGatheringArenaDeckMaster
@@ -12,10 +14,16 @@ namespace MagicTheGatheringArenaDeckMaster
     {
         MainWindowViewModel viewModel;
 
+        #region Constructors
+
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        #endregion
+
+        #region Methods
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -29,6 +37,8 @@ namespace MagicTheGatheringArenaDeckMaster
                 {
                     CardListBox = cardListBox
                 },
+                DeckBuilderViewModel = new DeckBuilderViewModel(),
+                DeckCollectionViewModel = new DeckCollectionViewModel(),
                 PopupDialogViewModel = new PopupDialogViewModel
                 {
                     AddSetToSettingsViewModel = new AddSetToSettingsViewModel(),
@@ -110,5 +120,25 @@ namespace MagicTheGatheringArenaDeckMaster
 
             viewModel.PopupDialogViewModel.DataViewModel.Visibility = Visibility.Visible;
         }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (tabControl.SelectedIndex == 0 && ServiceLocator.Instance.MainWindowViewModel != null)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing card collection";
+            }
+            else if (tabControl.SelectedIndex == 1 && ServiceLocator.Instance.MainWindowViewModel != null)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing decks";
+            }
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            // if deck editor window open ask user if they want to save before exiting
+            // todo
+        }
+
+        #endregion
     }
 }

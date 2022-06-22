@@ -80,7 +80,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                         ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() => 
                         {
                             ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Error downloading data.";
-                            ServiceLocator.Instance.MainWindowViewModel.ResetStatusMessage10Seconds();
+                            ServiceLocator.Instance.MainWindowViewModel.SetStatusMessageOnDelay("Ready", 10000);
 
                             ServiceLocator.Instance.MainWindowViewModel.ClearOutProgressDialog();
 
@@ -139,7 +139,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() =>
                     {
                         ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Error downloading data.";
-                        ServiceLocator.Instance.MainWindowViewModel.ResetStatusMessage10Seconds();
+                        ServiceLocator.Instance.MainWindowViewModel.SetStatusMessageOnDelay("Ready", 10000);
 
                         ServiceLocator.Instance.LoggerService.Error($"An error occurred downloaded data from Scryfall.com.{Environment.NewLine}{task.Exception}");
 
@@ -256,7 +256,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() =>
                     {
                         ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Error processing data.";
-                        ServiceLocator.Instance.MainWindowViewModel.ResetStatusMessage10Seconds();
+                        ServiceLocator.Instance.MainWindowViewModel.SetStatusMessageOnDelay("Ready", 10000);
 
                         ServiceLocator.Instance.LoggerService.Error($"An error occurred processing data from Scryfall.com.{Environment.NewLine}{task.Exception}");
 
@@ -281,7 +281,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
                     ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Data has been processed.";
-                    ServiceLocator.Instance.MainWindowViewModel.ResetStatusMessage10Seconds();
+                    ServiceLocator.Instance.MainWindowViewModel.SetStatusMessageOnDelay("Ready", 10000);
 
                     ServiceLocator.Instance.MainWindowViewModel.SetFilterMessageVisibility = Visibility.Visible;
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SetFilterViewModel.ShowSetFilter();
