@@ -213,7 +213,11 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 else
                 {
                     ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "All cards have been downloaded. For any errors please see the log file.";
-                    ServiceLocator.Instance.MainWindowViewModel.SetStatusMessageOnDelay("Viewing card collection", 7000);
+                    ServiceLocator.Instance.MainWindowViewModel.SetStatusMessageOnDelay(
+                        ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled 
+                            ? "Viewing card collection" 
+                            : "Creating deck", 
+                        7000);
 
                     ActiveCard = string.Empty;
                     ActiveSet = string.Empty;

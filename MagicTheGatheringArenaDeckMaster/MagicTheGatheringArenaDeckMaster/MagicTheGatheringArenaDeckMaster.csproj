@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\advanced-filter.png" />
     <None Remove="Images\black.png" />
     <None Remove="Images\blue.png" />
     <None Remove="Images\colorless.png" />
@@ -21,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\advanced-filter.png" />
     <Resource Include="Images\black.png" />
     <Resource Include="Images\blue.png" />
     <Resource Include="Images\colorless.png" />

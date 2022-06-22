@@ -125,7 +125,10 @@ namespace MagicTheGatheringArenaDeckMaster
         {
             if (tabControl.SelectedIndex == 0 && ServiceLocator.Instance.MainWindowViewModel != null)
             {
-                ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing card collection";
+                if (ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled)
+                    ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing card collection";
+                else
+                    ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Creating deck";
             }
             else if (tabControl.SelectedIndex == 1 && ServiceLocator.Instance.MainWindowViewModel != null)
             {

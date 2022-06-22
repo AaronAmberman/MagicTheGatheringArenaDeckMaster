@@ -240,8 +240,15 @@
                                                 </Image.Style>
                                             </Image>
                                         </customControls:RoundableToggleButton>
-                                        <Button Grid.Column="10" Content="Advanced" Margin="5,0,0,0" ToolTip="Advanced filter"
-                                                Command="{Binding CardCollectionViewModel.AdvancedFilterCommand}" />
+                                        <customControls:RoundableButton Grid.Column="10" Margin="5,0,0,0" ToolTip="Advanced filter" CornerRadius="12" 
+                                                                        Width="24" Height="24" Opacity="0.75" Padding="2"
+                                                                        Command="{Binding CardCollectionViewModel.AdvancedFilterCommand}">
+                                            <Image RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Source>
+                                                    <BitmapImage UriSource="pack://application:,,,/Images/advanced-filter.png" />
+                                                </Image.Source>
+                                            </Image>
+                                        </customControls:RoundableButton>
                                         <TextBlock Grid.Column="12" Text="Creating Deck" FontSize="18" VerticalAlignment="Center" Foreground="Yellow">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">

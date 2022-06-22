@@ -73,17 +73,19 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             window.Closed += Window_Closed;
             window.Show();
 
-            // show card collection tab again so users can double click on cards to add them
-            ServiceLocator.Instance.MainWindowViewModel.SelectedTabControlIndex = 0;
-
             // disable deck tab so users cannot navigate to it
             ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled = false;
+
+            // show card collection tab again so users can double click on cards to add them
+            ServiceLocator.Instance.MainWindowViewModel.SelectedTabControlIndex = 0;
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             // enable deck tab so users can navigate to it (regardless of what happens in this deck editor window; cancel or saved)
             ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled = true;
+
+            ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing card collection";
         }
 
         private void CopyDeck()
