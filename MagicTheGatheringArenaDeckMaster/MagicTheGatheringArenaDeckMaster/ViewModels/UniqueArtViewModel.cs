@@ -4,7 +4,7 @@ using System;
 
 namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
-    internal class UniqueArtTypeViewModel : ViewModelBase
+    public class UniqueArtTypeViewModel : ViewModelBase
     {
         #region Fields
 

@@ -17,7 +17,7 @@ namespace MagicTheGatheringArenaDeckMaster
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView = dynamicCardView;
+            //ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView = dynamicCardView;
         }
 
         #endregion

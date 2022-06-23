@@ -79,7 +79,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        public Grid DynamicCardView { get; set; }
+        //public Grid DynamicCardView { get; set; }
 
         public bool HasChanges 
         { 
@@ -287,7 +287,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             AverageManaCost = 0.0;
             CloseAction = null;
             Deck = null;
-            DynamicCardView = null;
+            //DynamicCardView = null;
             SelectedSetTypeIndex = -1;
             
             SetCounts();

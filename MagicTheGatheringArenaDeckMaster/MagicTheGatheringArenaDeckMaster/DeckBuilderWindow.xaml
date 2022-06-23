@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster"
         xmlns:viewModels="clr-namespace:MagicTheGatheringArenaDeckMaster.ViewModels" 
         xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
+        xmlns:internalCustomControls="clr-namespace:MagicTheGatheringArenaDeckMaster.CustomControls"
         mc:Ignorable="d"
         Title="Deck Builder" Height="800" MinHeight="400" Width="355" MinWidth="355" Topmost="True" 
         WindowStartupLocation="CenterScreen"
@@ -117,9 +118,10 @@
             </Grid>
             <Border Grid.Row="2" Background="White" Margin="0,5,0,0" Height="1" />
             <Grid Grid.Row="3" Margin="0,5,0,0">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <!--<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <Grid x:Name="dynamicCardView" />
-                </ScrollViewer>                
+                </ScrollViewer>-->
+                <internalCustomControls:CardView Foreground="White" Cards="{Binding Cards}" />
             </Grid>
             <Grid Grid.Row="4" Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
@@ -130,7 +132,6 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Margin="0,0,5,0" VerticalAlignment="Center" Background="Transparent" BorderBrush="Transparent" 
                         Content="{StaticResource StatusHidden}" Command="{Binding InfoCommand}" />
-                <TextBlock Grid.Column="1" Text="{Binding Cards.Count, StringFormat=0 total cards}" VerticalAlignment="Center" Style="{StaticResource DarkThemeTextBlockStyle}" />
                 <Button Grid.Column="2" Content="Save" Margin="0,0,5,0" Width="50" Command="{Binding SaveCommand}" />
                 <Button Grid.Column="3" Content="Cancel" Width="50" Command="{Binding CancelCommand}" />
             </Grid>

@@ -191,29 +191,29 @@ namespace MagicTheGatheringArenaDeckMaster
 
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.Add(vm);
 
-                if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView == null) return;
+                //if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView == null) return;
 
-                BitmapImage bitmap = new BitmapImage();
+                //BitmapImage bitmap = new BitmapImage();
 
-                bitmap.BeginInit();
-                bitmap.DecodePixelWidth = 313;
-                bitmap.UriSource = new Uri(vm.ImagePath);
-                bitmap.EndInit();
+                //bitmap.BeginInit();
+                //bitmap.DecodePixelWidth = 313;
+                //bitmap.UriSource = new Uri(vm.ImagePath);
+                //bitmap.EndInit();
 
-                Image image2 = new Image
-                {
-                    Width = 313,
-                    Height = 436,
-                    Source = bitmap,
-                    VerticalAlignment = VerticalAlignment.Top
-                };
-                image2.Margin = new Thickness(0, ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Count * 47, 0, 0);
-                image2.DataContext = vm;
-                image2.MouseLeftButtonDown += DeckBuilder_Image_MouseLeftButtonDown;
+                //Image image2 = new Image
+                //{
+                //    Width = 313,
+                //    Height = 436,
+                //    Source = bitmap,
+                //    VerticalAlignment = VerticalAlignment.Top
+                //};
+                //image2.Margin = new Thickness(0, ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Count * 47, 0, 0);
+                //image2.DataContext = vm;
+                //image2.MouseLeftButtonDown += DeckBuilder_Image_MouseLeftButtonDown;
 
-                RenderOptions.SetBitmapScalingMode(image2, BitmapScalingMode.HighQuality);
+                //RenderOptions.SetBitmapScalingMode(image2, BitmapScalingMode.HighQuality);
 
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Add(image2);
+                //ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Add(image2);
             }
         }
 
@@ -234,9 +234,9 @@ namespace MagicTheGatheringArenaDeckMaster
 
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.Remove(vm);
 
-                if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView == null) return;
+                //if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView == null) return;
 
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Remove(image);
+                //ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Remove(image);
             }
         }
 
