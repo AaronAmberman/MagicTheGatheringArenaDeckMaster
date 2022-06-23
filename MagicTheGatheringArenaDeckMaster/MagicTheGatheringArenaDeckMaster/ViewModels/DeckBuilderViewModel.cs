@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using WPF.InternalDialogs;
 
 namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
@@ -18,6 +20,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private ICommand cancelCommand;
         private ObservableCollection<UniqueArtTypeViewModel> cards = new ObservableCollection<UniqueArtTypeViewModel>();
         private Deck deck;
+        private bool isSavingAlready;
         private ICommand infoCommand;
         private double progressBarMax;
         private ICommand saveCommand;
@@ -175,6 +178,13 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                 HasChanges = true;
 
+                /*
+                 * the cards in the card collection view may need to be reset,
+                 * for example, if the user chooses Alchemy then we want to load the 
+                 * alchemy versions of cards because costs differ
+                 */
+                // todo
+
                 OnPropertyChanged();
             }
         }
@@ -319,9 +329,40 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void Save()
         {
-            HasChanges = false;
+            if (isSavingAlready) return;
 
-            // todo : save
+            isSavingAlready = true;
+
+            ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Missing Data";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "The deck needs a name. Please enter a name.";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                isSavingAlready = false;
+
+                return;
+            }
+
+            if (SelectedSetTypeIndex == -1)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Missing Data";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "The deck needs to have a game type specified. Please select one from the drop down.";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                isSavingAlready = false;
+
+                return;
+            }
+
+            ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
             switch(SelectedSetTypeIndex)
             {
                 case 0: Deck.GameType = "Alchemy"; break;
@@ -333,25 +374,120 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
             foreach (UniqueArtTypeViewModel card in Cards)
             {
-                Deck.Cards.Add(new Card
+                Card match = Deck.Cards.FirstOrDefault(c => c.Name == card.Name && c.SetSymbol == c.SetSymbol);
+
+                if (match != null)
                 {
-                    CardNumber = -1,
-                    Count = 1, // figure out how to manage card count
-                    Name = card.Name,
-                    SetSymbol = card.Model.set_id                    
-                });
+                    match.Count++;
+                }
+                else
+                {
+                    Card newCard = new Card
+                    {                        
+                        Count = 1,
+                        Name = card.Name,
+                        SetSymbol = card.Model.set
+                    };
+
+                    bool success = int.TryParse(card.Model.collector_number, out int collectorNumber);
+
+                    if (success)
+                    {
+                        newCard.CardNumber = collectorNumber;
+                    }
+                    else
+                    {
+                        ServiceLocator.Instance.LoggerService.Error($"Unable to process card collector number to set the on the card {card.Name} during saving of the deck {Deck.Name}.");
+                    }
+
+                    Deck.Cards.Add(newCard);
+                }
             }
 
             if (!ServiceLocator.Instance.DatabaseService.SaveDeck(Deck))
             {
+                ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Error saving deck";
+                ServiceLocator.Instance.MainWindowViewModel.SetStatusMessageOnDelay("Creating deck", 7000);
 
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Error Saving Changes";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "There was a problem saving the deck to the database. Please see log for details.";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.CriticalError;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true; // prevents closing
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
+                isSavingAlready = false;
+            }
+            else
+            {
+                HasChanges = false;
+
+                isSavingAlready = false;
+
+                Action close = CloseAction;
+
+                Clear();
+
+                close();
+            }
+        }
+
+        public bool SaveDeck()
+        {
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                return false;
             }
 
-            Action close = CloseAction;
+            if (SelectedSetTypeIndex == -1)
+            {
+                return false;
+            }
 
-            Clear();
+            switch (SelectedSetTypeIndex)
+            {
+                case 0: Deck.GameType = "Alchemy"; break;
+                case 1: Deck.GameType = "Brawl"; break;
+                case 2: Deck.GameType = "Explorer"; break;
+                case 3: Deck.GameType = "Historic"; break;
+                case 4: Deck.GameType = "Standard"; break;
+            }
 
-            close();
+            foreach (UniqueArtTypeViewModel card in Cards)
+            {
+                Card match = Deck.Cards.FirstOrDefault(c => c.Name == card.Name && c.SetSymbol == c.SetSymbol);
+
+                if (match != null)
+                {
+                    match.Count++;
+                }
+                else
+                {
+                    Card newCard = new Card
+                    {
+                        Count = 1,
+                        Name = card.Name,
+                        SetSymbol = card.Model.set
+                    };
+
+                    bool success = int.TryParse(card.Model.collector_number, out int collectorNumber);
+
+                    if (success)
+                    {
+                        newCard.CardNumber = collectorNumber;
+                    }
+                    else
+                    {
+                        ServiceLocator.Instance.LoggerService.Error($"Unable to process card collector number to set the on the card {card.Name} during saving of the deck {Deck.Name}.");
+                    }
+
+                    Deck.Cards.Add(newCard);
+                }
+            }
+
+            return ServiceLocator.Instance.DatabaseService.SaveDeck(Deck);
         }
 
         private void SetCounts()

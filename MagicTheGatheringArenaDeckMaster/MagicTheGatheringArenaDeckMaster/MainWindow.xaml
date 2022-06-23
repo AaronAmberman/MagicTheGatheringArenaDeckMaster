@@ -359,6 +359,9 @@
                                                 <GridViewColumn Header="# Lands" 
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
                                                                                 Converter={StaticResource ArithmeticConverter}, ConverterParameter=/22}" />
+                                                <GridViewColumn Header="Total Cards" 
+                                                                Width="{Binding ElementName=decksListView, Path=ActualWidth, 
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/18}" />
                                             </GridView>
                                         </ListView.View>
                                     </ListView>

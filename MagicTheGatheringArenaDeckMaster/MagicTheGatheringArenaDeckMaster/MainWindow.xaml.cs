@@ -152,8 +152,20 @@ namespace MagicTheGatheringArenaDeckMaster
 
                 if (ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxResult == MessageBoxResult.Yes)
                 {
-                    Debug.WriteLine("Save changes to database");
+                    if (!ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SaveDeck())
+                    {
+                        ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
+                        ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Error Saving Changes";
+                        ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "The deck could not be saved to the database. Please see log for details.";
+                        ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                        ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.CriticalError;
+                        ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true; // prevents closing
+                        ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+                    }
                 }
+
+                ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
             }
         }
 
@@ -169,6 +181,7 @@ namespace MagicTheGatheringArenaDeckMaster
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            // add card to deck
             if (!ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled) // this means we are creating a deck
             {
                 Image image = sender as Image;
@@ -195,10 +208,35 @@ namespace MagicTheGatheringArenaDeckMaster
                     VerticalAlignment = VerticalAlignment.Top
                 };
                 image2.Margin = new Thickness(0, ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Count * 47, 0, 0);
+                image2.DataContext = vm;
+                image2.MouseLeftButtonDown += DeckBuilder_Image_MouseLeftButtonDown;
 
                 RenderOptions.SetBitmapScalingMode(image2, BitmapScalingMode.HighQuality);
 
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Add(image2);
+            }
+        }
+
+        private void DeckBuilder_Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // remove card from deck
+            if (!ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled) // this means we are creating a deck
+            {
+                Image image = sender as Image;
+
+                if (image == null) return;
+
+                image.MouseLeftButtonDown -= DeckBuilder_Image_MouseLeftButtonDown;
+
+                UniqueArtTypeViewModel vm = image.DataContext as UniqueArtTypeViewModel;
+
+                if (vm == null) return;
+
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.Remove(vm);
+
+                if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView == null) return;
+
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Remove(image);
             }
         }
 

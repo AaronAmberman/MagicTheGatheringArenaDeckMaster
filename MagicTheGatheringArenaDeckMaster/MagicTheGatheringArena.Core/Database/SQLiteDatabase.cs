@@ -78,7 +78,7 @@ namespace MagicTheGatheringArena.Core.Database
 
         public bool SaveDeck(Deck deck)
         {
-            return true;
+            return false;
         }
 
         #endregion

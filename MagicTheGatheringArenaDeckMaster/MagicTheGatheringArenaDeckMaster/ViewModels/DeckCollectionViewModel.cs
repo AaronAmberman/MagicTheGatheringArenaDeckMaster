@@ -98,7 +98,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 // the user hit the red X at the top twice so we'll take that as a cancel
                 ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.HasChanges = false;
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
             }
             else
@@ -114,10 +113,33 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                     if (ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxResult == MessageBoxResult.Yes)
                     {
-                        Debug.WriteLine("Save changes to database");
+                        if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SaveDeck())
+                        {
+                            ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Deck Saved";
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "The deck has been saved to the database.";
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true; // prevents closing
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Error Saving Deck";
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "The deck could not be saved to the database. Please see log for details.";
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.CriticalError;
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true; // prevents closing
+                            ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+                        }
                     }
 
-                    ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.HasChanges = false;
+                    ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
+                    ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
                 }
             }
         }
