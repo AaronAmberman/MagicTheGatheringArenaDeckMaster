@@ -5,7 +5,7 @@
              xmlns:converter="clr-namespace:MagicTheGatheringArena.Core.WPF.Converters;assembly=MagicTheGatheringArena.Core" 
              xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
              StartupUri="MainWindow.xaml"
-             Startup="Application_Startup" ShutdownMode="OnMainWindowClose"
+             Startup="Application_Startup"
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
         <ResourceDictionary>

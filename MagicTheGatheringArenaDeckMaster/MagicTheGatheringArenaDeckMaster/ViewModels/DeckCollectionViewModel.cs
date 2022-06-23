@@ -1,10 +1,14 @@
-﻿using MagicTheGatheringArena.Core.MVVM;
+﻿using MagicTheGatheringArena.Core.Database.Models;
+using MagicTheGatheringArena.Core.MVVM;
 using MagicTheGatheringArena.Core.Types;
-using MagicTheGatheringArenaDeckMaster.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using WPF.InternalDialogs;
 
 namespace MagicTheGatheringArenaDeckMaster.ViewModels
 {
@@ -68,8 +72,15 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void AddDeck()
         {
+            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
+            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Deck = new Deck();
+
             DeckBuilderWindow window = new DeckBuilderWindow();
             window.DataContext = ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel;
+
+            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CloseAction = window.Close;
+
+            window.Closing += Window_Closing;
             window.Closed += Window_Closed;
             window.Show();
 
@@ -78,6 +89,37 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
             // show card collection tab again so users can double click on cards to add them
             ServiceLocator.Instance.MainWindowViewModel.SelectedTabControlIndex = 0;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility == Visibility.Visible)
+            {
+                // the user hit the red X at the top twice so we'll take that as a cancel
+                ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.HasChanges = false;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
+            }
+            else
+            {
+                if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.HasChanges)
+                {
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Save Pending Changes";
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "There are unsaved changes in the deck. Would you like to save now?";
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.YesNo;
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Help;
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true; // prevents closing
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                    if (ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxResult == MessageBoxResult.Yes)
+                    {
+                        Debug.WriteLine("Save changes to database");
+                    }
+
+                    ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.HasChanges = false;
+                }
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)

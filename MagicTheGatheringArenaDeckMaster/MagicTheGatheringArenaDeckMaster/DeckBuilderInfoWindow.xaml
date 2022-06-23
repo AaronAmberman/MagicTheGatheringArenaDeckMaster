@@ -1,0 +1,17 @@
+﻿<Window x:Class="MagicTheGatheringArenaDeckMaster.DeckBuilderInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight"
+        Title="Deck Builder Infomation" ResizeMode="NoResize">
+    <Grid x:Name="mainRootGrid" Background="#FF1F1F1F">
+        <Grid x:Name="mainInnerGrid" Margin="10">
+            <TextBlock Style="{StaticResource DarkThemeTextBlockStyle}">
+                To add cards to the deck simply click on them in the card collection.<LineBreak /><LineBreak />
+                To remove cards from the deck simply click on them in the deck builder window.
+            </TextBlock>
+        </Grid>
+    </Grid>
+</Window>

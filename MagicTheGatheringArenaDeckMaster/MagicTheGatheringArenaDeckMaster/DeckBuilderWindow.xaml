@@ -7,8 +7,10 @@
         xmlns:viewModels="clr-namespace:MagicTheGatheringArenaDeckMaster.ViewModels" 
         xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
         mc:Ignorable="d"
-        Title="Deck Builder" Height="600" Width="400" Topmost="True" WindowStartupLocation="CenterScreen"
-        d:DataContext="{d:DesignInstance {x:Type viewModels:DeckBuilderViewModel}}">
+        Title="Deck Builder" Height="800" MinHeight="400" Width="355" MinWidth="355" Topmost="True" 
+        WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance {x:Type viewModels:DeckBuilderViewModel}}"
+        Loaded="Window_Loaded">
     <Grid x:Name="mainRootGrid" Background="#FF1F1F1F">
         <Grid x:Name="mainInnerGrid" Margin="5">
             <Grid.RowDefinitions>
@@ -23,14 +25,9 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <customControls:WatermarkTextBox Grid.Column="0" Watermark="Name" Margin="0,0,5,0" VerticalContentAlignment="Center" MaxLength="24" />
-                <ComboBox Grid.Column="1">
-                    <ComboBoxItem Content="Alchemy" />
-                    <ComboBoxItem Content="Brawl" />
-                    <ComboBoxItem Content="Explorer" />
-                    <ComboBoxItem Content="Historic" />
-                    <ComboBoxItem Content="Standard" />
-                </ComboBox>
+                <customControls:WatermarkTextBox Grid.Column="0" Watermark="Name" Margin="0,0,5,0" VerticalContentAlignment="Center" MaxLength="24"
+                                                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding SetTypes}" SelectedIndex="{Binding SelectedSetTypeIndex}" />
             </Grid>
             <Grid Grid.Row="1" Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
@@ -44,10 +41,10 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="Creatures" Style="{StaticResource DarkThemeTextBlockStyle}" />
-                    <TextBlock Grid.Row="1" Text="Non-Creatures" Margin="0,1,0,0" Style="{StaticResource DarkThemeTextBlockStyle}" />
-                    <TextBlock Grid.Row="2" Text="Lands" Margin="0,1,0,0" Style="{StaticResource DarkThemeTextBlockStyle}" />
-                    <TextBlock Grid.Row="3" Text="Average Mana Cost" Margin="0,1,0,0" Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Row="0" Text="{Binding NumberOfCreatures, StringFormat=Number of Creatures 0}" Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Row="1" Text="{Binding NumberOfNonCreatures, StringFormat=Number of Non-Creatures 0}" Margin="0,1,0,0" Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Row="2" Text="{Binding NumberOfLands, StringFormat=Number of Lands 0}" Margin="0,1,0,0" Style="{StaticResource DarkThemeTextBlockStyle}" />
+                    <TextBlock Grid.Row="3" Text="{Binding AverageManaCost, StringFormat=Average Mana Cost {0:N1}}" Margin="0,1,0,0" Style="{StaticResource DarkThemeTextBlockStyle}" />
                 </Grid>
                 <Grid Grid.Column="1" Margin="0,13,0,0" HorizontalAlignment="Right">
                     <Grid.ColumnDefinitions>
@@ -62,32 +59,38 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <ProgressBar Grid.Column="0" Grid.Row="0" Maximum="10" Value="5" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-12,0,0,0">
+                    <ProgressBar Grid.Column="0" Grid.Row="0" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-12,0,0,0"
+                                 Maximum="{Binding ProgressBarMax}" Value="{Binding ValueOne}">
                         <ProgressBar.RenderTransform>
                             <RotateTransform Angle="-90" />
                         </ProgressBar.RenderTransform>
                     </ProgressBar>
-                    <ProgressBar Grid.Column="1" Grid.Row="0" Maximum="10" Value="5" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-20,0,0,0">
+                    <ProgressBar Grid.Column="1" Grid.Row="0" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-20,0,0,0"
+                                 Maximum="{Binding ProgressBarMax}" Value="{Binding ValueTwo}">
                         <ProgressBar.RenderTransform>
                             <RotateTransform Angle="-90" />
                         </ProgressBar.RenderTransform>
                     </ProgressBar>
-                    <ProgressBar Grid.Column="2" Grid.Row="0" Maximum="10" Value="5" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-20,0,0,0">
+                    <ProgressBar Grid.Column="2" Grid.Row="0" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-20,0,0,0"
+                                 Maximum="{Binding ProgressBarMax}" Value="{Binding ValueThree}">
                         <ProgressBar.RenderTransform>
                             <RotateTransform Angle="-90" />
                         </ProgressBar.RenderTransform>
                     </ProgressBar>
-                    <ProgressBar Grid.Column="3" Grid.Row="0" Maximum="10" Value="5" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-20,0,0,0">
+                    <ProgressBar Grid.Column="3" Grid.Row="0" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-20,0,0,0"
+                                 Maximum="{Binding ProgressBarMax}" Value="{Binding ValueFour}">
                         <ProgressBar.RenderTransform>
                             <RotateTransform Angle="-90" />
                         </ProgressBar.RenderTransform>
                     </ProgressBar>
-                    <ProgressBar Grid.Column="4" Grid.Row="0" Maximum="10" Value="5" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-20,0,5,0">
+                    <ProgressBar Grid.Column="4" Grid.Row="0" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-20,0,5,0"
+                                 Maximum="{Binding ProgressBarMax}" Value="{Binding ValueFive}">
                         <ProgressBar.RenderTransform>
                             <RotateTransform Angle="-90" />
                         </ProgressBar.RenderTransform>
                     </ProgressBar>
-                    <ProgressBar Grid.Column="5" Grid.Row="0" Maximum="10" Value="5" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-25,0,-12,0">
+                    <ProgressBar Grid.Column="5" Grid.Row="0" RenderTransformOrigin="0.5,0.5" Width="45" Height="20" Margin="-25,0,-12,0"
+                                 Maximum="{Binding ProgressBarMax}" Value="{Binding ValueSix}">
                         <ProgressBar.RenderTransform>
                             <RotateTransform Angle="-90" />
                         </ProgressBar.RenderTransform>
@@ -114,16 +117,22 @@
             </Grid>
             <Border Grid.Row="2" Background="White" Margin="0,5,0,0" Height="1" />
             <Grid Grid.Row="3" Margin="0,5,0,0">
-                <TextBlock Text="Make complex card layout that can have up to 8 groups" Foreground="White" />
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <Grid x:Name="dynamicCardView" />
+                </ScrollViewer>                
             </Grid>
             <Grid Grid.Row="4" Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="1" Content="Save" Margin="0,0,5,0" Width="50" />
-                <Button Grid.Column="2" Content="Cancel" Width="50" />
+                <Button Grid.Column="0" Margin="0,0,5,0" VerticalAlignment="Center" Background="Transparent" BorderBrush="Transparent" 
+                        Content="{StaticResource StatusHidden}" Command="{Binding InfoCommand}" />
+                <TextBlock Grid.Column="1" Text="{Binding Cards.Count, StringFormat=0 total cards}" VerticalAlignment="Center" Style="{StaticResource DarkThemeTextBlockStyle}" />
+                <Button Grid.Column="2" Content="Save" Margin="0,0,5,0" Width="50" Command="{Binding SaveCommand}" />
+                <Button Grid.Column="3" Content="Cancel" Width="50" Command="{Binding CancelCommand}" />
             </Grid>
         </Grid>
     </Grid>

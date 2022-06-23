@@ -6,6 +6,9 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using WPF.InternalDialogs;
 
 namespace MagicTheGatheringArenaDeckMaster
@@ -138,8 +141,65 @@ namespace MagicTheGatheringArenaDeckMaster
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            // if deck editor window open ask user if they want to save before exiting
-            // todo
+            if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.HasChanges)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Save Pending Changes";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "There are unsaved changes in the deck. Would you like to save now?";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.YesNo;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Help;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true; // prevents closing
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                if (ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxResult == MessageBoxResult.Yes)
+                {
+                    Debug.WriteLine("Save changes to database");
+                }
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            /*
+             * If the closing event of the deck builder window prevents execution because of a modal dialog then we 
+             * want to forcefully kill it by telling the environment to quit.
+             */
+
+            Environment.Exit(0);
+        }
+
+        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled) // this means we are creating a deck
+            {
+                Image image = sender as Image;
+                UniqueArtTypeViewModel vm = image.DataContext as UniqueArtTypeViewModel;
+
+                if (vm == null) return;
+
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.Add(vm);
+
+                if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView == null) return;
+
+                BitmapImage bitmap = new BitmapImage();
+
+                bitmap.BeginInit();
+                bitmap.DecodePixelWidth = 313;
+                bitmap.UriSource = new Uri(vm.ImagePath);
+                bitmap.EndInit();
+
+                Image image2 = new Image
+                {
+                    Width = 313,
+                    Height = 436,
+                    Source = bitmap,
+                    VerticalAlignment = VerticalAlignment.Top
+                };
+                image2.Margin = new Thickness(0, ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Count * 47, 0, 0);
+
+                RenderOptions.SetBitmapScalingMode(image2, BitmapScalingMode.HighQuality);
+
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Add(image2);
+            }
         }
 
         #endregion

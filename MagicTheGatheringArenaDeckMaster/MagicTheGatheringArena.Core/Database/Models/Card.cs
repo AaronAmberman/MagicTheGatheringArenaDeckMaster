@@ -1,6 +1,6 @@
-﻿namespace MagicTheGatheringArenaDeckMaster.Models
+﻿namespace MagicTheGatheringArena.Core.Database.Models
 {
-    internal class Card
+    public class Card
     {
         public int Id { get; set; }
         public int DeckId { get; set; }

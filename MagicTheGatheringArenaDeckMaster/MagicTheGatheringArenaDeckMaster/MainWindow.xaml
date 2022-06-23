@@ -13,7 +13,7 @@
         Title="MTG Arena Deck Master" Height="960" Width="1280" WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/Icon.ico"        
         d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}"
-        Loaded="Window_Loaded" Closing="Window_Closing">
+        Loaded="Window_Loaded" Closing="Window_Closing" Closed="Window_Closed">
     <Grid x:Name="mainRootGrid" Background="#FF1F1F1F">
         <Grid x:Name="mainInnerGrid">
             <Grid.RowDefinitions>
@@ -274,7 +274,8 @@
                                         <customControls:ZoomableListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid>
-                                                    <Image Margin="5" Width="219" Height="306" RenderOptions.BitmapScalingMode="HighQuality">
+                                                    <Image Margin="5" Width="219" Height="306" RenderOptions.BitmapScalingMode="HighQuality"
+                                                           MouseLeftButtonDown="Image_MouseLeftButtonDown">
                                                         <Image.Source>
                                                             <BitmapImage DecodePixelWidth="219" UriSource="{Binding ImagePath}" />
                                                         </Image.Source>

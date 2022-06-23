@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MagicTheGatheringArena.Core.Database.Models;
 using MagicTheGatheringArena.Core.Services;
 using Microsoft.Data.Sqlite;
-using SQLitePCL;
+using System;
+using System.Diagnostics;
 
 namespace MagicTheGatheringArena.Core.Database
 {
@@ -44,7 +40,8 @@ namespace MagicTheGatheringArena.Core.Database
                 string tableCreateStatement = "CREATE TABLE IF NOT EXISTS 'Decks'" +
                     "(" +
                     "'Id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                    "'Name' TEXT NOT NULL" +
+                    "'Name' TEXT NOT NULL," +
+                    "'GameType' TEXT NOT NULL" +
                     ")";
 
                 SqliteCommand command = connection.CreateCommand();
@@ -77,6 +74,11 @@ namespace MagicTheGatheringArena.Core.Database
 
                 return false;
             }
+        }
+
+        public bool SaveDeck(Deck deck)
+        {
+            return true;
         }
 
         #endregion

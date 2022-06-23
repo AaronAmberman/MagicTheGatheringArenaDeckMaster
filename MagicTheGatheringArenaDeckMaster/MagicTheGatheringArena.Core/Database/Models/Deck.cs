@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace MagicTheGatheringArenaDeckMaster.Models
+namespace MagicTheGatheringArena.Core.Database.Models
 {
-    internal class Deck
+    public class Deck
     {
+        public string GameType { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
 

@@ -117,6 +117,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\Models\Card.cs" />
+    <Compile Include="Database\Models\Deck.cs" />
     <Compile Include="Database\SQLiteDatabase.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ImageType.cs" />

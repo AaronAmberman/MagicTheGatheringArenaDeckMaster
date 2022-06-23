@@ -1,7 +1,6 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
 using MagicTheGatheringArenaDeckMaster.Collections;
 using MagicTheGatheringArenaDeckMaster.Models;
-using System;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,9 +84,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        public bool IsDeckTabEnabled 
-        { 
-            get => isDeckTabEnabled; 
+        public bool IsDeckTabEnabled
+        {
+            get => isDeckTabEnabled;
             set
             {
                 isDeckTabEnabled = value;
