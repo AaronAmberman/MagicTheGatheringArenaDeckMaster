@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using WPF.InternalDialogs;
 
 namespace MagicTheGatheringArenaDeckMaster.ViewModels
@@ -16,10 +17,15 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
     {
         #region Fields
 
-        private double averageManaCost;
         private ICommand cancelCommand;
         private ObservableCollection<UniqueArtTypeViewModel> cards = new ObservableCollection<UniqueArtTypeViewModel>();
+        private CardColumnViewModel cardViewOneColumnViewModel;
         private Deck deck;
+        private bool hasChanges;
+        private bool isEightColumnView;
+        private bool isEightColorColumnView;
+        private bool isOneColumnView = true;
+        private bool isThreeColumnView;
         private bool isSavingAlready;
         private ICommand infoCommand;
         private double progressBarMax;
@@ -33,13 +39,13 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             "Historic",
             "Standard",
         };
+        private int totalCardCount;
         private double valueOne;
         private double valueTwo;
         private double valueThree;
         private double valueFour;
         private double valueFive;
         private double valueSix;
-        private bool hasChanges;
 
         #endregion
 
@@ -47,11 +53,23 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         public double AverageManaCost
         {
-            get => averageManaCost;
-            set
+            get
             {
-                averageManaCost = value;
-                OnPropertyChanged();
+                double amc = 0.0;
+                double totalManaCost = 0.0;
+
+                foreach (var card in Cards)
+                {
+                    if (card.Model.type_line.Contains("creature", StringComparison.OrdinalIgnoreCase))
+                    {
+                        totalManaCost += card.ManaCostTotal;
+                    }
+                }
+
+                if (totalManaCost > 0.0)
+                    amc = totalManaCost / Cards.Count;
+
+                return amc;
             }
         }
 
@@ -63,6 +81,16 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             set
             {
                 cards = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewOneColumnViewModel
+        {
+            get => cardViewOneColumnViewModel;
+            set
+            {
+                cardViewOneColumnViewModel = value;
                 OnPropertyChanged();
             }
         }
@@ -79,11 +107,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        //public Grid DynamicCardView { get; set; }
-
-        public bool HasChanges 
-        { 
-            get => hasChanges; 
+        public bool HasChanges
+        {
+            get => hasChanges;
             set
             {
                 hasChanges = value;
@@ -92,6 +118,46 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         }
 
         public ICommand InfoCommand => infoCommand ??= new RelayCommand(ShowInfoWindow);
+
+        public bool IsEightColumnView
+        {
+            get => isEightColumnView;
+            set
+            {
+                isEightColumnView = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsEightColorColumnView
+        {
+            get => isEightColorColumnView;
+            set
+            {
+                isEightColorColumnView = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsOneColumnView
+        {
+            get => isOneColumnView;
+            set
+            {
+                isOneColumnView = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsThreeColumnView
+        {
+            get => isThreeColumnView;
+            set
+            {
+                isThreeColumnView = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string Name
         {
@@ -115,7 +181,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 foreach (var card in Cards)
                 {
                     if (card.Model.type_line.Contains("creature", StringComparison.OrdinalIgnoreCase))
-                        count++;
+                    {
+                        count += card.DeckBuilderDeckCount;
+                    }
                 }
 
                 return count;
@@ -131,10 +199,11 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 foreach (var card in Cards)
                 {
                     if (card.Model.type_line.Contains("creature", StringComparison.OrdinalIgnoreCase) ||
-                        card.Model.type_line.Contains("land", StringComparison.OrdinalIgnoreCase))
+                        (card.Model.type_line.Contains("land", StringComparison.OrdinalIgnoreCase) &&
+                        !card.Model.type_line.Equals("artifact land", StringComparison.OrdinalIgnoreCase)))
                         continue;
                     else
-                        count++;
+                        count += card.DeckBuilderDeckCount;
                 }
 
                 return count;
@@ -149,8 +218,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                 foreach (var card in Cards)
                 {
-                    if (card.Model.type_line.Contains("land", StringComparison.OrdinalIgnoreCase))
-                        count++;
+                    if (card.Model.type_line.Contains("land", StringComparison.OrdinalIgnoreCase) &&
+                        !card.Model.type_line.Equals("artifact land", StringComparison.OrdinalIgnoreCase))
+                        count += card.DeckBuilderDeckCount;
                 }
 
                 return count;
@@ -190,6 +260,16 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         }
 
         public List<string> SetTypes => setTypes;
+
+        public int TotalCardCount 
+        { 
+            get => totalCardCount; 
+            set
+            {
+                totalCardCount = value;
+                OnPropertyChanged();
+            }
+        }
 
         public double ValueOne
         {
@@ -275,21 +355,28 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void Cards_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            // this view holds all cards in one vertical line (like Arena)
+            CardViewOneColumnViewModel?.Cards.Clear();
+            CardViewOneColumnViewModel?.Cards.AddRange(Cards.OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+
             HasChanges = true;
 
             SetCounts();
         }
 
+        public void FireCollectionChanged()
+        {
+            Cards_CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
+
         public void Clear()
         {
-            cards.Clear();
+            Cards.Clear();
 
-            AverageManaCost = 0.0;
             CloseAction = null;
             Deck = null;
-            //DynamicCardView = null;
             SelectedSetTypeIndex = -1;
-            
+
             SetCounts();
 
             HasChanges = false;
@@ -363,7 +450,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
             ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
-            switch(SelectedSetTypeIndex)
+            switch (SelectedSetTypeIndex)
             {
                 case 0: Deck.GameType = "Alchemy"; break;
                 case 1: Deck.GameType = "Brawl"; break;
@@ -383,7 +470,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 else
                 {
                     Card newCard = new Card
-                    {                        
+                    {
                         Count = 1,
                         Name = card.Name,
                         SetSymbol = card.Model.set
@@ -490,7 +577,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             return ServiceLocator.Instance.DatabaseService.SaveDeck(Deck);
         }
 
-        private void SetCounts()
+        public void SetCounts()
         {
             List<UniqueArtTypeViewModel> ones = GetCardsForCost(1, -1);
 
@@ -529,9 +616,17 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
             ProgressBarMax = highest + 5;
 
+            OnPropertyChanged("AverageManaCost");
             OnPropertyChanged("NumberOfCreatures");
             OnPropertyChanged("NumberOfNonCreatures");
             OnPropertyChanged("NumberOfLands");
+
+            TotalCardCount = 0;
+
+            foreach (var card in Cards)
+            {
+                TotalCardCount += card.DeckBuilderDeckCount;
+            }
         }
 
         private void ShowInfoWindow()

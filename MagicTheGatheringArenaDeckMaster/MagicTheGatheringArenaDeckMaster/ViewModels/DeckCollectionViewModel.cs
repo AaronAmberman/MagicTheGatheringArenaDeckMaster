@@ -72,8 +72,21 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void AddDeck()
         {
-            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
-            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Deck = new Deck();
+            // clean if needed (we don't do this on close because of the MainWindow OnClose uses the view model...so only new up/clean up when needing to)
+            if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel != null)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewOneColumnViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewOneColumnViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel = null;
+            }
+
+            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel = new DeckBuilderViewModel
+            {
+                Deck = new Deck(),
+                CardViewOneColumnViewModel = new CardColumnViewModel()
+            };
+            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SetCounts();
 
             DeckBuilderWindow window = new DeckBuilderWindow();
             window.DataContext = ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel;
@@ -150,6 +163,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled = true;
 
             ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing card collection";
+
+            // encourage the garbage collector
+            GC.Collect();
         }
 
         private void CopyDeck()

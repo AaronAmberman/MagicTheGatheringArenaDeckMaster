@@ -16,6 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converter:ArithmeticConverter x:Key="ArithmeticConverter" />
+            <customControls:ZoomFactorConverter x:Key="ZoomFactorConverter" />
 
             <!-- Custom Styles -->
             <Style x:Key="DarkThemeTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">

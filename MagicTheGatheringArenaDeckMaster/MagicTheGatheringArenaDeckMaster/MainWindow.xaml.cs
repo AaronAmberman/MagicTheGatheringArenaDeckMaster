@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,7 +32,7 @@ namespace MagicTheGatheringArenaDeckMaster
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ServiceLocator.Instance.LoggerService.LogFile = Path.Combine(ServiceLocator.Instance.PathingService.BaseDataPath, "Logs", "DeckMaster.log");
-            ServiceLocator.Instance.LoggerService.LogRollSize = 10240; // 10 MB
+            ServiceLocator.Instance.LoggerService.LogRollSize = 100240; // 100 MB
 
             viewModel = new MainWindowViewModel
             {
@@ -40,7 +41,6 @@ namespace MagicTheGatheringArenaDeckMaster
                 {
                     CardListBox = cardListBox
                 },
-                DeckBuilderViewModel = new DeckBuilderViewModel(),
                 DeckCollectionViewModel = new DeckCollectionViewModel(),
                 PopupDialogViewModel = new PopupDialogViewModel
                 {
@@ -141,6 +141,8 @@ namespace MagicTheGatheringArenaDeckMaster
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel == null) return;
+
             if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.HasChanges)
             {
                 ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Save Pending Changes";
@@ -179,7 +181,7 @@ namespace MagicTheGatheringArenaDeckMaster
             Environment.Exit(0);
         }
 
-        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void CardCollection_CardImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // add card to deck
             if (!ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled) // this means we are creating a deck
@@ -189,54 +191,21 @@ namespace MagicTheGatheringArenaDeckMaster
 
                 if (vm == null) return;
 
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.Add(vm);
+                /*
+                 * we want to see if the card name and the card set are the same, if so...increment count, if not add new card
+                 */
+                UniqueArtTypeViewModel match = ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.FirstOrDefault(card => card.Name == vm.Name && card.Set == vm.Set);
 
-                //if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView == null) return;
+                if (match == null)
+                {
+                    ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.Add(vm.Clone()); // add new instance with same data
+                }
+                else
+                {
+                    match.DeckBuilderDeckCount++;
 
-                //BitmapImage bitmap = new BitmapImage();
-
-                //bitmap.BeginInit();
-                //bitmap.DecodePixelWidth = 313;
-                //bitmap.UriSource = new Uri(vm.ImagePath);
-                //bitmap.EndInit();
-
-                //Image image2 = new Image
-                //{
-                //    Width = 313,
-                //    Height = 436,
-                //    Source = bitmap,
-                //    VerticalAlignment = VerticalAlignment.Top
-                //};
-                //image2.Margin = new Thickness(0, ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Count * 47, 0, 0);
-                //image2.DataContext = vm;
-                //image2.MouseLeftButtonDown += DeckBuilder_Image_MouseLeftButtonDown;
-
-                //RenderOptions.SetBitmapScalingMode(image2, BitmapScalingMode.HighQuality);
-
-                //ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Add(image2);
-            }
-        }
-
-        private void DeckBuilder_Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            // remove card from deck
-            if (!ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled) // this means we are creating a deck
-            {
-                Image image = sender as Image;
-
-                if (image == null) return;
-
-                image.MouseLeftButtonDown -= DeckBuilder_Image_MouseLeftButtonDown;
-
-                UniqueArtTypeViewModel vm = image.DataContext as UniqueArtTypeViewModel;
-
-                if (vm == null) return;
-
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.Remove(vm);
-
-                //if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView == null) return;
-
-                //ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView.Children.Remove(image);
+                    ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.FireCollectionChanged();
+                }
             }
         }
 

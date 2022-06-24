@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="MagicTheGatheringArenaDeckMaster.UserControls.CardColumnUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster.UserControls"
+             xmlns:viewModels="clr-namespace:MagicTheGatheringArenaDeckMaster.ViewModels" 
+             xmlns:customControls="clr-namespace:MagicTheGatheringArenaDeckMaster.CustomControls"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance {x:Type viewModels:CardColumnViewModel}}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ContentPresenter Grid.Row="0" Content="{Binding Header}" />
+        <Border x:Name="line1" Grid.Row="1" Height="1" Background="{Binding LineBrush}" HorizontalAlignment="Center"
+                               Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualWidth, 
+                                               Converter={StaticResource ArithmeticConverter}, ConverterParameter=.8}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Header}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+        <Border x:Name="line2" Grid.Row="2" Height="1" Background="{Binding LineBrush}" HorizontalAlignment="Center"
+                               Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualWidth, 
+                                               Converter={StaticResource ArithmeticConverter}, ConverterParameter=.55}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Header}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+        <Border x:Name="line3" Grid.Row="3" Height="1" Background="{Binding LineBrush}" HorizontalAlignment="Center"
+                               Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualWidth, 
+                                               Converter={StaticResource ArithmeticConverter}, ConverterParameter=.30}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Header}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+        <ListBox Grid.Row="4" ItemsSource="{Binding Cards}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <customControls:CardControl CardName="{Binding Name}" CardCount="{Binding DeckBuilderDeckCount}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="0" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+    </Grid>
+</UserControl>

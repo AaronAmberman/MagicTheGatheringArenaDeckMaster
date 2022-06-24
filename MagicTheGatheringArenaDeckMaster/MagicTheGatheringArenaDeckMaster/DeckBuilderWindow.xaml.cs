@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace MagicTheGatheringArenaDeckMaster
 {
@@ -15,10 +17,7 @@ namespace MagicTheGatheringArenaDeckMaster
 
         #region Methods
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            //ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.DynamicCardView = dynamicCardView;
-        }
+
 
         #endregion
     }

@@ -8,6 +8,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
     {
         #region Fields
 
+        private int deckBuilderDeckCount = 1;
         private UniqueArtType model;
         private string imagePath;
 
@@ -76,6 +77,16 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
+        public int DeckBuilderDeckCount 
+        { 
+            get => deckBuilderDeckCount; 
+            set
+            {
+                deckBuilderDeckCount = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string ImagePath
         {
             get => imagePath;
@@ -100,12 +111,13 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 {
                     string temp = value.Replace("{", "");
 
-                    if (temp == "W") total += 1;
-                    else if (temp == "U") total += 1;
-                    else if (temp == "B") total += 1;
-                    else if (temp == "R") total += 1;
-                    else if (temp == "G") total += 1;
-                    else if (temp == "X") total += 20;
+                    // use contains because of either or color mana need such as G/W or W/B
+                    if (temp.Contains("W")) total += 1;
+                    else if (temp.Contains("U")) total += 1;
+                    else if (temp.Contains("B")) total += 1;
+                    else if (temp.Contains("R")) total += 1;
+                    else if (temp.Contains("G")) total += 1;
+                    else if (temp.Contains("X")) total += 20;
                     else if (int.TryParse(temp, out int convRes)) total += convRes;
                 }
 
@@ -136,7 +148,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 {
                     // there aren't actually 6 colors but this will put artifacts at the end of the list
                     return 6;
-                }                
+                }
                 else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
                     model.type_line.Contains("Artifact Land"))
                 {
@@ -185,6 +197,18 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         {
             model = uat;
             imagePath = string.Empty;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public UniqueArtTypeViewModel Clone()
+        {
+            return new UniqueArtTypeViewModel(Model)
+            {
+                ImagePath = ImagePath
+            };
         }
 
         #endregion

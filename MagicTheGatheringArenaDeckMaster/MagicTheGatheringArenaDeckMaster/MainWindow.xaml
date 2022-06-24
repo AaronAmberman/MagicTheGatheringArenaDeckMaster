@@ -275,7 +275,7 @@
                                             <DataTemplate>
                                                 <Grid>
                                                     <Image Margin="5" Width="219" Height="306" RenderOptions.BitmapScalingMode="HighQuality"
-                                                           MouseLeftButtonDown="Image_MouseLeftButtonDown">
+                                                           MouseLeftButtonDown="CardCollection_CardImage_MouseLeftButtonDown">
                                                         <Image.Source>
                                                             <BitmapImage DecodePixelWidth="219" UriSource="{Binding ImagePath}" />
                                                         </Image.Source>
