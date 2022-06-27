@@ -53,7 +53,7 @@
                                 </Style>
                             </Image.Style>
                         </Image>
-                        <Border Background="#FFCCCCCC" BorderBrush="#FF555555" BorderThickness="1" CornerRadius="8" MinWidth="16" Height="16" SnapsToDevicePixels="True">
+                        <Border Background="#FFAAAAAA" BorderBrush="#FF444444" BorderThickness="1" CornerRadius="8" MinWidth="16" Height="16" SnapsToDevicePixels="True">
                             <Border.Style>
                                 <Style TargetType="Border">
                                     <Setter Property="Visibility" Value="Visible" />
