@@ -30,7 +30,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private ICommand infoCommand;
         private double progressBarMax;
         private ICommand saveCommand;
-        private int selectedSetTypeIndex;
+        private int selectedSetTypeIndex = -1;
         private List<string> setTypes = new List<string>
         {
             "Alchemy",

@@ -11,33 +11,53 @@
 
   <ItemGroup>
     <None Remove="Images\advanced-filter.png" />
+    <None Remove="Images\black-green.png" />
+    <None Remove="Images\black-red.png" />
     <None Remove="Images\black.png" />
+    <None Remove="Images\blue-black.png" />
+    <None Remove="Images\blue-red.png" />
     <None Remove="Images\blue.png" />
     <None Remove="Images\colorless.png" />
     <None Remove="Images\EightColumn.png" />
     <None Remove="Images\EightColumnColor.png" />
+    <None Remove="Images\green-blue.png" />
+    <None Remove="Images\green-white.png" />
     <None Remove="Images\green.png" />
     <None Remove="Images\land.png" />
     <None Remove="Images\multicolor.png" />
     <None Remove="Images\OneColumn.png" />
+    <None Remove="Images\red-green.png" />
+    <None Remove="Images\red-white.png" />
     <None Remove="Images\red.png" />
     <None Remove="Images\ThreeColumn.png" />
+    <None Remove="Images\white-black.png" />
+    <None Remove="Images\white-blue.png" />
     <None Remove="Images\white.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Images\advanced-filter.png" />
+    <Resource Include="Images\black-green.png" />
+    <Resource Include="Images\black-red.png" />
     <Resource Include="Images\black.png" />
+    <Resource Include="Images\blue-black.png" />
+    <Resource Include="Images\blue-red.png" />
     <Resource Include="Images\blue.png" />
     <Resource Include="Images\colorless.png" />
     <Resource Include="Images\EightColumn.png" />
     <Resource Include="Images\EightColumnColor.png" />
+    <Resource Include="Images\green-blue.png" />
+    <Resource Include="Images\green-white.png" />
     <Resource Include="Images\green.png" />
     <Resource Include="Images\land.png" />
     <Resource Include="Images\multicolor.png" />
     <Resource Include="Images\OneColumn.png" />
+    <Resource Include="Images\red-green.png" />
+    <Resource Include="Images\red-white.png" />
     <Resource Include="Images\red.png" />
     <Resource Include="Images\ThreeColumn.png" />
+    <Resource Include="Images\white-black.png" />
+    <Resource Include="Images\white-blue.png" />
     <Resource Include="Images\white.png" />
   </ItemGroup>
 

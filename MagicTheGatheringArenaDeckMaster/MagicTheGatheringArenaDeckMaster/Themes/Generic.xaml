@@ -23,16 +23,49 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" FontSize="16" FontWeight="Bold" Text="{TemplateBinding CardName}" TextTrimming="CharacterEllipsis" />
+                                    <StackPanel Grid.Column="1" x:Name="ManaImagePanel" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,3,0,0" />
                                 </Grid>
                             </Border>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:ManaCostSymbol}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ManaCostSymbol}">
+                    <Grid>
+                        <Image Width="16" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True"
+                               Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SymbolImage}">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SymbolImage}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Border Background="#FFCCCCCC" BorderBrush="#FF555555" BorderThickness="1" CornerRadius="8" MinWidth="16" Height="16" SnapsToDevicePixels="True">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SymbolText}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <TextBlock FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SymbolText}" />
                         </Border>
                     </Grid>
                 </ControlTemplate>

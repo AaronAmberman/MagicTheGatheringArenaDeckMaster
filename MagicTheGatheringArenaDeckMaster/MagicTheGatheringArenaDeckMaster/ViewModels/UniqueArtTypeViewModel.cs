@@ -111,7 +111,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 {
                     string temp = value.Replace("{", "");
 
-                    // use contains because of either or color mana need such as G/W or W/B
                     if (temp.Contains("W")) total += 1;
                     else if (temp.Contains("U")) total += 1;
                     else if (temp.Contains("B")) total += 1;

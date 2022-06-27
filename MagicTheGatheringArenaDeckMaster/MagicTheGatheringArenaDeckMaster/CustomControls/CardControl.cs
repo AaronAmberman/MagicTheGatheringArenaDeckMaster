@@ -21,6 +21,8 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
     {
         #region Fields
 
+        private StackPanel manaImagePanel;
+
         #endregion
 
         #region Properties
@@ -79,31 +81,276 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
 
         #region Methods
 
+        public override void OnApplyTemplate()
+        {
+            // this fires after DataContextChanged
+
+            base.OnApplyTemplate();
+
+            manaImagePanel = GetTemplateChild("ManaImagePanel") as StackPanel;
+
+            UniqueArtTypeViewModel vm = DataContext as UniqueArtTypeViewModel;
+
+            if (vm == null) return;
+
+            string[] valueGroup = vm.Model.mana_cost.Split("}", StringSplitOptions.RemoveEmptyEntries);
+
+            List<ManaCostSymbol> cost = new List<ManaCostSymbol>();
+
+            for (int i = 0; i < valueGroup.Length; i++)
+            {
+                string value = valueGroup[i];
+                string temp = value.Replace("{", "");
+
+                cost.Add(SetSymbol(temp));
+            }
+
+            foreach (ManaCostSymbol symbol in cost)
+            {
+                manaImagePanel.Children.Add(symbol);
+            }
+        }
+
+        private ManaCostSymbol SetSymbol(string value)
+        {
+            if (value.Contains("W/U"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/white-blue.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("W/B"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/white-black.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("U/B"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/blue-black.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("U/R"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/blue-red.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("B/R"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/black-red.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("B/G"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/black-green.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("R/W"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/red-white.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("R/G"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/red-green.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("G/W"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/green-white.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("G/B"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/green-blue.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("W"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/white.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("U"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/blue.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("B"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/black.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("R"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/red.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("G"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolImage = "pack://application:,,,/Images/green.png";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (value.Contains("X"))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolText = "X";
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else if (int.TryParse(value, out int convRes))
+            {
+                ManaCostSymbol symbol = new ManaCostSymbol();
+                symbol.SymbolText = convRes.ToString(System.Globalization.CultureInfo.CurrentCulture);
+                symbol.Margin = new Thickness(2, 0, 0, 0);
+
+                return symbol;
+            }
+            else return null;
+        }
+
         private void SetColorSchemeBasedOnCard(UniqueArtTypeViewModel model)
         {
             if (model.NumberOfColors == 0)
             {
-                model.ToString();
+                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF949494"));
+                InnerBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCBCBCB"));
             }
             else if (model.NumberOfColors == 1)
             {
-                // mono colored cards
+                if (model.Model.colors[0] == "C") // colorless
+                {
+                    Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFAAAAAA"));
+                    InnerBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC"));
+                }
+                else if (model.Model.colors[0] == "G") // green
+                {
+                    Background = Brushes.Green;
+                    InnerBackground = Brushes.LightGreen;
+                }
+                else if (model.Model.colors[0] == "U") // blue
+                {
+                    Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF0880C3"));
+                    InnerBackground = Brushes.LightSkyBlue;
+                }
+                else if (model.Model.colors[0] == "R") // red
+                {
+                    Background = Brushes.Red;
+                    InnerBackground = Brushes.Salmon;
+                }
+                else if (model.Model.colors[0] == "B") // black
+                {
+                    Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF444444"));
+                    InnerBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF888888"));
+                }
+                else if (model.Model.colors[0] == "W") // white
+                {
+                    Background = Brushes.White;
+                    InnerBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFDDDDDD"));
+                }
             }
             else if (model.NumberOfColors == 2)
             {
-                // two colored cards
+                Color colorOne;
+                Color colorTwo;
+
+                if (model.Model.colors[0] == "W")
+                {
+                    colorOne = Brushes.White.Color;
+                }
+                else if (model.Model.colors[0] == "U")
+                {
+                    colorOne = (Color)ColorConverter.ConvertFromString("#FF0880C3");
+                }
+                else if (model.Model.colors[0] == "B")
+                {
+                    colorOne = (Color)ColorConverter.ConvertFromString("#FF444444");
+                }
+                else if (model.Model.colors[0] == "R")
+                {
+                    colorOne = Brushes.Red.Color;
+                }
+                else if (model.Model.colors[0] == "G")
+                {
+                    colorOne = Brushes.Green.Color;
+                }
+
+                if (model.Model.colors[1] == "W")
+                {
+                    colorTwo = Brushes.White.Color;
+                }
+                else if (model.Model.colors[1] == "U")
+                {
+                    colorTwo = (Color)ColorConverter.ConvertFromString("#FF0880C3");
+                }
+                else if (model.Model.colors[1] == "B")
+                {
+                    colorTwo = (Color)ColorConverter.ConvertFromString("#FF444444");
+                }
+                else if (model.Model.colors[1] == "R")
+                {
+                    colorTwo = Brushes.Red.Color;
+                }
+                else if (model.Model.colors[1] == "G")
+                {
+                    colorTwo = Brushes.Green.Color;
+                }
+
+                Background = new LinearGradientBrush(colorOne, colorTwo, new Point(0, 0), new Point(1, 1));
+                InnerBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFD6BE73"));
             }
             else if (model.NumberOfColors >= 3 && model.NumberOfColors <= 5)
             {
-                // three or more colored cards
+                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFB3A26D"));
+                InnerBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFD6BE73"));
             }
             else if (model.NumberOfColors == 6) // Artifacts
             {
-                if (model.Model.type_line.Equals("artifact land", StringComparison.OrdinalIgnoreCase)) // artifact land
-                {
-                    Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF949494"));
-                    InnerBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCBCBCB"));
-                }
+                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF949494"));
+                InnerBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCBCBCB"));
             }
             else if (model.NumberOfColors >= 7) // Lands
             {
