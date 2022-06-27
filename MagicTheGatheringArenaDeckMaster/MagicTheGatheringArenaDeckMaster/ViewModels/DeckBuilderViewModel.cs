@@ -20,6 +20,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private ICommand cancelCommand;
         private ObservableCollection<UniqueArtTypeViewModel> cards = new ObservableCollection<UniqueArtTypeViewModel>();
         private CardColumnViewModel cardViewOneColumnViewModel;
+        private CardColumnViewModel cardViewThreeColumnColumnOneViewModel;
+        private CardColumnViewModel cardViewThreeColumnColumnTwoViewModel;
+        private CardColumnViewModel cardViewThreeColumnColumnThreeViewModel;
         private Deck deck;
         private bool hasChanges;
         private bool isEightColumnView;
@@ -57,17 +60,19 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             {
                 double amc = 0.0;
                 double totalManaCost = 0.0;
+                double totalCardCount = 0.0;
 
                 foreach (var card in Cards)
                 {
-                    if (card.Model.type_line.Contains("creature", StringComparison.OrdinalIgnoreCase))
+                    if (!card.Model.type_line.Contains("land", StringComparison.OrdinalIgnoreCase))
                     {
-                        totalManaCost += card.ManaCostTotal;
+                        totalCardCount += card.DeckBuilderDeckCount;
+                        totalManaCost += card.ManaCostTotal * card.DeckBuilderDeckCount;
                     }
                 }
 
                 if (totalManaCost > 0.0)
-                    amc = totalManaCost / Cards.Count;
+                    amc = totalManaCost / totalCardCount;
 
                 return amc;
             }
@@ -91,6 +96,36 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             set
             {
                 cardViewOneColumnViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewThreeColumnColumnOneViewModel
+        {
+            get => cardViewThreeColumnColumnOneViewModel;
+            set
+            {
+                cardViewThreeColumnColumnOneViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewThreeColumnColumnTwoViewModel
+        {
+            get => cardViewThreeColumnColumnTwoViewModel;
+            set
+            {
+                cardViewThreeColumnColumnTwoViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewThreeColumnColumnThreeViewModel
+        {
+            get => cardViewThreeColumnColumnThreeViewModel;
+            set
+            {
+                cardViewThreeColumnColumnThreeViewModel = value;
                 OnPropertyChanged();
             }
         }
@@ -358,6 +393,15 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             // this view holds all cards in one vertical line (like Arena)
             CardViewOneColumnViewModel?.Cards.Clear();
             CardViewOneColumnViewModel?.Cards.AddRange(Cards.OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+
+            // the columns are creatures, non-creautes, lands
+            CardViewThreeColumnColumnOneViewModel?.Cards.Clear();
+            CardViewThreeColumnColumnTwoViewModel?.Cards.Clear();
+            CardViewThreeColumnColumnThreeViewModel?.Cards.Clear();
+
+            CardViewThreeColumnColumnOneViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("creature", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewThreeColumnColumnThreeViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("land", StringComparison.OrdinalIgnoreCase) && !x.Model.type_line.Equals("artifact land", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewThreeColumnColumnTwoViewModel.Cards.AddRange(Cards.Except(CardViewThreeColumnColumnOneViewModel.Cards).Except(CardViewThreeColumnColumnThreeViewModel.Cards).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
 
             HasChanges = true;
 

@@ -16,7 +16,17 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ContentPresenter Grid.Row="0" Content="{Binding Header}" />
+        <ContentPresenter Grid.Row="0" Content="{Binding Header}" TextElement.Foreground="White">
+            <ContentPresenter.Resources>
+                <ResourceDictionary>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="FontSize" Value="20" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                    </Style>
+                </ResourceDictionary>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
         <Border x:Name="line1" Grid.Row="1" Height="1" Background="{Binding LineBrush}" HorizontalAlignment="Center"
                                Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualWidth, 
                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=.8}">

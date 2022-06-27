@@ -78,13 +78,31 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewOneColumnViewModel.Cards.Clear();
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewOneColumnViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnOneViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnOneViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnTwoViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnTwoViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnThreeViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnThreeViewModel = null;
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel = null;
             }
 
             ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel = new DeckBuilderViewModel
             {
                 Deck = new Deck(),
-                CardViewOneColumnViewModel = new CardColumnViewModel()
+                CardViewOneColumnViewModel = new CardColumnViewModel(),
+                CardViewThreeColumnColumnOneViewModel = new CardColumnViewModel
+                {
+                    Header = "Creatures"
+                },
+                CardViewThreeColumnColumnTwoViewModel = new CardColumnViewModel
+                {
+                    Header = "Non-Creatures"
+                },
+                CardViewThreeColumnColumnThreeViewModel = new CardColumnViewModel
+                {
+                    Header = "Land"
+                }
             };
             ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SetCounts();
 

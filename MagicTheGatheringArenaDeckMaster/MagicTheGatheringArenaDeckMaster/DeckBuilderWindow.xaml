@@ -156,7 +156,7 @@
                             </RadioButton>
                         </Grid>
                     </Border>
-                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="0,5,0,0">
+                    <Grid Grid.Row="1" Margin="0,5,0,0">
                         <Grid x:Name="cardViewGrid">
                             <Grid x:Name="oneColumnView">
                                 <Grid.Style>
@@ -182,7 +182,17 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Grid.Style>
-                                <TextBlock Text="Three" />
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <userControls:CardColumnUserControl x:Name="threeColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewThreeColumnColumnOneViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="threeColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewThreeColumnColumnTwoViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="threeColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,0,0"
+                                                                    DataContext="{Binding CardViewThreeColumnColumnThreeViewModel}" />
                             </Grid>
                             <Grid x:Name="eightColumnView">
                                 <Grid.Style>
@@ -211,7 +221,7 @@
                                 <TextBlock Text="Eight color" />
                             </Grid>
                         </Grid>
-                    </ScrollViewer>
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid Grid.Row="4" Margin="0,5,0,0">
