@@ -17,6 +17,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -116,7 +117,7 @@
                 </Grid>
             </Grid>
             <Border Grid.Row="2" Background="White" Margin="0,5,0,0" Height="1" />
-            <Grid Grid.Row="3" Margin="0,5,0,0">
+            <Grid Grid.Row="3" Margin="0,5,0,0" HorizontalAlignment="Center">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -125,10 +126,10 @@
                     <Border Grid.Row="0" CornerRadius="3" Background="#55CCCCCC">
                         <Grid Margin="2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="78" />
+                                <ColumnDefinition Width="78" />
+                                <ColumnDefinition Width="78" />
+                                <ColumnDefinition Width="78" />
                             </Grid.ColumnDefinitions>
                             <RadioButton Grid.Column="0" Margin="0,0,5,0" Background="Transparent" BorderBrush="Transparent" 
                                                  Opacity="0.5" GroupName="ViewButtons" Style="{StaticResource {x:Type ToggleButton}}"
@@ -144,7 +145,7 @@
                             </RadioButton>
                             <RadioButton Grid.Column="2" Margin="0,0,5,0" Background="Transparent" BorderBrush="Transparent" 
                                                  Opacity="0.5" GroupName="ViewButtons" Style="{StaticResource {x:Type ToggleButton}}"
-                                                 ToolTip="Eight column view (type)" 
+                                                 ToolTip="Eight column view (type)"
                                                  IsChecked="{Binding IsEightColumnView}">
                                 <Image Source="pack://application:,,,/Images/EightColumn.png" Height="16" />
                             </RadioButton>
@@ -155,126 +156,126 @@
                                 <Image Source="pack://application:,,,/Images/EightColumnColor.png" Height="16" />
                             </RadioButton>
                         </Grid>
-                    </Border>
-                    <Grid Grid.Row="1" Margin="0,5,0,0">
-                        <Grid x:Name="cardViewGrid">
-                            <Grid x:Name="oneColumnView">
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsOneColumnView}" Value="True">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
-                                <userControls:CardColumnUserControl x:Name="oneColumnCardView" DataContext="{Binding CardViewOneColumnViewModel}" />
-                            </Grid>
-                            <Grid x:Name="threeColumnView">
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsThreeColumnView}" Value="True">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <userControls:CardColumnUserControl x:Name="threeColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewThreeColumnColumnOneViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="threeColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewThreeColumnColumnTwoViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="threeColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,0,0"
-                                                                    DataContext="{Binding CardViewThreeColumnColumnThreeViewModel}" />
-                            </Grid>
-                            <Grid x:Name="eightColumnView">
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsEightColumnView}" Value="True">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColumnOneViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColumnTwoViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColumnThreeViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnFour" Grid.Column="3" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColumnFourViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnFive" Grid.Column="4" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColumnFiveViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnSix" Grid.Column="5" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColumnSixViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnSeven" Grid.Column="6" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColumnSevenViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnEight" Grid.Column="7" Margin="0,0,0,0"
-                                                                    DataContext="{Binding CardViewEightColumnColumnEightViewModel}" />
-                            </Grid>
-                            <Grid x:Name="eightColumnColorView">
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsEightColorColumnView}" Value="True">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnOneViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnTwoViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnThreeViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnFour" Grid.Column="3" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnFourViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnFive" Grid.Column="4" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnFiveViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnSix" Grid.Column="5" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnSixViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnSeven" Grid.Column="6" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnSevenViewModel}" />
-                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnEight" Grid.Column="7" Margin="0,0,0,0"
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnEightViewModel}" />
-                            </Grid>
-                        </Grid>
-                    </Grid>
+                    </Border>                    
                 </Grid>
             </Grid>
             <Grid Grid.Row="4" Margin="0,5,0,0">
+                <Grid x:Name="cardViewGrid">
+                    <Grid x:Name="oneColumnView">
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsOneColumnView}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <userControls:CardColumnUserControl x:Name="oneColumnCardView" DataContext="{Binding CardViewOneColumnViewModel}" />
+                    </Grid>
+                    <Grid x:Name="threeColumnView">
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsThreeColumnView}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <userControls:CardColumnUserControl x:Name="threeColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewThreeColumnColumnOneViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="threeColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewThreeColumnColumnTwoViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="threeColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,0,0"
+                                                                    DataContext="{Binding CardViewThreeColumnColumnThreeViewModel}" />
+                    </Grid>
+                    <Grid x:Name="eightColumnView">
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsEightColumnView}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColumnOneViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColumnTwoViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColumnThreeViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnFour" Grid.Column="3" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColumnFourViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnFive" Grid.Column="4" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColumnFiveViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnSix" Grid.Column="5" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColumnSixViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnSeven" Grid.Column="6" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColumnSevenViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnEight" Grid.Column="7" Margin="0,0,0,0"
+                                                                    DataContext="{Binding CardViewEightColumnColumnEightViewModel}" />
+                    </Grid>
+                    <Grid x:Name="eightColumnColorView">
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsEightColorColumnView}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnOneViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnTwoViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnThreeViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnFour" Grid.Column="3" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnFourViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnFive" Grid.Column="4" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnFiveViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnSix" Grid.Column="5" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnSixViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnSeven" Grid.Column="6" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnSevenViewModel}" />
+                        <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnEight" Grid.Column="7" Margin="0,0,0,0"
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnEightViewModel}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="5" Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
