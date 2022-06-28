@@ -8,7 +8,7 @@
         xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
         xmlns:userControls="clr-namespace:MagicTheGatheringArenaDeckMaster.UserControls"
         mc:Ignorable="d"
-        Title="Deck Builder" Height="800" MinHeight="400" Width="355" MinWidth="355" Topmost="True" 
+        Title="Deck Builder" Height="800" MinHeight="400" Width="355" MinWidth="355"
         WindowStartupLocation="CenterScreen"
         d:DataContext="{d:DesignInstance {x:Type viewModels:DeckBuilderViewModel}}">
     <Grid x:Name="mainRootGrid" Background="#FF1F1F1F">
@@ -205,7 +205,32 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Grid.Style>
-                                <TextBlock Text="Eight" />
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColumnOneViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColumnTwoViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColumnThreeViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnFour" Grid.Column="3" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColumnFourViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnFive" Grid.Column="4" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColumnFiveViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnSix" Grid.Column="5" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColumnSixViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnSeven" Grid.Column="6" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColumnSevenViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnEight" Grid.Column="7" Margin="0,0,0,0"
+                                                                    DataContext="{Binding CardViewEightColumnColumnEightViewModel}" />
                             </Grid>
                             <Grid x:Name="eightColumnColorView">
                                 <Grid.Style>
@@ -218,7 +243,32 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Grid.Style>
-                                <TextBlock Text="Eight color" />
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnOneViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnTwoViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnThreeViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnFour" Grid.Column="3" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnFourViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnFive" Grid.Column="4" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnFiveViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnSix" Grid.Column="5" Margin="0,0,10,0"
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnSixViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnSeven" Grid.Column="6" Margin="0,0,10,0"                                                                  
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnSevenViewModel}" />
+                                <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnEight" Grid.Column="7" Margin="0,0,0,0"
+                                                                    DataContext="{Binding CardViewEightColumnColorColumnEightViewModel}" />
                             </Grid>
                         </Grid>
                     </Grid>

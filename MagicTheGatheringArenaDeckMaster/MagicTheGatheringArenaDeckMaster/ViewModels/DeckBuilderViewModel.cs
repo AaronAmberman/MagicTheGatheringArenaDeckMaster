@@ -23,6 +23,22 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private CardColumnViewModel cardViewThreeColumnColumnOneViewModel;
         private CardColumnViewModel cardViewThreeColumnColumnTwoViewModel;
         private CardColumnViewModel cardViewThreeColumnColumnThreeViewModel;
+        private CardColumnViewModel cardViewEightColumnColumnOneViewModel;
+        private CardColumnViewModel cardViewEightColumnColumnTwoViewModel;
+        private CardColumnViewModel cardViewEightColumnColumnThreeViewModel;
+        private CardColumnViewModel cardViewEightColumnColumnFourViewModel;
+        private CardColumnViewModel cardViewEightColumnColumnFiveViewModel;
+        private CardColumnViewModel cardViewEightColumnColumnSixViewModel;
+        private CardColumnViewModel cardViewEightColumnColumnSevenViewModel;
+        private CardColumnViewModel cardViewEightColumnColumnEightViewModel;
+        private CardColumnViewModel cardViewEightColumnColorColumnOneViewModel;
+        private CardColumnViewModel cardViewEightColumnColorColumnTwoViewModel;
+        private CardColumnViewModel cardViewEightColumnColorColumnThreeViewModel;
+        private CardColumnViewModel cardViewEightColumnColorColumnFourViewModel;
+        private CardColumnViewModel cardViewEightColumnColorColumnFiveViewModel;
+        private CardColumnViewModel cardViewEightColumnColorColumnSixViewModel;
+        private CardColumnViewModel cardViewEightColumnColorColumnSevenViewModel;
+        private CardColumnViewModel cardViewEightColumnColorColumnEightViewModel;
         private Deck deck;
         private bool hasChanges;
         private bool isEightColumnView;
@@ -126,6 +142,166 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             set
             {
                 cardViewThreeColumnColumnThreeViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColumnOneViewModel
+        {
+            get => cardViewEightColumnColumnOneViewModel;
+            set
+            {
+                cardViewEightColumnColumnOneViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColumnTwoViewModel
+        {
+            get => cardViewEightColumnColumnTwoViewModel;
+            set
+            {
+                cardViewEightColumnColumnTwoViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColumnThreeViewModel
+        {
+            get => cardViewEightColumnColumnThreeViewModel;
+            set
+            {
+                cardViewEightColumnColumnThreeViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColumnFourViewModel
+        {
+            get => cardViewEightColumnColumnFourViewModel;
+            set
+            {
+                cardViewEightColumnColumnFourViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColumnFiveViewModel
+        {
+            get => cardViewEightColumnColumnFiveViewModel;
+            set
+            {
+                cardViewEightColumnColumnFiveViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColumnSixViewModel
+        {
+            get => cardViewEightColumnColumnSixViewModel;
+            set
+            {
+                cardViewEightColumnColumnSixViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColumnSevenViewModel
+        {
+            get => cardViewEightColumnColumnSevenViewModel;
+            set
+            {
+                cardViewEightColumnColumnSevenViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColumnEightViewModel
+        {
+            get => cardViewEightColumnColumnEightViewModel;
+            set
+            {
+                cardViewEightColumnColumnEightViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColorColumnOneViewModel
+        {
+            get => cardViewEightColumnColorColumnOneViewModel;
+            set
+            {
+                cardViewEightColumnColorColumnOneViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColorColumnTwoViewModel
+        {
+            get => cardViewEightColumnColorColumnTwoViewModel;
+            set
+            {
+                cardViewEightColumnColorColumnTwoViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColorColumnThreeViewModel
+        {
+            get => cardViewEightColumnColorColumnThreeViewModel;
+            set
+            {
+                cardViewEightColumnColorColumnThreeViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColorColumnFourViewModel
+        {
+            get => cardViewEightColumnColorColumnFourViewModel;
+            set
+            {
+                cardViewEightColumnColorColumnFourViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColorColumnFiveViewModel
+        {
+            get => cardViewEightColumnColorColumnFiveViewModel;
+            set
+            {
+                cardViewEightColumnColorColumnFiveViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColorColumnSixViewModel
+        {
+            get => cardViewEightColumnColorColumnSixViewModel;
+            set
+            {
+                cardViewEightColumnColorColumnSixViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColorColumnSevenViewModel
+        {
+            get => cardViewEightColumnColorColumnSevenViewModel;
+            set
+            {
+                cardViewEightColumnColorColumnSevenViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CardColumnViewModel CardViewEightColumnColorColumnEightViewModel
+        {
+            get => cardViewEightColumnColorColumnEightViewModel;
+            set
+            {
+                cardViewEightColumnColorColumnEightViewModel = value;
                 OnPropertyChanged();
             }
         }
@@ -403,9 +579,52 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             CardViewThreeColumnColumnThreeViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("land", StringComparison.OrdinalIgnoreCase) && !x.Model.type_line.Equals("artifact land", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
             CardViewThreeColumnColumnTwoViewModel.Cards.AddRange(Cards.Except(CardViewThreeColumnColumnOneViewModel.Cards).Except(CardViewThreeColumnColumnThreeViewModel.Cards).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
 
+            // the eight columns are creature, planeswalker, instant, sorcery, enchantment, artifact, commander, land
+            CardViewEightColumnColumnOneViewModel.Cards.Clear();
+            CardViewEightColumnColumnTwoViewModel.Cards.Clear();
+            CardViewEightColumnColumnThreeViewModel.Cards.Clear();
+            CardViewEightColumnColumnFourViewModel.Cards.Clear();
+            CardViewEightColumnColumnFiveViewModel.Cards.Clear();
+            CardViewEightColumnColumnSixViewModel.Cards.Clear();
+            CardViewEightColumnColumnSevenViewModel.Cards.Clear();
+            CardViewEightColumnColumnEightViewModel.Cards.Clear();
+
+            CardViewEightColumnColumnOneViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("creature", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColumnTwoViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("planeswalker", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColumnThreeViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("instant", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColumnFourViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("sorcery", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColumnFiveViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("enchantment", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColumnSixViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("artifact", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColumnSevenViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("commander", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColumnEightViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("land", StringComparison.OrdinalIgnoreCase) && !x.Model.type_line.Equals("artifact land", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+
+            // the eight columns are white, blue, black, red, green, artifact, multicolored, land
+            CardViewEightColumnColorColumnOneViewModel.Cards.Clear();
+            CardViewEightColumnColorColumnTwoViewModel.Cards.Clear();
+            CardViewEightColumnColorColumnThreeViewModel.Cards.Clear();
+            CardViewEightColumnColorColumnFourViewModel.Cards.Clear();
+            CardViewEightColumnColorColumnFiveViewModel.Cards.Clear();
+            CardViewEightColumnColorColumnSixViewModel.Cards.Clear();
+            CardViewEightColumnColorColumnSevenViewModel.Cards.Clear();
+            CardViewEightColumnColorColumnEightViewModel.Cards.Clear();
+
+            CardViewEightColumnColorColumnOneViewModel.Cards.AddRange(Cards.Where(x => x.ColorScore == 1).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColorColumnTwoViewModel.Cards.AddRange(Cards.Where(x => x.ColorScore == 2).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColorColumnThreeViewModel.Cards.AddRange(Cards.Where(x => x.ColorScore == 3).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColorColumnFourViewModel.Cards.AddRange(Cards.Where(x => x.ColorScore == 4).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColorColumnFiveViewModel.Cards.AddRange(Cards.Where(x => x.ColorScore == 5).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColorColumnSixViewModel.Cards.AddRange(Cards.Where(x => x.ColorScore == 16).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColorColumnSevenViewModel.Cards.AddRange(Cards.Where(x => x.Model.colors.Count > 1).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+            CardViewEightColumnColorColumnEightViewModel.Cards.AddRange(Cards.Where(x => x.Model.type_line.Contains("land", StringComparison.OrdinalIgnoreCase) && !x.Model.type_line.Equals("artifact land", StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList());
+
             HasChanges = true;
 
             SetCounts();
+        }
+
+        public void ClearCollectionChanged()
+        {
+            Cards.CollectionChanged -= Cards_CollectionChanged;
         }
 
         public void FireCollectionChanged()
