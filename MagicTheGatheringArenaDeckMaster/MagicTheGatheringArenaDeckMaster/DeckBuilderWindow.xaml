@@ -145,15 +145,25 @@
                             </RadioButton>
                             <RadioButton Grid.Column="2" Margin="0,0,5,0" Background="Transparent" BorderBrush="Transparent" 
                                                  Opacity="0.5" GroupName="ViewButtons" Style="{StaticResource {x:Type ToggleButton}}"
-                                                 ToolTip="Eight column view (type)"
                                                  IsChecked="{Binding IsEightColumnView}">
                                 <Image Source="pack://application:,,,/Images/EightColumn.png" Height="16" />
+                                <RadioButton.ToolTip>
+                                    <TextBlock>
+                                        Eight column view (type).<LineBreak /><LineBreak />
+                                        Columns are added and/or removed as needed.
+                                    </TextBlock>
+                                </RadioButton.ToolTip>
                             </RadioButton>
                             <RadioButton Grid.Column="3" Margin="0,0,0,0" Background="Transparent" BorderBrush="Transparent" 
                                                  Opacity="0.5" GroupName="ViewButtons" Style="{StaticResource {x:Type ToggleButton}}"
-                                                 ToolTip="Eight column view (color)" 
                                                  IsChecked="{Binding IsEightColorColumnView}">
                                 <Image Source="pack://application:,,,/Images/EightColumnColor.png" Height="16" />
+                                <RadioButton.ToolTip>
+                                    <TextBlock>
+                                        Eight column view (color).<LineBreak /><LineBreak />
+                                        Columns are added and/or removed as needed.
+                                    </TextBlock>
+                                </RadioButton.ToolTip>
                             </RadioButton>
                         </Grid>
                     </Border>                    
@@ -209,31 +219,127 @@
                             </Style>
                         </Grid.Style>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColumnOneViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColumnTwoViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColumnThreeViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColumnFourViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColumnFiveViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColumnSixViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColumnSevenViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColumnEightViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColumnOneViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColumnOneViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColumnTwoViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColumnTwoViewModel}"
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColumnThreeViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColumnThreeViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnFour" Grid.Column="3" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColumnFourViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColumnFourViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnFive" Grid.Column="4" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColumnFiveViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColumnFiveViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnSix" Grid.Column="5" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColumnSixViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColumnSixViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnSeven" Grid.Column="6" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColumnSevenViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColumnSevenViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColumnCardViewColumnEight" Grid.Column="7" Margin="0,0,0,0"
-                                                                    DataContext="{Binding CardViewEightColumnColumnEightViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColumnEightViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                     </Grid>
                     <Grid x:Name="eightColumnColorView">
                         <Grid.Style>
@@ -247,31 +353,127 @@
                             </Style>
                         </Grid.Style>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColorColumnOneViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColorColumnTwoViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColorColumnThreeViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColorColumnFourViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColorColumnFiveViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColorColumnSixViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColorColumnSevenViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="ColumnDefinition">
+                                        <Setter Property="Width" Value="*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CardViewEightColumnColorColumnEightViewModel.Cards.Count}" Value="0">
+                                                <Setter Property="Width" Value="Auto" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnOne" Grid.Column="0" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnOneViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColorColumnOneViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnTwo" Grid.Column="1" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnTwoViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColorColumnTwoViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnThree" Grid.Column="2" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnThreeViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColorColumnThreeViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnFour" Grid.Column="3" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnFourViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColorColumnFourViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnFive" Grid.Column="4" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnFiveViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColorColumnFiveViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnSix" Grid.Column="5" Margin="0,0,10,0"
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnSixViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColorColumnSixViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnSeven" Grid.Column="6" Margin="0,0,10,0"                                                                  
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnSevenViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColorColumnSevenViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                         <userControls:CardColumnUserControl x:Name="eightColorColumnCardViewColumnEight" Grid.Column="7" Margin="0,0,0,0"
-                                                                    DataContext="{Binding CardViewEightColumnColorColumnEightViewModel}" />
+                                                            DataContext="{Binding CardViewEightColumnColorColumnEightViewModel}" 
+                                                            Style="{StaticResource CardColumnFor8Column}" />
                     </Grid>
                 </Grid>
             </Grid>

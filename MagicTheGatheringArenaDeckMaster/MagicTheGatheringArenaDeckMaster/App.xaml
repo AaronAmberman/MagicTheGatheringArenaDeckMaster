@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster"
              xmlns:converter="clr-namespace:MagicTheGatheringArena.Core.WPF.Converters;assembly=MagicTheGatheringArena.Core" 
              xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
+             xmlns:userControls="clr-namespace:MagicTheGatheringArenaDeckMaster.UserControls"
              StartupUri="MainWindow.xaml"
              Startup="Application_Startup"
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
@@ -36,6 +37,14 @@
             <Style x:Key="DeckHeaderButton" TargetType="Button" BasedOn="{StaticResource DarkThemeHighlightButtonStyle}">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+            <Style x:Key="CardColumnFor8Column" TargetType="userControls:CardColumnUserControl">
+                <Setter Property="Visibility" Value="Visible" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Cards.Count}" Value="0">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </Application.Resources>
