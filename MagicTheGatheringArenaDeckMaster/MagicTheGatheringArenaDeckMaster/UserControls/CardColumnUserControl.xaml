@@ -72,7 +72,8 @@
         <ListBox Grid.Row="4" ItemsSource="{Binding Cards}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <customControls:CardControl CardName="{Binding Name}" CardCount="{Binding DeckBuilderDeckCount}" />
+                    <customControls:CardControl CardName="{Binding Name}" CardCount="{Binding DeckBuilderDeckCount}"
+                                                AddCard="CardControl_AddCard" RemoveCard="CardControl_RemoveCard" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>

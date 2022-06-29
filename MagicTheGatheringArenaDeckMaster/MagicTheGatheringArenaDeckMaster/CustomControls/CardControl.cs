@@ -1,18 +1,11 @@
 ﻿using MagicTheGatheringArenaDeckMaster.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using WPF.CustomControls;
 
 namespace MagicTheGatheringArenaDeckMaster.CustomControls
 {
@@ -21,7 +14,9 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
     {
         #region Fields
 
+        private Border border;
         private StackPanel manaImagePanel;
+        private RoundableButton addRemoveButton;
 
         #endregion
 
@@ -56,6 +51,13 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
 
         #endregion
 
+        #region Events
+
+        public event EventHandler<UniqueArtTypeViewModel> AddCard;
+        public event EventHandler<UniqueArtTypeViewModel> RemoveCard;
+
+        #endregion
+
         #region Constructors
 
         static CardControl()
@@ -87,6 +89,8 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
 
             base.OnApplyTemplate();
 
+            border = GetTemplateChild("border") as Border;
+            addRemoveButton = GetTemplateChild("addRemoveButton") as RoundableButton;
             manaImagePanel = GetTemplateChild("ManaImagePanel") as StackPanel;
 
             UniqueArtTypeViewModel vm = DataContext as UniqueArtTypeViewModel;
@@ -109,6 +113,26 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
             {
                 manaImagePanel.Children.Add(symbol);
             }
+
+            border.MouseLeftButtonDown += Border_MouseLeftButtonDown;
+            addRemoveButton.Click += AddRemoveButton_Click;
+            addRemoveButton.MouseRightButtonDown += AddRemoveButton_MouseRightButtonDown;
+        }
+
+        private void AddRemoveButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddCard?.Invoke(this, DataContext as UniqueArtTypeViewModel);
+        }
+
+        private void AddRemoveButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // remove card (-1 on card if more than one, if one then remove card completely)
+            RemoveCard?.Invoke(this, DataContext as UniqueArtTypeViewModel);
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            RemoveCard?.Invoke(this, DataContext as UniqueArtTypeViewModel);
         }
 
         private ManaCostSymbol SetSymbol(string value)

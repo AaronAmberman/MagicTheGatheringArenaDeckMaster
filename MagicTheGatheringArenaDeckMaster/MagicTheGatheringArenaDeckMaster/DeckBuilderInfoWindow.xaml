@@ -5,12 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MagicTheGatheringArenaDeckMaster"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight"
-        Title="Deck Builder Infomation" ResizeMode="NoResize">
-    <Grid x:Name="mainRootGrid" Background="#FF1F1F1F">
-        <Grid x:Name="mainInnerGrid" Margin="10">
-            <TextBlock Style="{StaticResource DarkThemeTextBlockStyle}">
-                To add cards to the deck simply click on them in the card collection.<LineBreak /><LineBreak />
-                To remove cards from the deck simply click on them in the deck builder window.
+        Title="Deck Builder Infomation" ResizeMode="NoResize" Width="600">
+    <Grid x:Name="mainRootGrid" Background="#FF1F1F1F">        
+        <Grid x:Name="mainInnerGrid" Grid.Row="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Style="{StaticResource DarkThemeTextBlockStyle}" TextWrapping="Wrap">
+                <Underline>Card Collection Add</Underline><LineBreak />
+                To initially add a card simply click on it in the card collection tab in the main window. Additional cards can be added the same way.
+                <LineBreak /><LineBreak />
+                <Underline>Deck Buiilder</Underline>
+                <LineBreak />
+                Once a card is in the deck builder it can have more added to it or removed from it right in the deck builder window.
+            </TextBlock>
+            <TextBlock Grid.Row="1" Style="{StaticResource DarkThemeTextBlockStyle}" TextWrapping="Wrap" Margin="20,15,0,0">
+                <Italic>Count Button</Italic>
+                <LineBreak />
+                Left click the count button to add a card. Right click the count button to remove a card.
+                <LineBreak /><LineBreak />
+                <Italic>Card Header</Italic>
+                <LineBreak />
+                Left click the card header and it will remove a card.
             </TextBlock>
         </Grid>
     </Grid>

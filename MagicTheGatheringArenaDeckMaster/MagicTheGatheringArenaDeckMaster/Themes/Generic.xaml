@@ -28,6 +28,13 @@
                                     <StackPanel Grid.Column="1" x:Name="ManaImagePanel" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,3,0,0" />
                                 </Grid>
                             </Border>
+                            <Border.ToolTip>
+                                <Image Margin="5" Width="372" Height="520" RenderOptions.BitmapScalingMode="HighQuality">
+                                    <Image.Source>
+                                        <BitmapImage DecodePixelWidth="372" UriSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.ImagePath}" />
+                                    </Image.Source>
+                                </Image>
+                            </Border.ToolTip>
                         </Border>
                     </Grid>
                 </ControlTemplate>

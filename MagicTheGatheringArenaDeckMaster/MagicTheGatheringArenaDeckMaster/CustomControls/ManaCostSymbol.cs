@@ -1,27 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MagicTheGatheringArenaDeckMaster.CustomControls
 {
     /// <summary>Represents the cost of one mana symbol.</summary>
     public class ManaCostSymbol : Control
     {
-        #region Fields
-
-        #endregion
-
         #region Properties
 
         /// <summary>Gets or sets the image to use for the symbol (if not text).</summary>
@@ -52,10 +36,6 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ManaCostSymbol), new FrameworkPropertyMetadata(typeof(ManaCostSymbol)));
         }
-
-        #endregion
-
-        #region Methods
 
         #endregion
     }
