@@ -68,6 +68,10 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
             DataContextChanged += CardControl_DataContextChanged;
         }
 
+        #endregion
+
+        #region Methods
+
         private void CardControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             UniqueArtTypeViewModel vm = e.NewValue as UniqueArtTypeViewModel;
@@ -76,10 +80,6 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
 
             SetColorSchemeBasedOnCard(vm);
         }
-
-        #endregion
-
-        #region Methods
 
         public override void OnApplyTemplate()
         {

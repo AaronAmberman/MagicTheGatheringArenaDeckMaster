@@ -17,8 +17,6 @@ namespace MagicTheGatheringArenaDeckMaster
 
         #region Methods
 
-
-
         #endregion
     }
 }
