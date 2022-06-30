@@ -8,7 +8,7 @@ I enjoy MTG and find Arena fun but do not love the deck editor and as such wante
 ### Main View
 ![WIP](https://user-images.githubusercontent.com/23512394/176679514-490481d6-fa41-4913-a24f-3790ec522d3c.png)
 
-### Single Column Deck Editor
+### Single Column Deck Builder
 ![WIP2](https://user-images.githubusercontent.com/23512394/176679587-dc689a97-a4b8-4218-b399-1e202c5d7fe7.png)
 
 ### 8 Column Views (for detailed viewing)
