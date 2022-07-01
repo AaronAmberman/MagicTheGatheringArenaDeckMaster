@@ -480,6 +480,7 @@
             <Grid Grid.Row="5" Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -487,8 +488,11 @@
                 <Button Grid.Column="0" Margin="0,0,5,0" VerticalAlignment="Center" Background="Transparent" BorderBrush="Transparent" 
                         Content="{StaticResource StatusHidden}" Command="{Binding InfoCommand}" />
                 <TextBlock Grid.Column="1" Text="{Binding TotalCardCount, StringFormat=Total cards 0}" Foreground="White" />
-                <Button Grid.Column="2" Content="Save" Margin="0,0,5,0" Width="50" Command="{Binding SaveCommand}" />
-                <Button Grid.Column="3" Content="Cancel" Width="50" Command="{Binding CancelCommand}" />
+                <Grid Grid.Column="2">
+                    
+                </Grid>
+                <Button Grid.Column="3" Content="Save" Margin="0,0,5,0" Width="50" Command="{Binding SaveCommand}" />
+                <Button Grid.Column="4" Content="Cancel" Width="50" Command="{Binding CancelCommand}" />
             </Grid>
         </Grid>
     </Grid>

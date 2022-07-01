@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -207,6 +208,31 @@ namespace MagicTheGatheringArenaDeckMaster
                     ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.FireCollectionChanged();
                 }
             }
+        }
+
+        private void CardCollection_CardImage_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Image image = sender as Image;
+            UniqueArtTypeViewModel vm = image.DataContext as UniqueArtTypeViewModel;
+
+            if (vm == null) return;
+
+            ServiceLocator.Instance.MainWindowViewModel.BigCardImage = new BitmapImage();
+            ServiceLocator.Instance.MainWindowViewModel.BigCardImage.BeginInit();
+            ServiceLocator.Instance.MainWindowViewModel.BigCardImage.CacheOption = BitmapCacheOption.None;
+            ServiceLocator.Instance.MainWindowViewModel.BigCardImage.DecodePixelWidth = 521;
+            ServiceLocator.Instance.MainWindowViewModel.BigCardImage.UriSource = new Uri(vm.ImagePath);
+            ServiceLocator.Instance.MainWindowViewModel.BigCardImage.EndInit();
+
+            ServiceLocator.Instance.MainWindowViewModel.BigCardViewVisibility = Visibility.Visible;
+        }
+
+        private void InternalDialog_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ServiceLocator.Instance.MainWindowViewModel.BigCardViewVisibility = Visibility.Collapsed;
+
+            // encourage the carbage collector
+            GC.Collect();
         }
 
         #endregion

@@ -1,10 +1,14 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
 using MagicTheGatheringArenaDeckMaster.Collections;
 using MagicTheGatheringArenaDeckMaster.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using WPF.InternalDialogs;
 
@@ -14,6 +18,8 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
     {
         #region Fields
 
+        private BitmapImage bigCardImage;
+        private Visibility bigCardView = Visibility.Collapsed;
         private CancellationTokenSource cts = new CancellationTokenSource();
         private CardCollectionViewModel cardCollectionViewModel;
         private CardCollection cards;
@@ -26,11 +32,31 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private Visibility setFilterMessageVisibility = Visibility.Collapsed;
         private ObservableCollection<string> setNames;
         private ObservableCollection<string> standardOnlySetNames;
-        private string statusMessage = "Ready";
+        private string statusMessage = "Ready";        
 
         #endregion
 
         #region Properties
+
+        public BitmapImage BigCardImage
+        {
+            get => bigCardImage;
+            set
+            {
+                bigCardImage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Visibility BigCardViewVisibility
+        {
+            get => bigCardView;
+            set
+            {
+                bigCardView = value;
+                OnPropertyChanged();
+            }
+        }
 
         public CardCollectionViewModel CardCollectionViewModel
         {
@@ -168,6 +194,13 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         public MainWindowViewModel()
         {
             FilterSetNames = new ObservableCollection<SetFilter>();
+
+            bigCardImage = new BitmapImage();
+            bigCardImage.BeginInit();
+            bigCardImage.CacheOption = BitmapCacheOption.None;
+            bigCardImage.DecodePixelWidth = 521;
+            bigCardImage.UriSource = new Uri("pack://application:,,,/Images/card-back.png");
+            bigCardImage.EndInit();
         }
 
         #endregion

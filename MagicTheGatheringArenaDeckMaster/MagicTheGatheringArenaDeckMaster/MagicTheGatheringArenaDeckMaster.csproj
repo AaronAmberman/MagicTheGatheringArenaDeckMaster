@@ -17,6 +17,7 @@
     <None Remove="Images\blue-black.png" />
     <None Remove="Images\blue-red.png" />
     <None Remove="Images\blue.png" />
+    <None Remove="Images\card-back.png" />
     <None Remove="Images\colorless.png" />
     <None Remove="Images\EightColumn.png" />
     <None Remove="Images\EightColumnColor.png" />
@@ -43,6 +44,7 @@
     <Resource Include="Images\blue-black.png" />
     <Resource Include="Images\blue-red.png" />
     <Resource Include="Images\blue.png" />
+    <Resource Include="Images\card-back.png" />
     <Resource Include="Images\colorless.png" />
     <Resource Include="Images\EightColumn.png" />
     <Resource Include="Images\EightColumnColor.png" />

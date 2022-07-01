@@ -275,7 +275,8 @@
                                             <DataTemplate>
                                                 <Grid>
                                                     <Image Margin="5" Width="219" Height="306" RenderOptions.BitmapScalingMode="HighQuality"
-                                                           MouseLeftButtonDown="CardCollection_CardImage_MouseLeftButtonDown">
+                                                           MouseLeftButtonDown="CardCollection_CardImage_MouseLeftButtonDown" 
+                                                           MouseRightButtonUp="CardCollection_CardImage_MouseRightButtonUp">
                                                         <Image.Source>
                                                             <BitmapImage DecodePixelWidth="219" UriSource="{Binding ImagePath}" />
                                                         </Image.Source>
@@ -294,6 +295,15 @@
                                                 Please select one or more sets from the "Set Filter" at the top left of the window.
                                             </TextBlock>
                                         </Border>
+                                    </id:InternalDialog>
+                                    <id:InternalDialog x:Name="bigImageInternalDialog" Grid.Row="0" Grid.RowSpan="2" Background="#AA000000" CloseOnEscape="False"
+                                                       FocusParent="{Binding ElementName=cardCollectionMainGrid}"
+                                                       Visibility="{Binding BigCardViewVisibility, FallbackValue=Collapsed, TargetNullValue=Collapsed}"
+                                                       MouseLeftButtonDown="InternalDialog_MouseLeftButtonDown">
+                                        <Grid>
+                                            <Image x:Name="bigImage" Grid.Row="1" Margin="5" Width="521" Height="728" RenderOptions.BitmapScalingMode="HighQuality" 
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding BigCardImage}" />
+                                        </Grid>
                                     </id:InternalDialog>
                                 </Grid>
                             </TabItem>
