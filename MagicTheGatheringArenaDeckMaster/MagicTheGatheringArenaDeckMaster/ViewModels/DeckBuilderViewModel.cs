@@ -65,6 +65,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private double valueFour;
         private double valueFive;
         private double valueSix;
+        private double zoomFactor = 1.0;
+        private double zoomMax = 2.0;
+        private double zoomMin = 0.5;
 
         #endregion
 
@@ -538,6 +541,42 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             set
             {
                 valueSix = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double ZoomFactor
+        {
+            get => zoomFactor;
+            set 
+            {
+                if (value < ZoomMin)
+                    zoomFactor = ZoomMin;
+                else if (value > ZoomMax)
+                    zoomFactor = ZoomMax;
+                else
+                    zoomFactor = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public double ZoomMax
+        {
+            get => zoomMax;
+            set
+            {
+                zoomMax = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double ZoomMin
+        {
+            get => zoomMin;
+            set
+            {
+                zoomMin = value;
                 OnPropertyChanged();
             }
         }

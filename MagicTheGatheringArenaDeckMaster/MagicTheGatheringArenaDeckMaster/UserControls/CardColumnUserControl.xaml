@@ -72,8 +72,10 @@
         <ListBox Grid.Row="4" ItemsSource="{Binding Cards}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
+                    <!-- scale this not the ListBox or ListBoxItem -->
                     <customControls:CardControl CardName="{Binding Name}" CardCount="{Binding DeckBuilderDeckCount}"
-                                                AddCard="CardControl_AddCard" RemoveCard="CardControl_RemoveCard" />
+                                                AddCard="CardControl_AddCard" RemoveCard="CardControl_RemoveCard"
+                                                ZoomFactor="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:CardColumnUserControl}}, Path=ZoomFactor}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>

@@ -17,6 +17,11 @@ namespace MagicTheGatheringArenaDeckMaster
 
         #region Methods
 
+        private void resetZoom_Click(object sender, RoutedEventArgs e)
+        {
+            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.ZoomFactor = 1.0;
+        }
+
         #endregion
     }
 }

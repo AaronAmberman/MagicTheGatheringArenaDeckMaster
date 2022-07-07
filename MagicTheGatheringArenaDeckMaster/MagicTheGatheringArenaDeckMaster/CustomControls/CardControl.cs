@@ -49,6 +49,15 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
         public static readonly DependencyProperty InnerBackgroundProperty =
             DependencyProperty.Register("InnerBackground", typeof(SolidColorBrush), typeof(CardControl), new PropertyMetadata(Brushes.Transparent));
 
+        public double ZoomFactor
+        {
+            get { return (double)GetValue(ZoomFactorProperty); }
+            set { SetValue(ZoomFactorProperty, value); }
+        }
+
+        public static readonly DependencyProperty ZoomFactorProperty =
+            DependencyProperty.Register("ZoomFactor", typeof(double), typeof(CardControl), new PropertyMetadata(1.0, ZoomFactorChanged));
+
         #endregion
 
         #region Events
@@ -73,6 +82,17 @@ namespace MagicTheGatheringArenaDeckMaster.CustomControls
         #endregion
 
         #region Methods
+
+        private static void ZoomFactorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is not CardControl cc) return;
+
+            if (cc.border != null)
+                cc.border.LayoutTransform = new ScaleTransform(cc.ZoomFactor, cc.ZoomFactor);
+
+            if (cc.addRemoveButton != null)
+                cc.addRemoveButton.LayoutTransform = new ScaleTransform(cc.ZoomFactor, cc.ZoomFactor);
+        }
 
         private void CardControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

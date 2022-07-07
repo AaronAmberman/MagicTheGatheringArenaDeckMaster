@@ -19,6 +19,20 @@ namespace MagicTheGatheringArenaDeckMaster.UserControls
     /// <summary>Represents a column of cards.</summary>
     public partial class CardColumnUserControl : UserControl
     {
+        #region Properties
+
+        /// <summary>Gets or sets the zoom factor for the card column. Default is 1.0.</summary>
+        public double ZoomFactor
+        {
+            get { return (double)GetValue(ZoomFactorProperty); }
+            set { SetValue(ZoomFactorProperty, value); }
+        }
+
+        public static readonly DependencyProperty ZoomFactorProperty =
+            DependencyProperty.Register("ZoomFactor", typeof(double), typeof(CardColumnUserControl), new PropertyMetadata(1.0));
+
+        #endregion
+
         #region Constructors
 
         public CardColumnUserControl()
