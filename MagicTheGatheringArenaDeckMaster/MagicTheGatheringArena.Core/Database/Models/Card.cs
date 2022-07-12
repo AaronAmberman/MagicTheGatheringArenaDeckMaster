@@ -2,8 +2,8 @@
 {
     public class Card
     {
-        public int Id { get; set; }
-        public int DeckId { get; set; }
+        public long Id { get; set; }
+        public long DeckId { get; set; }
         public string Name { get; set; }
         public int Count { get; set; }
         public string SetSymbol { get; set; }

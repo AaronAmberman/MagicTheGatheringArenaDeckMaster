@@ -76,9 +76,128 @@ namespace MagicTheGatheringArena.Core.Database
             }
         }
 
+        public bool IsDeckNameUnique(string name, int deckId)
+        {
+            try
+            {
+                SqliteCommand command = connection.CreateCommand();
+
+                if (deckId == -1)
+                {                    
+                    command.CommandText = "SELECT Id 'Decks' WHERE 'Name' = :name";
+                    command.Parameters.Add(new SqliteParameter(":name", name));
+                }
+                else
+                {
+                    command.CommandText = "SELECT Id 'Decks' WHERE 'Name' = :name AND 'Id' = :id";
+                    command.Parameters.Add(new SqliteParameter(":name", name));
+                    command.Parameters.Add(new SqliteParameter(":id", deckId));
+                }
+
+                long? id = (long?)command.ExecuteScalar();
+
+                if (id.HasValue) return true;
+                else return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"An error occurred attempting to check to see if the deck name was unique.{Environment.NewLine}{ex}");
+                logger.Error($"An error occurred attempting to check to see if the deck name was unique.{Environment.NewLine}{ex}");
+
+                return false;
+            }
+        }
+
         public bool SaveDeck(Deck deck)
         {
-            return false;
+            SqliteTransaction transaction = null;
+
+            try
+            {
+                connection.Open();
+
+                transaction = connection.BeginTransaction();
+
+                // save the deck first
+                SqliteCommand command = connection.CreateCommand();
+                command.CommandText = "INSERT INTO 'Decks' VALUES(NULL, :name, :gameType)";
+                command.Parameters.Add(new SqliteParameter(":name", deck.Name));
+                command.Parameters.Add(new SqliteParameter(":gameType", deck.GameType));
+
+                int result = command.ExecuteNonQuery();
+
+                if (result == 0)
+                {
+                    transaction.Rollback();
+
+                    Debug.WriteLine("Could not insert the deck into the database.");
+                    logger.Error("Could not insert the deck into the database.");
+
+                    return false;
+                }
+
+                command.Dispose();
+
+                // get the deck id second
+                command = connection.CreateCommand();
+                command.CommandText = "SELECT last_insert_rowid()";
+
+                long deckId = (long)command.ExecuteScalar();
+
+                deck.Id = deckId;
+
+                command.Dispose();
+
+                // set the deck id on all the cards
+                // save all the cards
+                foreach (Card card in deck.Cards)
+                {
+                    card.DeckId = deckId;
+
+                    command = connection.CreateCommand();
+                    command.CommandText = "INSERT INTO 'CardsPerDeck' VALUES(NULL, :deckId, :name, :count, :setSymbol, :number)";
+                    command.Parameters.Add(new SqliteParameter(":deckId", deckId));
+                    command.Parameters.Add(new SqliteParameter(":name", card.Name));
+                    command.Parameters.Add(new SqliteParameter(":count", card.Count));
+                    command.Parameters.Add(new SqliteParameter(":setSymbol", card.SetSymbol));
+                    command.Parameters.Add(new SqliteParameter(":number", card.CardNumber));
+
+                    result = command.ExecuteNonQuery();
+
+                    if (result == 0)
+                    {
+                        transaction.Rollback();
+
+                        Debug.WriteLine($"Could not insert card {card.Name} into the database.");
+                        logger.Error($"Could not insert card {card.Name} into the database.");
+
+                        return false;
+                    }
+
+                    command.Dispose();
+
+                    // get the card id
+                    command = connection.CreateCommand();
+                    command.CommandText = "SELECT last_insert_rowid()";
+
+                    long cardId = (long)command.ExecuteScalar();
+
+                    card.Id = cardId;
+                }
+
+                transaction.Commit();
+
+                return true;
+            }
+            catch (Exception ex) 
+            {
+                transaction?.Rollback();
+
+                Debug.WriteLine($"An error occurred attempting to save the deck to the database.{Environment.NewLine}{ex}");
+                logger.Error($"An error occurred attempting to save the deck to the database.{Environment.NewLine}{ex}");
+
+                return false;
+            }
         }
 
         #endregion

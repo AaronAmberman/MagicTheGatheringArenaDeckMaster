@@ -750,6 +750,19 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 return;
             }
 
+            if (!ServiceLocator.Instance.DatabaseService.IsDeckNameUnique(Name, -1))
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Conflicting Name";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "The deck name needs to be unique. Please enter a unique deck name.";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.CriticalError;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                isSavingAlready = false;
+
+                return;
+            }
+
             ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
             switch (SelectedSetTypeIndex)
@@ -763,34 +776,25 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
             foreach (UniqueArtTypeViewModel card in Cards)
             {
-                Card match = Deck.Cards.FirstOrDefault(c => c.Name == card.Name && c.SetSymbol == c.SetSymbol);
-
-                if (match != null)
+                Card newCard = new Card
                 {
-                    match.Count++;
+                    Count = card.DeckBuilderDeckCount,
+                    Name = card.Name,
+                    SetSymbol = card.Model.set
+                };
+
+                bool success = int.TryParse(card.Model.collector_number, out int collectorNumber);
+
+                if (success)
+                {
+                    newCard.CardNumber = collectorNumber;
                 }
                 else
                 {
-                    Card newCard = new Card
-                    {
-                        Count = 1,
-                        Name = card.Name,
-                        SetSymbol = card.Model.set
-                    };
-
-                    bool success = int.TryParse(card.Model.collector_number, out int collectorNumber);
-
-                    if (success)
-                    {
-                        newCard.CardNumber = collectorNumber;
-                    }
-                    else
-                    {
-                        ServiceLocator.Instance.LoggerService.Error($"Unable to process card collector number to set the on the card {card.Name} during saving of the deck {Deck.Name}.");
-                    }
-
-                    Deck.Cards.Add(newCard);
+                    ServiceLocator.Instance.LoggerService.Error($"Unable to process card collector number to set the on the card {card.Name} during saving of the deck {Deck.Name}.");
                 }
+
+                Deck.Cards.Add(newCard);
             }
 
             if (!ServiceLocator.Instance.DatabaseService.SaveDeck(Deck))
