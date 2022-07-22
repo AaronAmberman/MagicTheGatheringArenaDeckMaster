@@ -1,10 +1,5 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace MagicTheGatheringArenaDeckMaster.ViewModels
@@ -50,14 +45,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        #endregion
-
-        #region Constructors
-
-        #endregion
-
-        #region Methods
 
         #endregion
     }

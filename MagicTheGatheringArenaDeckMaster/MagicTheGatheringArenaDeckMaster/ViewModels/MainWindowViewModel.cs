@@ -25,14 +25,13 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private CardCollection cards;
         private DeckBuilderViewModel deckBuilderViewModel;
         private DeckCollectionViewModel deckCollectionViewModel;
-        private ObservableCollection<SetFilter> filterSetNames;
-        private bool isDeckTabButtonsEnabled = true;
+        private ObservableCollection<SetFilter> filterSetNames;        
         private PopupDialogViewModel popupDialogViewModel;
         private int selectedTabControlIndex;
         private Visibility setFilterMessageVisibility = Visibility.Collapsed;
         private ObservableCollection<string> setNames;
         private ObservableCollection<string> standardOnlySetNames;
-        private string statusMessage = "Ready";        
+        private string statusMessage = "Ready";
 
         #endregion
 
@@ -110,15 +109,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        public bool IsDeckTabButtonsEnabled
-        {
-            get => isDeckTabButtonsEnabled;
-            set
-            {
-                isDeckTabButtonsEnabled = value;
-                OnPropertyChanged();
-            }
-        }
+        
 
         public PopupDialogViewModel PopupDialogViewModel
         {

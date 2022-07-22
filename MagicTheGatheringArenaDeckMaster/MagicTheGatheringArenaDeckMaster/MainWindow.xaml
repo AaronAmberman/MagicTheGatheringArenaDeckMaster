@@ -254,7 +254,7 @@
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsDeckTabButtonsEnabled}" Value="False">
+                                                        <DataTrigger Binding="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" Value="False">
                                                             <Setter Property="Visibility" Value="Visible" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -308,7 +308,7 @@
                                 </Grid>
                             </TabItem>
                             <TabItem Header="Decks">
-                                <Grid>
+                                <Grid x:Name="deckMainGrid">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />
@@ -330,46 +330,49 @@
                                                                          Margin="0,0,5,0" VerticalContentAlignment="Center"
                                                                          Text="{Binding DeckCollectionViewModel.SearchText}" />
                                         <Button Grid.Column="2" Margin="0,0,5,0" Height="28" ToolTip="Add" Command="{Binding DeckCollectionViewModel.AddCommand}"
-                                                Content="{StaticResource Add}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
+                                                Content="{StaticResource Add}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" />
                                         <Button Grid.Column="3" Margin="0,0,5,0" ToolTip="Remove" Command="{Binding DeckCollectionViewModel.RemoveCommand}"
-                                                Content="{StaticResource Remove}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
+                                                Content="{StaticResource Remove}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" />
                                         <Button Grid.Column="4" Margin="0,0,5,0" ToolTip="Edit" Command="{Binding DeckCollectionViewModel.EditCommand}"
-                                                Content="{StaticResource Edit}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
+                                                Content="{StaticResource Edit}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" />
                                         <Button Grid.Column="5" Margin="0,0,5,0" ToolTip="Copy" Command="{Binding DeckCollectionViewModel.CopyCommand}"
-                                                Content="{StaticResource Copy}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
+                                                Content="{StaticResource Copy}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" />
                                         <Button Grid.Column="6" Margin="0,0,5,0" ToolTip="Import" Command="{Binding DeckCollectionViewModel.ImportCommand}"
-                                                Content="{StaticResource Import}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
+                                                Content="{StaticResource Import}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" />
                                         <Button Grid.Column="7" Margin="0,0,5,0" ToolTip="Export" Command="{Binding DeckCollectionViewModel.ExportCommand}"
-                                                Content="{StaticResource Export}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
+                                                Content="{StaticResource Export}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" />
                                     </Grid>
                                     <ListView x:Name="decksListView" Grid.Row="1" Margin="0,5,0,0" ItemsSource="{Binding DeckCollectionViewModel.Decks}">
                                         <ListView.View>
                                             <GridView>
-                                                <GridViewColumn Header="Name"
+                                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
                                                                                 Converter={StaticResource ArithmeticConverter}, ConverterParameter=/4}" />
+                                                <GridViewColumn Header="Game Type" DisplayMemberBinding="{Binding GameType}"
+                                                                Width="{Binding ElementName=decksListView, Path=ActualWidth, 
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/10}" />
                                                 <GridViewColumn Header="Colors"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
                                                                                 Converter={StaticResource ArithmeticConverter}, ConverterParameter=/8}" />
-                                                <GridViewColumn Header="# Creatures"
+                                                <GridViewColumn Header="# Creatures" DisplayMemberBinding="{Binding NumberOfCreatures}"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
                                                                                 Converter={StaticResource ArithmeticConverter}, ConverterParameter=/17}" />
-                                                <GridViewColumn Header="# Instants"
+                                                <GridViewColumn Header="# Instants" DisplayMemberBinding="{Binding NumberOfInstants}"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
                                                                                 Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}" />
-                                                <GridViewColumn Header="# Soceries"
+                                                <GridViewColumn Header="# Soceries" DisplayMemberBinding="{Binding NumberOfSorceries}"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
                                                                                 Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}" />
-                                                <GridViewColumn Header="# Enchantments" 
+                                                <GridViewColumn Header="# Enchantments" DisplayMemberBinding="{Binding NumberOfEnchantments}"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
                                                                                 Converter={StaticResource ArithmeticConverter}, ConverterParameter=/13}" />
-                                                <GridViewColumn Header="# Artifacts" 
+                                                <GridViewColumn Header="# Artifacts" DisplayMemberBinding="{Binding NumberOfArtifacts}"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
                                                                                 Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}" />
-                                                <GridViewColumn Header="# Lands" 
+                                                <GridViewColumn Header="# Lands" DisplayMemberBinding="{Binding NumberOfLands}"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
                                                                                 Converter={StaticResource ArithmeticConverter}, ConverterParameter=/22}" />
-                                                <GridViewColumn Header="Total Cards" 
+                                                <GridViewColumn Header="Total Cards" DisplayMemberBinding="{Binding TotalCards}"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
                                                                                 Converter={StaticResource ArithmeticConverter}, ConverterParameter=/18}" />
                                             </GridView>
@@ -377,6 +380,25 @@
                                     </ListView>
                                     <TextBlock Grid.Row="2" Margin="5,4.5"
                                                Text="{Binding ElementName=decksListView, Path=Items.Count, StringFormat=0 decks}" />
+                                    <id:ProgressInternalDialog x:Name="databaseBusyOverlay" Grid.Row="0" Grid.RowSpan="3" 
+                                                               Background="#AA000000" CloseOnEscape="False" 
+                                                               ProgressDialogBackground="#FF2F2F2F" TitleAreaBackground="#FF101010" Foreground="White"
+                                                               ResizeGripVisibility="Collapsed" 
+                                                               ProgressDialogMessage="Please wait while we query the database for information about decks." Title="Querying Database"
+                                                               FocusParent="{Binding ElementName=deckMainGrid}"
+                                                               Visibility="{Binding DeckCollectionViewModel.DeckBusyVisibility, FallbackValue=Collapsed, TargetNullValue=Collapsed}">
+                                        <id:ProgressInternalDialog.CloseButtonStyle>
+                                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </Style>
+                                        </id:ProgressInternalDialog.CloseButtonStyle>
+                                        <id:ProgressInternalDialog.ProgressBarStyle>
+                                            <Style TargetType="ProgressBar" BasedOn="{StaticResource {x:Type ProgressBar}}">
+                                                <Setter Property="IsIndeterminate" Value="True" />
+                                                <Setter Property="Height" Value="20" />
+                                            </Style>
+                                        </id:ProgressInternalDialog.ProgressBarStyle>
+                                    </id:ProgressInternalDialog>
                                 </Grid>
                             </TabItem>
                         </TabControl>

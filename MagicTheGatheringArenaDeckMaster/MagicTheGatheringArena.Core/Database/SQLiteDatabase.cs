@@ -180,20 +180,20 @@ namespace MagicTheGatheringArena.Core.Database
 
                 if (deckId == -1)
                 {                    
-                    command.CommandText = "SELECT Id 'Decks' WHERE 'Name' = :name";
+                    command.CommandText = "SELECT Id FROM 'Decks' WHERE Name = :name";
                     command.Parameters.Add(new SqliteParameter(":name", name));
                 }
                 else
                 {
-                    command.CommandText = "SELECT Id 'Decks' WHERE 'Name' = :name AND 'Id' = :id";
+                    command.CommandText = "SELECT Id FROM 'Decks' WHERE Name = :name AND Id = :id";
                     command.Parameters.Add(new SqliteParameter(":name", name));
                     command.Parameters.Add(new SqliteParameter(":id", deckId));
                 }
 
                 long? id = (long?)command.ExecuteScalar();
 
-                if (id.HasValue) return true;
-                else return false;
+                if (id.HasValue && id.Value != 0) return false;
+                else return true;
             }
             catch (Exception ex)
             {

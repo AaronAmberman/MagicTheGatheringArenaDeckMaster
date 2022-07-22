@@ -6,9 +6,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using WPF.InternalDialogs;
 
 namespace MagicTheGatheringArenaDeckMaster.ViewModels
@@ -824,6 +822,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 Clear();
 
                 close();
+
+                // refresh UI, with data from database
+                ServiceLocator.Instance.MainWindowViewModel.DeckCollectionViewModel.QueryDatabaseForDecks();
             }
         }
 

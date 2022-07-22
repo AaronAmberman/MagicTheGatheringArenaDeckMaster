@@ -214,7 +214,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 {
                     ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "All cards have been downloaded. For any errors please see the log file.";
                     ServiceLocator.Instance.MainWindowViewModel.SetStatusMessageOnDelay(
-                        ServiceLocator.Instance.MainWindowViewModel.IsDeckTabButtonsEnabled 
+                        ServiceLocator.Instance.MainWindowViewModel.DeckCollectionViewModel.IsDeckTabButtonsEnabled 
                             ? "Viewing card collection" 
                             : "Creating deck", 
                         7000);

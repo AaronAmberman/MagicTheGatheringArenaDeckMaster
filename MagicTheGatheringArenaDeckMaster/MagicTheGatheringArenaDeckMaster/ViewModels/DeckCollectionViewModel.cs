@@ -2,9 +2,11 @@
 using MagicTheGatheringArena.Core.MVVM;
 using MagicTheGatheringArena.Core.Types;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -20,9 +22,11 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private ICommand copyCommand;
         private ObservableCollection<Deck> decks = new ObservableCollection<Deck>();
         private CollectionView deckCollectionView;
+        private Visibility deckBusyVisibility = Visibility.Collapsed;
         private ICommand editCommand;
         private ICommand exportCommand;
         private ICommand importCommand;
+        private bool isDeckTabButtonsEnabled = true;
         private ICommand removeCommand;
         private string searchText;
         private SingleShotTimer timer;
@@ -45,11 +49,31 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
+        public Visibility DeckBusyVisibility
+        {
+            get => deckBusyVisibility;
+            set
+            {
+                deckBusyVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand EditCommand => editCommand ??= new RelayCommand(EditDeck);
 
         public ICommand ExportCommand => exportCommand ??= new RelayCommand(ExportDeck);
 
         public ICommand ImportCommand => importCommand ??= new RelayCommand(ImportDeck);
+
+        public bool IsDeckTabButtonsEnabled
+        {
+            get => isDeckTabButtonsEnabled;
+            set
+            {
+                isDeckTabButtonsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand RemoveCommand => removeCommand ??= new RelayCommand(RemoveDeck);
 
@@ -216,7 +240,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             window.Show();
 
             // disable deck tab so users cannot navigate to it
-            ServiceLocator.Instance.MainWindowViewModel.IsDeckTabButtonsEnabled = false;
+            ServiceLocator.Instance.MainWindowViewModel.DeckCollectionViewModel.IsDeckTabButtonsEnabled = false;
 
             // show card collection tab again so users can double click on cards to add them
             ServiceLocator.Instance.MainWindowViewModel.SelectedTabControlIndex = 0;
@@ -254,6 +278,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
                             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true; // prevents closing
                             ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                            // refresh UI, with data from database
+                            ServiceLocator.Instance.MainWindowViewModel.DeckCollectionViewModel.QueryDatabaseForDecks();
                         }
                         else
                         {
@@ -286,7 +313,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
 
             // enable deck tab so users can navigate to it (regardless of what happens in this deck editor window; cancel or saved)
-            ServiceLocator.Instance.MainWindowViewModel.IsDeckTabButtonsEnabled = true;
+            ServiceLocator.Instance.MainWindowViewModel.DeckCollectionViewModel.IsDeckTabButtonsEnabled = true;
 
             ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing card collection";
 
@@ -323,6 +350,75 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private void ImportDeck()
         {
 
+        }
+
+        public void QueryDatabaseForDecks()
+        {
+            // this means the task is already running
+            if (DeckBusyVisibility == Visibility.Visible) return;
+
+            Task.Run(() => 
+            {
+                DeckBusyVisibility = Visibility.Visible;
+
+                return ServiceLocator.Instance.DatabaseService.GetDecks();
+            }).ContinueWith(task => 
+            {
+                if (task.Exception != null)
+                {
+                    ServiceLocator.Instance.LoggerService.Error($"An error occurred attempting to query the database for deck info.{Environment.NewLine}{task.Exception}");
+
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.CriticalError;
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Error Counting Files";
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = $"An error occurred attempting to query the database. Please see log for details.";
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                    ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
+                    DeckBusyVisibility = Visibility.Collapsed;
+
+                    return new List<Deck>();
+                }
+                else
+                {
+                    List<Deck> decks = task.Result;
+
+                    foreach (Deck deck in decks)
+                    {
+                        ServiceLocator.Instance.DatabaseService.GetCardsForDeck(deck);
+                    }
+
+                    return decks;
+                }
+            }).ContinueWith(task => 
+            {
+                if (task.Exception != null)
+                {
+                    ServiceLocator.Instance.LoggerService.Error($"An error occurred attempting to query the database for deck info.{Environment.NewLine}{task.Exception}");
+
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.CriticalError;
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Error Counting Files";
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = $"An error occurred attempting to query the database. Please see log for details.";
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                    ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();                    
+                }
+
+                List<Deck> decks = task.Result;
+
+                ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() => 
+                {
+                    Decks.Clear();
+                    Decks.AddRange(decks);
+                });
+
+                // we have all of our deck information, close wait UI
+                DeckBusyVisibility = Visibility.Collapsed;
+            });
         }
 
         private void RemoveDeck()

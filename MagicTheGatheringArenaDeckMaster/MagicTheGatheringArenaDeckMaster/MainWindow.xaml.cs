@@ -129,7 +129,7 @@ namespace MagicTheGatheringArenaDeckMaster
         {
             if (tabControl.SelectedIndex == 0 && ServiceLocator.Instance.MainWindowViewModel != null)
             {
-                if (ServiceLocator.Instance.MainWindowViewModel.IsDeckTabButtonsEnabled)
+                if (ServiceLocator.Instance.MainWindowViewModel.DeckCollectionViewModel.IsDeckTabButtonsEnabled)
                     ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing card collection";
                 else
                     ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Creating deck";
@@ -137,6 +137,7 @@ namespace MagicTheGatheringArenaDeckMaster
             else if (tabControl.SelectedIndex == 1 && ServiceLocator.Instance.MainWindowViewModel != null)
             {
                 ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing decks";
+                ServiceLocator.Instance.MainWindowViewModel.DeckCollectionViewModel.QueryDatabaseForDecks();
             }
         }
 
@@ -185,7 +186,7 @@ namespace MagicTheGatheringArenaDeckMaster
         private void CardCollection_CardImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // add card to deck
-            if (!ServiceLocator.Instance.MainWindowViewModel.IsDeckTabButtonsEnabled) // this means we are creating a deck
+            if (!ServiceLocator.Instance.MainWindowViewModel.DeckCollectionViewModel.IsDeckTabButtonsEnabled) // this means we are creating a deck
             {
                 Image image = sender as Image;
                 UniqueArtTypeViewModel vm = image.DataContext as UniqueArtTypeViewModel;
