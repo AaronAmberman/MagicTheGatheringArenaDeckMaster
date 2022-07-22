@@ -26,7 +26,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private DeckBuilderViewModel deckBuilderViewModel;
         private DeckCollectionViewModel deckCollectionViewModel;
         private ObservableCollection<SetFilter> filterSetNames;
-        private bool isDeckTabEnabled = true;
+        private bool isDeckTabButtonsEnabled = true;
         private PopupDialogViewModel popupDialogViewModel;
         private int selectedTabControlIndex;
         private Visibility setFilterMessageVisibility = Visibility.Collapsed;
@@ -110,12 +110,12 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        public bool IsDeckTabEnabled
+        public bool IsDeckTabButtonsEnabled
         {
-            get => isDeckTabEnabled;
+            get => isDeckTabButtonsEnabled;
             set
             {
-                isDeckTabEnabled = value;
+                isDeckTabButtonsEnabled = value;
                 OnPropertyChanged();
             }
         }

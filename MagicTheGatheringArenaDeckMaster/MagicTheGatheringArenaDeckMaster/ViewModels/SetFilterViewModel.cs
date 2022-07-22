@@ -351,7 +351,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                     Visibility = Visibility.Collapsed;
 
-                    if (ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled)
+                    if (ServiceLocator.Instance.MainWindowViewModel.IsDeckTabButtonsEnabled)
                         ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing card collection";
                     else
                         ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Creating deck";

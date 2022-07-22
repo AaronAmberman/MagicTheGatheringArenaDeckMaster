@@ -254,7 +254,7 @@
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsDeckTabEnabled}" Value="False">
+                                                        <DataTrigger Binding="{Binding IsDeckTabButtonsEnabled}" Value="False">
                                                             <Setter Property="Visibility" Value="Visible" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -307,7 +307,7 @@
                                     </id:InternalDialog>
                                 </Grid>
                             </TabItem>
-                            <TabItem Header="Decks" IsEnabled="{Binding IsDeckTabEnabled}">
+                            <TabItem Header="Decks">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -330,17 +330,17 @@
                                                                          Margin="0,0,5,0" VerticalContentAlignment="Center"
                                                                          Text="{Binding DeckCollectionViewModel.SearchText}" />
                                         <Button Grid.Column="2" Margin="0,0,5,0" Height="28" ToolTip="Add" Command="{Binding DeckCollectionViewModel.AddCommand}"
-                                                Content="{StaticResource Add}" Style="{StaticResource DeckHeaderButton}" />
+                                                Content="{StaticResource Add}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
                                         <Button Grid.Column="3" Margin="0,0,5,0" ToolTip="Remove" Command="{Binding DeckCollectionViewModel.RemoveCommand}"
-                                                Content="{StaticResource Remove}" Style="{StaticResource DeckHeaderButton}"/>
+                                                Content="{StaticResource Remove}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
                                         <Button Grid.Column="4" Margin="0,0,5,0" ToolTip="Edit" Command="{Binding DeckCollectionViewModel.EditCommand}"
-                                                Content="{StaticResource Edit}" Style="{StaticResource DeckHeaderButton}"/>
+                                                Content="{StaticResource Edit}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
                                         <Button Grid.Column="5" Margin="0,0,5,0" ToolTip="Copy" Command="{Binding DeckCollectionViewModel.CopyCommand}"
-                                                Content="{StaticResource Copy}" Style="{StaticResource DeckHeaderButton}"/>
+                                                Content="{StaticResource Copy}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
                                         <Button Grid.Column="6" Margin="0,0,5,0" ToolTip="Import" Command="{Binding DeckCollectionViewModel.ImportCommand}"
-                                                Content="{StaticResource Import}" Style="{StaticResource DeckHeaderButton}"/>
+                                                Content="{StaticResource Import}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
                                         <Button Grid.Column="7" Margin="0,0,5,0" ToolTip="Export" Command="{Binding DeckCollectionViewModel.ExportCommand}"
-                                                Content="{StaticResource Export}" Style="{StaticResource DeckHeaderButton}"/>
+                                                Content="{StaticResource Export}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding IsDeckTabButtonsEnabled}" />
                                     </Grid>
                                     <ListView x:Name="decksListView" Grid.Row="1" Margin="0,5,0,0" ItemsSource="{Binding DeckCollectionViewModel.Decks}">
                                         <ListView.View>

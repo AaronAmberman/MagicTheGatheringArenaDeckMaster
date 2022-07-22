@@ -216,7 +216,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             window.Show();
 
             // disable deck tab so users cannot navigate to it
-            ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled = false;
+            ServiceLocator.Instance.MainWindowViewModel.IsDeckTabButtonsEnabled = false;
 
             // show card collection tab again so users can double click on cards to add them
             ServiceLocator.Instance.MainWindowViewModel.SelectedTabControlIndex = 0;
@@ -286,7 +286,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
 
             // enable deck tab so users can navigate to it (regardless of what happens in this deck editor window; cancel or saved)
-            ServiceLocator.Instance.MainWindowViewModel.IsDeckTabEnabled = true;
+            ServiceLocator.Instance.MainWindowViewModel.IsDeckTabButtonsEnabled = true;
 
             ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Viewing card collection";
 

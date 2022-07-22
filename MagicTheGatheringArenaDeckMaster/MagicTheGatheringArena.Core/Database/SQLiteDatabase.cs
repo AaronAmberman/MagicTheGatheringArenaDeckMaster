@@ -2,6 +2,7 @@
 using MagicTheGatheringArena.Core.Services;
 using Microsoft.Data.Sqlite;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace MagicTheGatheringArena.Core.Database
@@ -65,6 +66,25 @@ namespace MagicTheGatheringArena.Core.Database
                 command.ExecuteNonQuery();
                 command.Dispose();
 
+                // create index on FK for faster lookup
+                tableCreateStatement = "CREATE INDEX IF NOT EXISTS Decks_CardsPerDeck_Index ON CardsPerDeck('DeckId')";
+
+                command = connection.CreateCommand();
+                command.CommandText = tableCreateStatement;
+                command.ExecuteNonQuery();
+                command.Dispose();
+
+                // create delete trigger that will delete all the cards for a deck when we delete the deck
+                tableCreateStatement = "CREATE TRIGGER IF NOT EXISTS delete_CardsPerDeck_OnDeleteDeck BEFORE DELETE ON Decks " +
+                    "BEGIN " +
+                    "DELETE FROM 'CardsPerDeck' WHERE DeckId = OLD.Id; " +
+                    "END";
+
+                command = connection.CreateCommand();
+                command.CommandText = tableCreateStatement;
+                command.ExecuteNonQuery();
+                command.Dispose();
+
                 return true;
             }
             catch (Exception ex)
@@ -74,6 +94,82 @@ namespace MagicTheGatheringArena.Core.Database
 
                 return false;
             }
+        }
+
+        public void GetCardsForDeck(Deck deck)
+        {
+            try
+            {
+                connection.Open();
+
+                string selectStatement = "SELECT * FROM 'CardsPerDeck' WHERE 'DeckId' = :id";
+
+                SqliteCommand command = connection.CreateCommand();
+                command.CommandText = selectStatement;
+                command.Parameters.Add(new SqliteParameter(":id", deck.Id));
+
+                SqliteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Card card = new Card
+                    {
+                        Id = reader.GetFieldValue<long>(0),
+                        DeckId = reader.GetFieldValue<long>(1),
+                        Name = reader.GetFieldValue<string>(2),
+                        Count = reader.GetFieldValue<int>(3),
+                        SetSymbol = reader.GetFieldValue<string>(4),
+                        CardNumber = reader.GetFieldValue<int>(5)
+                    };
+
+                    deck.Cards.Add(card);
+                }
+
+                command.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"An error occurred attempting to get cards for the deck {deck.Name}.{Environment.NewLine}{ex}");
+                logger.Error($"An error occurred attempting to get cards for the deck {deck.Name}.{Environment.NewLine}{ex}");
+            }
+        }
+
+        public List<Deck> GetDecks()
+        {
+            List<Deck> decks = new List<Deck>();
+
+            try
+            {
+                connection.Open();
+
+                string selectStatement = "SELECT * FROM 'Decks'";
+
+                SqliteCommand command = connection.CreateCommand();
+                command.CommandText = selectStatement;
+                
+                SqliteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Deck deck = new Deck
+                    {
+                        Id = reader.GetFieldValue<long>(0),
+                        Name = reader.GetFieldValue<string>(1),
+                        GameType = reader.GetFieldValue<string>(2)
+                    };
+
+                    decks.Add(deck);
+                }
+
+                command.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"An error occurred attempting to get the deck list from the database.{Environment.NewLine}{ex}");
+                logger.Error($"An error occurred attempting to get the deck list from the database.{Environment.NewLine}{ex}");
+            }
+
+            return decks;
         }
 
         public bool IsDeckNameUnique(string name, int deckId)
