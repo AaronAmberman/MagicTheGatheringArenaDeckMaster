@@ -8,5 +8,7 @@
         public int Count { get; set; }
         public string SetSymbol { get; set; }
         public int CardNumber { get; set; }
+        public string Color { get; set; }
+        public string Type { get; set; }
     }
 }

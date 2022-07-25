@@ -29,6 +29,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private bool isDeckTabButtonsEnabled = true;
         private ICommand removeCommand;
         private string searchText;
+        private Deck selectedDeck;
         private SingleShotTimer timer;
 
         #endregion
@@ -86,6 +87,16 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                 SetupOrRefreshFilter();
 
+                OnPropertyChanged();
+            }
+        }
+
+        public Deck SelectedDeck 
+        { 
+            get => selectedDeck; 
+            set
+            {
+                selectedDeck = value;
                 OnPropertyChanged();
             }
         }
@@ -343,7 +354,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             if (deck == null) return false;
 
             if (deck.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)) return true;
-            
+
             return false;
         }
 
@@ -357,12 +368,12 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             // this means the task is already running
             if (DeckBusyVisibility == Visibility.Visible) return;
 
-            Task.Run(() => 
+            Task.Run(() =>
             {
                 DeckBusyVisibility = Visibility.Visible;
 
                 return ServiceLocator.Instance.DatabaseService.GetDecks();
-            }).ContinueWith(task => 
+            }).ContinueWith(task =>
             {
                 if (task.Exception != null)
                 {
@@ -392,7 +403,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                     return decks;
                 }
-            }).ContinueWith(task => 
+            }).ContinueWith(task =>
             {
                 if (task.Exception != null)
                 {
@@ -405,12 +416,12 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
                     ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
 
-                    ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();                    
+                    ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
                 }
 
                 List<Deck> decks = task.Result;
 
-                ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() => 
+                ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() =>
                 {
                     Decks.Clear();
                     Decks.AddRange(decks);

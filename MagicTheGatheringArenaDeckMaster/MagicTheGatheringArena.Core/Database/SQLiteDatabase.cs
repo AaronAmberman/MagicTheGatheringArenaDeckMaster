@@ -58,6 +58,8 @@ namespace MagicTheGatheringArena.Core.Database
                     "'Count' INTEGER NOT NULL," +
                     "'SetSymbol' TEXT NOT NULL," +
                     "'Number' INTEGER NOT NULL," +
+                    "'Color' TEXT NOT NULL," +
+                    "'Type' TEXT NOT NULL," +
                     "CONSTRAINT fk_CardsPerDeck_Decks FOREIGN KEY('DeckId') REFERENCES 'Decks'('Id') ON DELETE CASCADE" +
                     ")";
 
@@ -102,7 +104,7 @@ namespace MagicTheGatheringArena.Core.Database
             {
                 connection.Open();
 
-                string selectStatement = "SELECT * FROM 'CardsPerDeck' WHERE 'DeckId' = :id";
+                string selectStatement = "SELECT * FROM 'CardsPerDeck' WHERE DeckId = :id";
 
                 SqliteCommand command = connection.CreateCommand();
                 command.CommandText = selectStatement;
@@ -119,7 +121,9 @@ namespace MagicTheGatheringArena.Core.Database
                         Name = reader.GetFieldValue<string>(2),
                         Count = reader.GetFieldValue<int>(3),
                         SetSymbol = reader.GetFieldValue<string>(4),
-                        CardNumber = reader.GetFieldValue<int>(5)
+                        CardNumber = reader.GetFieldValue<int>(5),
+                        Color = reader.GetFieldValue<string>(6),
+                        Type = reader.GetFieldValue<string>(7)
                     };
 
                     deck.Cards.Add(card);
@@ -251,12 +255,14 @@ namespace MagicTheGatheringArena.Core.Database
                     card.DeckId = deckId;
 
                     command = connection.CreateCommand();
-                    command.CommandText = "INSERT INTO 'CardsPerDeck' VALUES(NULL, :deckId, :name, :count, :setSymbol, :number)";
+                    command.CommandText = "INSERT INTO 'CardsPerDeck' VALUES(NULL, :deckId, :name, :count, :setSymbol, :number, :color, :type)";
                     command.Parameters.Add(new SqliteParameter(":deckId", deckId));
                     command.Parameters.Add(new SqliteParameter(":name", card.Name));
                     command.Parameters.Add(new SqliteParameter(":count", card.Count));
                     command.Parameters.Add(new SqliteParameter(":setSymbol", card.SetSymbol));
                     command.Parameters.Add(new SqliteParameter(":number", card.CardNumber));
+                    command.Parameters.Add(new SqliteParameter(":color", card.Color));
+                    command.Parameters.Add(new SqliteParameter(":type", card.Type));
 
                     result = command.ExecuteNonQuery();
 

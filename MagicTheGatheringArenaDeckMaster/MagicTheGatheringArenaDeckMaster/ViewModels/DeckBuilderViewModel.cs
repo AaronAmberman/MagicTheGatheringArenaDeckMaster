@@ -778,7 +778,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 {
                     Count = card.DeckBuilderDeckCount,
                     Name = card.Name,
-                    SetSymbol = card.Model.set
+                    SetSymbol = card.Model.set,
+                    Color = string.Join("", card.Model.colors),
+                    Type = card.Model.type_line
                 };
 
                 bool success = int.TryParse(card.Model.collector_number, out int collectorNumber);

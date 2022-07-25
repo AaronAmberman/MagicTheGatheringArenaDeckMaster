@@ -127,6 +127,11 @@ namespace MagicTheGatheringArenaDeckMaster
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // the ListView on the deck page is firing this selection changed event alongn with
+            // its own when a deck is selected make sure our source is the tab control...
+            // wonder why it does this? they are separate selection changed events
+            if (e.OriginalSource != tabControl) return;
+
             if (tabControl.SelectedIndex == 0 && ServiceLocator.Instance.MainWindowViewModel != null)
             {
                 if (ServiceLocator.Instance.MainWindowViewModel.DeckCollectionViewModel.IsDeckTabButtonsEnabled)

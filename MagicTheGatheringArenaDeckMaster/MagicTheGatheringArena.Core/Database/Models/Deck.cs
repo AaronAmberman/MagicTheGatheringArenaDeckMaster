@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 
 namespace MagicTheGatheringArena.Core.Database.Models
 {
@@ -10,12 +13,18 @@ namespace MagicTheGatheringArena.Core.Database.Models
 
         public List<Card> Cards { get; set; } = new List<Card>();
 
-        public int NumberOfCreatures => 0;
-        public int NumberOfInstants => 0;
-        public int NumberOfSorceries => 0;
-        public int NumberOfEnchantments => 0;
-        public int NumberOfArtifacts => 0;
-        public int NumberOfLands => 0;
-        public int TotalCards => 0;
+        public int NumberOfCreatures => Cards.Count(card => card.Type.Contains("Creature"));
+        public int NumberOfInstants => Cards.Count(card => card.Type.Contains("Instant"));
+        public int NumberOfSorceries => Cards.Count(card => card.Type.Contains("Sorcery"));
+        public int NumberOfEnchantments => Cards.Count(card => card.Type.Contains("Enchantment"));
+        public int NumberOfArtifacts => Cards.Count(card => card.Type.Contains("Artifact"));
+        public int NumberOfLands => Cards.Count(card => card.Type.Contains("Land") && card.Type != "Artifact Land");
+        public int TotalCards => Cards.Sum(card => card.Count);
+
+        public Visibility HasWhite => Cards.Any(card => card.Color.Contains("W")) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility HasBlue => Cards.Any(card => card.Color.Contains("U")) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility HasBlack => Cards.Any(card => card.Color.Contains("B")) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility HasRed => Cards.Any(card => card.Color.Contains("R")) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility HasGreen => Cards.Any(card => card.Color.Contains("G")) ? Visibility.Visible : Visibility.Collapsed;
     }
 }

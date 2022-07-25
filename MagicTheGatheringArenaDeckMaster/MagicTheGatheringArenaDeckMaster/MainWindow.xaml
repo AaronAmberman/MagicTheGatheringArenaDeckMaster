@@ -9,6 +9,7 @@
         xmlns:userControls="clr-namespace:MagicTheGatheringArenaDeckMaster.UserControls"
         xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
         xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+        xmlns:cc="clr-namespace:MagicTheGatheringArenaDeckMaster.CustomControls"
         mc:Ignorable="d"
         Title="MTG Arena Deck Master" Height="960" Width="1280" WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/Icon.ico"        
@@ -342,39 +343,115 @@
                                         <Button Grid.Column="7" Margin="0,0,5,0" ToolTip="Export" Command="{Binding DeckCollectionViewModel.ExportCommand}"
                                                 Content="{StaticResource Export}" Style="{StaticResource DeckHeaderButton}" IsEnabled="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" />
                                     </Grid>
-                                    <ListView x:Name="decksListView" Grid.Row="1" Margin="0,5,0,0" ItemsSource="{Binding DeckCollectionViewModel.Decks}">
+                                    <ListView x:Name="decksListView" Grid.Row="1" Margin="0,5,0,0" ItemsSource="{Binding DeckCollectionViewModel.Decks}" SelectedItem="{Binding DeckCollectionViewModel.SelectedDeck}">
+                                        <ListView.ItemContainerStyle>
+                                            <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            </Style>
+                                        </ListView.ItemContainerStyle>
                                         <ListView.View>
                                             <GridView>
-                                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"
+                                                <GridViewColumn Header="Name"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
-                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/4}" />
-                                                <GridViewColumn Header="Game Type" DisplayMemberBinding="{Binding GameType}"
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/4}">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Name}" FontSize="14" />
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn Header="Game Type"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
-                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/10}" />
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/14}">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding GameType}" FontSize="14" TextAlignment="Center" />
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
                                                 <GridViewColumn Header="Colors"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
-                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/8}" />
-                                                <GridViewColumn Header="# Creatures" DisplayMemberBinding="{Binding NumberOfCreatures}"
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/11}">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal" Margin="0,1,0,0" HorizontalAlignment="Center">
+                                                                <cc:ManaCostSymbol SymbolImage="pack://application:,,,/Images/white.png" Width="16" Margin="0,0,2,0"
+                                                                                   Visibility="{Binding HasWhite}" />
+                                                                <cc:ManaCostSymbol SymbolImage="pack://application:,,,/Images/blue.png" Width="16" Margin="0,0,2,0"
+                                                                                   Visibility="{Binding HasBlue}" />
+                                                                <cc:ManaCostSymbol SymbolImage="pack://application:,,,/Images/black.png" Width="16" Margin="0,0,2,0"
+                                                                                   Visibility="{Binding HasBlack}" />
+                                                                <cc:ManaCostSymbol SymbolImage="pack://application:,,,/Images/red.png" Width="16" Margin="0,0,2,0"
+                                                                                   Visibility="{Binding HasRed}" />
+                                                                <cc:ManaCostSymbol SymbolImage="pack://application:,,,/Images/green.png" Width="16"
+                                                                                   Visibility="{Binding HasGreen}" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn Header="# Creatures"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
-                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/17}" />
-                                                <GridViewColumn Header="# Instants" DisplayMemberBinding="{Binding NumberOfInstants}"
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/17}">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding NumberOfCreatures}" FontSize="14" TextAlignment="Center" />
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn Header="# Instants"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
-                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}" />
-                                                <GridViewColumn Header="# Soceries" DisplayMemberBinding="{Binding NumberOfSorceries}"
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding NumberOfInstants}" FontSize="14" TextAlignment="Center" />
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn Header="# Soceries"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
-                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}" />
-                                                <GridViewColumn Header="# Enchantments" DisplayMemberBinding="{Binding NumberOfEnchantments}"
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding NumberOfSorceries}" FontSize="14" TextAlignment="Center" />
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn Header="# Enchantments"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
-                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/13}" />
-                                                <GridViewColumn Header="# Artifacts" DisplayMemberBinding="{Binding NumberOfArtifacts}"
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/13}">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding NumberOfEnchantments}" FontSize="14" TextAlignment="Center" />
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn Header="# Artifacts"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
-                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}" />
-                                                <GridViewColumn Header="# Lands" DisplayMemberBinding="{Binding NumberOfLands}"
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/19}">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding NumberOfArtifacts}" FontSize="14" TextAlignment="Center" />
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn Header="# Lands"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
-                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/22}" />
-                                                <GridViewColumn Header="Total Cards" DisplayMemberBinding="{Binding TotalCards}"
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/22}">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding NumberOfLands}" FontSize="14" TextAlignment="Center" />
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn Header="Total Cards"
                                                                 Width="{Binding ElementName=decksListView, Path=ActualWidth, 
-                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/18}" />
+                                                                                Converter={StaticResource ArithmeticConverter}, ConverterParameter=/18}">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding TotalCards}" FontSize="14" TextAlignment="Center" />
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
                                             </GridView>
                                         </ListView.View>
                                     </ListView>
