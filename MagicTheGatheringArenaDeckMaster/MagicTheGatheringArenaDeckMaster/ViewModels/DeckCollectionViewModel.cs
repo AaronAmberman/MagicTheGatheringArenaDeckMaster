@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -38,7 +38,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         public ICommand AddCommand => addCommand ??= new RelayCommand(AddDeck);
 
-        public ICommand CopyCommand => copyCommand ??= new RelayCommand(CopyDeck);
+        public ICommand CopyCommand => copyCommand ??= new RelayCommand(CopyDeck, CanCopyDeck);
 
         public ObservableCollection<Deck> Decks
         {
@@ -60,9 +60,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        public ICommand EditCommand => editCommand ??= new RelayCommand(EditDeck);
+        public ICommand EditCommand => editCommand ??= new RelayCommand(EditDeck, CanEditDeck);
 
-        public ICommand ExportCommand => exportCommand ??= new RelayCommand(ExportDeck);
+        public ICommand ExportCommand => exportCommand ??= new RelayCommand(ExportDeck, CanExportDeck);
 
         public ICommand ImportCommand => importCommand ??= new RelayCommand(ImportDeck);
 
@@ -76,7 +76,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        public ICommand RemoveCommand => removeCommand ??= new RelayCommand(RemoveDeck);
+        public ICommand RemoveCommand => removeCommand ??= new RelayCommand(RemoveDeck, CanRemoveDeck);
 
         public string SearchText
         {
@@ -107,59 +107,11 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void AddDeck()
         {
-            // clean if needed (we don't do this on close because of the MainWindow OnClose uses the view model...so only new up/clean up when needing to)
-            if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel != null)
-            {
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.ClearCollectionChanged();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewOneColumnViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewOneColumnViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnOneViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnOneViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnTwoViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnTwoViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnThreeViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnThreeViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnOneViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnOneViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnTwoViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnTwoViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnThreeViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnThreeViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnFourViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnFourViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnFiveViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnFiveViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnSixViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnSixViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnSevenViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnSevenViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnEightViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnEightViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnOneViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnOneViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnTwoViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnTwoViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnThreeViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnThreeViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnFourViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnFourViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnFiveViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnFiveViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnSixViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnSixViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnSevenViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnSevenViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnEightViewModel.Cards.Clear();
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnEightViewModel = null;
-                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel = null;
-
-                // encourage the garbage collector
-                GC.Collect();
-            }
+            ClearDeckBuilderView();
 
             ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel = new DeckBuilderViewModel
             {
+                IsEditing = false,
                 Deck = new Deck(),
                 CardViewOneColumnViewModel = new CardColumnViewModel(),
                 CardViewThreeColumnColumnOneViewModel = new CardColumnViewModel
@@ -332,6 +284,80 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             GC.Collect();
         }
 
+        private bool CanCopyDeck()
+        {
+            return SelectedDeck != null;
+        }
+
+        private bool CanEditDeck()
+        {
+            return SelectedDeck != null;
+        }
+
+        private bool CanExportDeck()
+        {
+            return SelectedDeck != null;
+        }
+
+        private bool CanRemoveDeck()
+        {
+            return SelectedDeck != null;
+        }
+
+        private void ClearDeckBuilderView()
+        {
+            // clean if needed (we don't do this on close because of the MainWindow OnClose uses the view model...so only new up/clean up when needing to)
+            if (ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel != null)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.ClearCollectionChanged();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewOneColumnViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewOneColumnViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnOneViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnOneViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnTwoViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnTwoViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnThreeViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewThreeColumnColumnThreeViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnOneViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnOneViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnTwoViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnTwoViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnThreeViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnThreeViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnFourViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnFourViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnFiveViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnFiveViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnSixViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnSixViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnSevenViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnSevenViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnEightViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColumnEightViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnOneViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnOneViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnTwoViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnTwoViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnThreeViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnThreeViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnFourViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnFourViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnFiveViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnFiveViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnSixViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnSixViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnSevenViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnSevenViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnEightViewModel.Cards.Clear();
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CardViewEightColumnColorColumnEightViewModel = null;
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel = null;
+
+                // encourage the garbage collector
+                GC.Collect();
+            }
+        }
+
         private void CopyDeck()
         {
 
@@ -339,7 +365,164 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void EditDeck()
         {
+            ClearDeckBuilderView();
 
+            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel = new DeckBuilderViewModel
+            {
+                IsEditing = true,
+                Deck = SelectedDeck,
+                CardViewOneColumnViewModel = new CardColumnViewModel(),
+                CardViewThreeColumnColumnOneViewModel = new CardColumnViewModel
+                {
+                    Header = "Creatures"
+                },
+                CardViewThreeColumnColumnTwoViewModel = new CardColumnViewModel
+                {
+                    Header = "Non-Creatures"
+                },
+                CardViewThreeColumnColumnThreeViewModel = new CardColumnViewModel
+                {
+                    Header = "Land"
+                },
+                CardViewEightColumnColumnOneViewModel = new CardColumnViewModel
+                {
+                    Header = "Creature"
+                },
+                CardViewEightColumnColumnTwoViewModel = new CardColumnViewModel
+                {
+                    Header = "Planeswalker"
+                },
+                CardViewEightColumnColumnThreeViewModel = new CardColumnViewModel
+                {
+                    Header = "Instant"
+                },
+                CardViewEightColumnColumnFourViewModel = new CardColumnViewModel
+                {
+                    Header = "Sorcery"
+                },
+                CardViewEightColumnColumnFiveViewModel = new CardColumnViewModel
+                {
+                    Header = "Enchantment"
+                },
+                CardViewEightColumnColumnSixViewModel = new CardColumnViewModel
+                {
+                    Header = "Artifact"
+                },
+                CardViewEightColumnColumnSevenViewModel = new CardColumnViewModel
+                {
+                    Header = "Commander"
+                },
+                CardViewEightColumnColumnEightViewModel = new CardColumnViewModel
+                {
+                    Header = "Land"
+                },
+                CardViewEightColumnColorColumnOneViewModel = new CardColumnViewModel
+                {
+                    Header = "White"
+                },
+                CardViewEightColumnColorColumnTwoViewModel = new CardColumnViewModel
+                {
+                    Header = "Blue"
+                },
+                CardViewEightColumnColorColumnThreeViewModel = new CardColumnViewModel
+                {
+                    Header = "Black"
+                },
+                CardViewEightColumnColorColumnFourViewModel = new CardColumnViewModel
+                {
+                    Header = "Red"
+                },
+                CardViewEightColumnColorColumnFiveViewModel = new CardColumnViewModel
+                {
+                    Header = "Green"
+                },
+                CardViewEightColumnColorColumnSixViewModel = new CardColumnViewModel
+                {
+                    Header = "Artifact"
+                },
+                CardViewEightColumnColorColumnSevenViewModel = new CardColumnViewModel
+                {
+                    Header = "Multicolored"
+                },
+                CardViewEightColumnColorColumnEightViewModel = new CardColumnViewModel
+                {
+                    Header = "Land"
+                }
+            };
+
+            if (SelectedDeck.GameType == "Alchemy")
+            {
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SelectedSetTypeIndex = 0;
+            }
+            else if (SelectedDeck.GameType == "Brawl")
+            {
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SelectedSetTypeIndex = 1;
+            }
+            else if (SelectedDeck.GameType == "Explorer")
+            {
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SelectedSetTypeIndex = 2;
+            }
+            else if (SelectedDeck.GameType == "Historic")
+            {
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SelectedSetTypeIndex = 3;
+            }
+            else if (SelectedDeck.GameType == "Standard")
+            {
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SelectedSetTypeIndex = 4;
+            }
+
+            // get all the UniqueArtTypeViewModel instances that represent our cards for the deck
+            List<UniqueArtTypeViewModel> cardsInDeck = new List<UniqueArtTypeViewModel>();
+
+            // group the cards in the deck by set name so we only have to iterate a set once
+            var cardsGroupedBySet = SelectedDeck.Cards.GroupBy(card => card.SetSymbol).ToList();
+
+            foreach (IEnumerable<UniqueArtTypeViewModel> setCollection in ServiceLocator.Instance.MainWindowViewModel.Cards)
+            {
+                foreach (UniqueArtTypeViewModel card in setCollection)
+                {
+                    foreach (var group in cardsGroupedBySet)
+                    {
+                        if (group.Key == card.Model.set) // same set symbol
+                        {
+                            foreach (Card groupedCard in group)
+                            {
+                                if (groupedCard.Name == card.Name)
+                                {
+                                    UniqueArtTypeViewModel clone = card.Clone();
+                                    clone.DeckBuilderDeckCount = groupedCard.Count;
+
+                                    cardsInDeck.Add(clone);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.Clear();
+
+            foreach (UniqueArtTypeViewModel card in cardsInDeck)
+            {
+                ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.Add(card);
+            }
+
+            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SetCounts();
+
+            DeckBuilderWindow window = new DeckBuilderWindow();
+            window.DataContext = ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel;
+
+            ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.CloseAction = window.Close;
+
+            window.Closing += Window_Closing;
+            window.Closed += Window_Closed;
+            window.Show();
+
+            // disable deck tab so users cannot navigate to it
+            ServiceLocator.Instance.MainWindowViewModel.DeckCollectionViewModel.IsDeckTabButtonsEnabled = false;
+
+            // show card collection tab again so users can double click on cards to add them
+            ServiceLocator.Instance.MainWindowViewModel.SelectedTabControlIndex = 0;
         }
 
         private void ExportDeck()

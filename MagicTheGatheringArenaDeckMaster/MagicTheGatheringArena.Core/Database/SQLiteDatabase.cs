@@ -24,6 +24,53 @@ namespace MagicTheGatheringArena.Core.Database
 
         #region Methods
 
+        public bool DeleteCardsFromDeck(List<Card> cards)
+        {
+            SqliteTransaction transaction = null;
+
+            try
+            {
+                connection.Open();
+
+                transaction = connection.BeginTransaction();
+
+                foreach (Card card in cards)
+                {
+                    // delete the card
+                    using (SqliteCommand command = connection.CreateCommand())
+                    {
+                        command.CommandText = "DELETE FROM 'CardsPerDeck' WHERE Id = :id";
+                        command.Parameters.Add(new SqliteParameter(":id", card.Id));
+
+                        int result = command.ExecuteNonQuery();
+
+                        if (result == 0)
+                        {
+                            transaction.Rollback();
+
+                            Debug.WriteLine("Could not delete the card from the deck.");
+                            logger.Error("Could not delete the card from the deck.");
+
+                            return false;
+                        }
+                    }                        
+                }
+
+                transaction.Commit();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+
+                Debug.WriteLine($"An error occurred attempting to delete some cards for deck Id {cards[0].DeckId} from the database.{Environment.NewLine}{ex}");
+                logger.Error($"An error occurred attempting to delete some cards for deck Id {cards[0].DeckId} from the database.{Environment.NewLine}{ex}");
+
+                return false;
+            }
+        }
+
         public bool EnsureDatabase(LoggerService loggerService)
         {
             logger = loggerService;
@@ -176,7 +223,7 @@ namespace MagicTheGatheringArena.Core.Database
             return decks;
         }
 
-        public bool IsDeckNameUnique(string name, int deckId)
+        public bool IsDeckNameUnique(string name, long deckId)
         {
             try
             {
@@ -196,7 +243,12 @@ namespace MagicTheGatheringArena.Core.Database
 
                 long? id = (long?)command.ExecuteScalar();
 
-                if (id.HasValue && id.Value != 0) return false;
+                if (id.HasValue && id.Value != 0)
+                {
+                    // if we have the same id then we are unique
+                    if (id == deckId) return true;
+                    return false;
+                }
                 else return true;
             }
             catch (Exception ex)
@@ -218,73 +270,168 @@ namespace MagicTheGatheringArena.Core.Database
 
                 transaction = connection.BeginTransaction();
 
-                // save the deck first
-                SqliteCommand command = connection.CreateCommand();
-                command.CommandText = "INSERT INTO 'Decks' VALUES(NULL, :name, :gameType)";
-                command.Parameters.Add(new SqliteParameter(":name", deck.Name));
-                command.Parameters.Add(new SqliteParameter(":gameType", deck.GameType));
-
-                int result = command.ExecuteNonQuery();
-
-                if (result == 0)
+                if (deck.Id > 0) // update
                 {
-                    transaction.Rollback();
+                    // save the deck first
+                    SqliteCommand command = connection.CreateCommand();
+                    command.CommandText = "UPDATE 'Decks' SET Name = :name, GameType = :gameType WHERE Id = :id";
+                    command.Parameters.Add(new SqliteParameter(":name", deck.Name));
+                    command.Parameters.Add(new SqliteParameter(":gameType", deck.GameType));
+                    command.Parameters.Add(new SqliteParameter(":id", deck.Id));
 
-                    Debug.WriteLine("Could not insert the deck into the database.");
-                    logger.Error("Could not insert the deck into the database.");
-
-                    return false;
-                }
-
-                command.Dispose();
-
-                // get the deck id second
-                command = connection.CreateCommand();
-                command.CommandText = "SELECT last_insert_rowid()";
-
-                long deckId = (long)command.ExecuteScalar();
-
-                deck.Id = deckId;
-
-                command.Dispose();
-
-                // set the deck id on all the cards
-                // save all the cards
-                foreach (Card card in deck.Cards)
-                {
-                    card.DeckId = deckId;
-
-                    command = connection.CreateCommand();
-                    command.CommandText = "INSERT INTO 'CardsPerDeck' VALUES(NULL, :deckId, :name, :count, :setSymbol, :number, :color, :type)";
-                    command.Parameters.Add(new SqliteParameter(":deckId", deckId));
-                    command.Parameters.Add(new SqliteParameter(":name", card.Name));
-                    command.Parameters.Add(new SqliteParameter(":count", card.Count));
-                    command.Parameters.Add(new SqliteParameter(":setSymbol", card.SetSymbol));
-                    command.Parameters.Add(new SqliteParameter(":number", card.CardNumber));
-                    command.Parameters.Add(new SqliteParameter(":color", card.Color));
-                    command.Parameters.Add(new SqliteParameter(":type", card.Type));
-
-                    result = command.ExecuteNonQuery();
+                    int result = command.ExecuteNonQuery();
 
                     if (result == 0)
                     {
                         transaction.Rollback();
 
-                        Debug.WriteLine($"Could not insert card {card.Name} into the database.");
-                        logger.Error($"Could not insert card {card.Name} into the database.");
+                        Debug.WriteLine("Could not update the deck in the database.");
+                        logger.Error("Could not update the deck in the database.");
 
                         return false;
                     }
 
                     command.Dispose();
 
-                    // get the card id
+                    // set the deck id on all the cards
+                    // save all the cards
+                    foreach (Card card in deck.Cards)
+                    {
+                        if (card.Id > 0) // update 
+                        {
+                            command = connection.CreateCommand();
+                            command.CommandText = "UPDATE 'CardsPerDeck' SET DeckId = :deckId, Name = :name, Count = :count, SetSymbol = :setSymbol, Number = :number, Color = :color, Type = :type WHERE Id = :id";
+                            command.Parameters.Add(new SqliteParameter(":deckId", deck.Id));
+                            command.Parameters.Add(new SqliteParameter(":name", card.Name));
+                            command.Parameters.Add(new SqliteParameter(":count", card.Count));
+                            command.Parameters.Add(new SqliteParameter(":setSymbol", card.SetSymbol));
+                            command.Parameters.Add(new SqliteParameter(":number", card.CardNumber));
+                            command.Parameters.Add(new SqliteParameter(":color", card.Color));
+                            command.Parameters.Add(new SqliteParameter(":type", card.Type));
+                            command.Parameters.Add(new SqliteParameter(":id", card.Id));
+
+                            result = command.ExecuteNonQuery();
+
+                            if (result == 0)
+                            {
+                                transaction.Rollback();
+
+                                Debug.WriteLine($"Could not update card {card.Name} in the database for deck {deck.Name}.");
+                                logger.Error($"Could not update card {card.Name} in the database for deck {deck.Name}.");
+
+                                return false;
+                            }
+
+                            command.Dispose();
+                        }
+                        else // insert
+                        {
+                            card.DeckId = deck.Id;
+
+                            command = connection.CreateCommand();
+                            command.CommandText = "INSERT INTO 'CardsPerDeck' VALUES(NULL, :deckId, :name, :count, :setSymbol, :number, :color, :type)";
+                            command.Parameters.Add(new SqliteParameter(":deckId", deck.Id));
+                            command.Parameters.Add(new SqliteParameter(":name", card.Name));
+                            command.Parameters.Add(new SqliteParameter(":count", card.Count));
+                            command.Parameters.Add(new SqliteParameter(":setSymbol", card.SetSymbol));
+                            command.Parameters.Add(new SqliteParameter(":number", card.CardNumber));
+                            command.Parameters.Add(new SqliteParameter(":color", card.Color));
+                            command.Parameters.Add(new SqliteParameter(":type", card.Type));
+
+                            result = command.ExecuteNonQuery();
+
+                            if (result == 0)
+                            {
+                                transaction.Rollback();
+
+                                Debug.WriteLine($"Could not insert card {card.Name} into the database for deck {deck.Name}.");
+                                logger.Error($"Could not insert card {card.Name} into the database for deck {deck.Name}.");
+
+                                return false;
+                            }
+
+                            command.Dispose();
+
+                            // get the card id
+                            command = connection.CreateCommand();
+                            command.CommandText = "SELECT last_insert_rowid()";
+
+                            long cardId = (long)command.ExecuteScalar();
+
+                            card.Id = cardId;
+                        }
+                    }
+                }
+                else // insert
+                {
+                    // save the deck first
+                    SqliteCommand command = connection.CreateCommand();
+                    command.CommandText = "INSERT INTO 'Decks' VALUES(NULL, :name, :gameType)";
+                    command.Parameters.Add(new SqliteParameter(":name", deck.Name));
+                    command.Parameters.Add(new SqliteParameter(":gameType", deck.GameType));
+
+                    int result = command.ExecuteNonQuery();
+
+                    if (result == 0)
+                    {
+                        transaction.Rollback();
+
+                        Debug.WriteLine("Could not insert the deck into the database.");
+                        logger.Error("Could not insert the deck into the database.");
+
+                        return false;
+                    }
+
+                    command.Dispose();
+
+                    // get the deck id second
                     command = connection.CreateCommand();
                     command.CommandText = "SELECT last_insert_rowid()";
 
-                    long cardId = (long)command.ExecuteScalar();
+                    long deckId = (long)command.ExecuteScalar();
 
-                    card.Id = cardId;
+                    deck.Id = deckId;
+
+                    command.Dispose();
+
+                    // set the deck id on all the cards
+                    // save all the cards
+                    foreach (Card card in deck.Cards)
+                    {
+                        card.DeckId = deckId;
+
+                        command = connection.CreateCommand();
+                        command.CommandText = "INSERT INTO 'CardsPerDeck' VALUES(NULL, :deckId, :name, :count, :setSymbol, :number, :color, :type)";
+                        command.Parameters.Add(new SqliteParameter(":deckId", deckId));
+                        command.Parameters.Add(new SqliteParameter(":name", card.Name));
+                        command.Parameters.Add(new SqliteParameter(":count", card.Count));
+                        command.Parameters.Add(new SqliteParameter(":setSymbol", card.SetSymbol));
+                        command.Parameters.Add(new SqliteParameter(":number", card.CardNumber));
+                        command.Parameters.Add(new SqliteParameter(":color", card.Color));
+                        command.Parameters.Add(new SqliteParameter(":type", card.Type));
+
+                        result = command.ExecuteNonQuery();
+
+                        if (result == 0)
+                        {
+                            transaction.Rollback();
+
+                            Debug.WriteLine($"Could not insert card {card.Name} into the database for deck {deck.Name}.");
+                            logger.Error($"Could not insert card {card.Name} into the database for deck {deck.Name}.");
+
+                            return false;
+                        }
+
+                        command.Dispose();
+
+                        // get the card id
+                        command = connection.CreateCommand();
+                        command.CommandText = "SELECT last_insert_rowid()";
+
+                        long cardId = (long)command.ExecuteScalar();
+
+                        card.Id = cardId;
+                    }
                 }
 
                 transaction.Commit();

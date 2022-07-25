@@ -255,9 +255,29 @@
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" Value="False">
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" Value="False" />
+                                                                <Condition Binding="{Binding DeckBuilderViewModel.IsEditing}" Value="False" />
+                                                            </MultiDataTrigger.Conditions>
                                                             <Setter Property="Visibility" Value="Visible" />
-                                                        </DataTrigger>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <TextBlock Grid.Column="12" Text="Editing Deck" FontSize="18" VerticalAlignment="Center" Foreground="Orange">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DeckCollectionViewModel.IsDeckTabButtonsEnabled}" Value="False" />
+                                                                <Condition Binding="{Binding DeckBuilderViewModel.IsEditing}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </TextBlock.Style>

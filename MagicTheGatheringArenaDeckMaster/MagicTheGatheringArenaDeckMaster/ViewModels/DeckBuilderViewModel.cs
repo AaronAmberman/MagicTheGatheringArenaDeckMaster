@@ -39,6 +39,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private CardColumnViewModel cardViewEightColumnColorColumnEightViewModel;
         private Deck deck;
         private bool hasChanges;
+        private bool isEditing;
         private bool isEightColumnView;
         private bool isEightColorColumnView;
         private bool isOneColumnView = true;
@@ -66,7 +67,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private double zoomFactor = 1.0;
         private double zoomMax = 2.0;
         private double zoomMin = 0.5;
-
+        
         #endregion
 
         #region Properties
@@ -331,6 +332,16 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         public ICommand InfoCommand => infoCommand ??= new RelayCommand(ShowInfoWindow);
 
+        public bool IsEditing 
+        { 
+            get => isEditing; 
+            set
+            {
+                isEditing = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsEightColumnView
         {
             get => isEightColumnView;
@@ -473,9 +484,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         public List<string> SetTypes => setTypes;
 
-        public int TotalCardCount 
-        { 
-            get => totalCardCount; 
+        public int TotalCardCount
+        {
+            get => totalCardCount;
             set
             {
                 totalCardCount = value;
@@ -546,7 +557,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         public double ZoomFactor
         {
             get => zoomFactor;
-            set 
+            set
             {
                 if (value < ZoomMin)
                     zoomFactor = ZoomMin;
@@ -748,7 +759,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 return;
             }
 
-            if (!ServiceLocator.Instance.DatabaseService.IsDeckNameUnique(Name, -1))
+            if (!ServiceLocator.Instance.DatabaseService.IsDeckNameUnique(Name, Deck.Id <= 0 ? -1 : Deck.Id))
             {
                 ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Conflicting Name";
                 ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "The deck name needs to be unique. Please enter a unique deck name.";
@@ -774,6 +785,20 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
             foreach (UniqueArtTypeViewModel card in Cards)
             {
+                if (IsEditing)
+                {
+                    Card match = Deck.Cards.FirstOrDefault(c => c.Name == card.Name && c.SetSymbol == card.Model.set);
+
+                    if (match != null)
+                    {
+                        match.Count = card.DeckBuilderDeckCount;
+
+                        // if we have a match then just update the count and continue on
+                        continue;
+                    }
+                }
+
+                // if no match then make a new card
                 Card newCard = new Card
                 {
                     Count = card.DeckBuilderDeckCount,
@@ -797,6 +822,25 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 Deck.Cards.Add(newCard);
             }
 
+            // if our deck has cards our card collection does not then those cards need to be deleted as the user removed them
+            List<Card> cardsToRemove = new List<Card>();
+
+            foreach (Card card in Deck.Cards)
+            {
+                UniqueArtTypeViewModel match = Cards.FirstOrDefault(c => c.Name == card.Name && c.Model.set == card.SetSymbol);
+
+                if (match == null)
+                {
+                    cardsToRemove.Add(card);
+                }
+            }
+
+            foreach (Card cardToRemove in cardsToRemove)
+            {
+                Deck.Cards.Remove(cardToRemove);
+            }
+
+            // save deck to database
             if (!ServiceLocator.Instance.DatabaseService.SaveDeck(Deck))
             {
                 ServiceLocator.Instance.MainWindowViewModel.StatusMessage = "Error saving deck";
@@ -815,6 +859,15 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
             else
             {
+                // after successful save, if we have cards to delete then delete them
+                if (cardsToRemove.Count > 0)
+                {
+                    if (!ServiceLocator.Instance.DatabaseService.DeleteCardsFromDeck(cardsToRemove))
+                    {
+                        ServiceLocator.Instance.LoggerService.Error($"Error deleting cards from deck in database. Deck: {Deck.Name}");
+                    }
+                }
+
                 HasChanges = false;
 
                 isSavingAlready = false;
@@ -842,6 +895,11 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 return false;
             }
 
+            if (!ServiceLocator.Instance.DatabaseService.IsDeckNameUnique(Name, -1))
+            {
+                return false;
+            }
+
             switch (SelectedSetTypeIndex)
             {
                 case 0: Deck.GameType = "Alchemy"; break;
@@ -853,6 +911,19 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
             foreach (UniqueArtTypeViewModel card in Cards)
             {
+                if (IsEditing)
+                {
+                    Card editMatch = Deck.Cards.FirstOrDefault(c => c.Name == card.Name && c.SetSymbol == card.Model.set);
+
+                    if (editMatch != null)
+                    {
+                        editMatch.Count = card.DeckBuilderDeckCount;
+
+                        // if we have a match then just update the count and continue on
+                        continue;
+                    }
+                }
+
                 Card match = Deck.Cards.FirstOrDefault(c => c.Name == card.Name && c.SetSymbol == c.SetSymbol);
 
                 if (match != null)
@@ -883,7 +954,40 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 }
             }
 
-            return ServiceLocator.Instance.DatabaseService.SaveDeck(Deck);
+            // if our deck has cards our card collection does not then those cards need to be deleted as the user removed them
+            List<Card> cardsToRemove = new List<Card>();
+
+            foreach (Card card in Deck.Cards)
+            {
+                UniqueArtTypeViewModel match = Cards.FirstOrDefault(c => c.Name == card.Name && c.Model.set == card.SetSymbol);
+
+                if (match == null)
+                {
+                    cardsToRemove.Add(card);
+                }
+            }
+
+            foreach (Card cardToRemove in cardsToRemove)
+            {
+                Deck.Cards.Remove(cardToRemove);
+            }
+
+            bool result = ServiceLocator.Instance.DatabaseService.SaveDeck(Deck);
+
+            if (!result) return result;
+
+            // after successful save, if we have cards to delete then delete them
+            if (cardsToRemove.Count > 0)
+            {
+                result = ServiceLocator.Instance.DatabaseService.DeleteCardsFromDeck(cardsToRemove);
+
+                if (!result)
+                {
+                    ServiceLocator.Instance.LoggerService.Error($"Error deleting cards from deck in database. Deck: {Deck.Name}");
+                }
+            }
+
+            return result;
         }
 
         public void SetCounts()
