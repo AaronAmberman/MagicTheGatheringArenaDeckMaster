@@ -26,5 +26,32 @@ namespace MagicTheGatheringArena.Core.Database.Models
         public Visibility HasBlack => Cards.Any(card => card.Color.Contains("B")) ? Visibility.Visible : Visibility.Collapsed;
         public Visibility HasRed => Cards.Any(card => card.Color.Contains("R")) ? Visibility.Visible : Visibility.Collapsed;
         public Visibility HasGreen => Cards.Any(card => card.Color.Contains("G")) ? Visibility.Visible : Visibility.Collapsed;
+
+        public Deck Clone()
+        {
+            Deck clone = new Deck
+            {
+                GameType = GameType,
+                Id = Id,
+                Name = Name
+            };
+
+            foreach (Card card in Cards)
+            {
+                clone.Cards.Add(card.Clone());
+            }
+
+            return clone;
+        }
+
+        public void ZeroId()
+        {
+            Id = 0;
+
+            foreach (Card card in Cards)
+            {
+                card.Id = 0;
+            }
+        }
     }
 }

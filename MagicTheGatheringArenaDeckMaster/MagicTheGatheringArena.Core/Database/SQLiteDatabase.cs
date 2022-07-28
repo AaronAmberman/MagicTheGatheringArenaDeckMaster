@@ -71,6 +71,51 @@ namespace MagicTheGatheringArena.Core.Database
             }
         }
 
+        public bool DeleteDeck(Deck deck)
+        {
+            SqliteTransaction transaction = null;
+
+            try
+            {
+                connection.Open();
+
+                transaction = connection.BeginTransaction();
+
+                string selectStatement = "DELETE * FROM 'Decks' WHERE DeckId = :id";
+
+                SqliteCommand command = connection.CreateCommand();
+                command.CommandText = selectStatement;
+                command.Parameters.Add(new SqliteParameter(":id", deck.Id));
+
+                int result = command.ExecuteNonQuery();
+
+                command.Dispose();
+
+                if (result == 0)
+                {
+                    transaction.Rollback();
+
+                    Debug.WriteLine("Could not delete the deck from the database.");
+                    logger.Error("Could not delete the deck from the database.");
+
+                    return false;
+                }
+
+                transaction.Commit();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+
+                Debug.WriteLine($"An error occurred attempting to delete the deck {deck.Name} from the database.{Environment.NewLine}{ex}");
+                logger.Error($"An error occurred attempting to delete the deck {deck.Name} from the database.{Environment.NewLine}{ex}");
+
+                return false;
+            }
+        }
+
         public bool EnsureDatabase(LoggerService loggerService)
         {
             logger = loggerService;

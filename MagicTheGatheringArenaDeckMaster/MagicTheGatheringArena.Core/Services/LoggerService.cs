@@ -107,14 +107,6 @@ namespace MagicTheGatheringArena.Core.Services
             WriteToLog("ERROR", message);
         }
 
-        public void Error(string message, Exception exception)
-        {
-            EnsureLogFile(); 
-            RollLogFileIfNeeded();
-
-            WriteToLog("ERROR", message);
-        }
-
         public void Info(string message)
         {
             EnsureLogFile();
