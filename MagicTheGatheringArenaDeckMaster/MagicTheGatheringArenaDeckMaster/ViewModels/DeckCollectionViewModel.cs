@@ -287,7 +287,14 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void ExportDeck()
         {
+            string output = "Deck" + Environment.NewLine;
 
+            foreach (var card in SelectedDeck.Cards)
+            {
+                output += $"{card.Count} {card.Name} ({card.SetSymbol.ToUpper()}) {card.CardNumber}" + Environment.NewLine;
+            }
+
+            Clipboard.SetText(output);
         }
 
         private bool FilterDecks(object obj)
