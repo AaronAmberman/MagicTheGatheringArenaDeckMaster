@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -259,9 +260,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         {
             SetDeckBuilderViewModel(deck, true);
 
-            SetDeckBuilderType();
+            SetDeckBuilderType(deck);
 
-            List<UniqueArtTypeViewModel> cardsInDeck = GetCardsInDeck();
+            List<UniqueArtTypeViewModel> cardsInDeck = GetCardsInDeck(deck);
 
             AddSetNamesToGlobalSetNamesAndDownloadCardsIfNeeded(cardsInDeck);
 
@@ -300,12 +301,12 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             return false;
         }
 
-        private List<UniqueArtTypeViewModel> GetCardsInDeck()
+        private List<UniqueArtTypeViewModel> GetCardsInDeck(Deck deck)
         {
             List<UniqueArtTypeViewModel> cardsInDeck = new List<UniqueArtTypeViewModel>();
 
             // group the cards in the deck by set name so we only have to iterate a set once
-            var cardsGroupedBySet = SelectedDeck.Cards.GroupBy(card => card.SetSymbol).ToList();
+            var cardsGroupedBySet = deck.Cards.GroupBy(card => card.SetSymbol).ToList();
 
             foreach (IEnumerable<UniqueArtTypeViewModel> setCollection in ServiceLocator.Instance.MainWindowViewModel.Cards)
             {
@@ -313,12 +314,15 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 {
                     foreach (var group in cardsGroupedBySet)
                     {
-                        if (group.Key == card.Model.set) // same set symbol
+                        if (group.Key.Equals(card.Model.set, StringComparison.OrdinalIgnoreCase)) // same set symbol
                         {
                             foreach (Card groupedCard in group)
                             {
                                 if (groupedCard.Name == card.Name)
                                 {
+                                    groupedCard.Color = string.Join("", card.Model.colors);
+                                    groupedCard.Type = card.Model.type_line;
+
                                     UniqueArtTypeViewModel clone = card.Clone();
                                     clone.DeckBuilderDeckCount = groupedCard.Count;
 
@@ -335,7 +339,69 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
         private void ImportDeck()
         {
+            string clipboardContent = Clipboard.GetText();
 
+            if (string.IsNullOrEmpty(clipboardContent))
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.Information;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Clipboard Empty";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "There was no data available in the clipboard.";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
+                return;
+            }
+
+            if (!clipboardContent.StartsWith("Deck", StringComparison.OrdinalIgnoreCase))
+            {
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.CriticalError;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Clipboard Content Invalid";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "The data available in the clipboard was not in the correct format.";
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxIsModal = true;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+
+                ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
+
+                return;
+            }
+
+            List<string> lines = clipboardContent.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
+            lines.RemoveAt(0); // remove Deck
+
+            Deck deck = new Deck();
+
+            foreach (string line in lines)
+            {
+                List<string> dataElements = line.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                int firstSpaceIndex = line.IndexOf(" ", StringComparison.OrdinalIgnoreCase);
+                int firstParenIndex = line.IndexOf("(", firstSpaceIndex, StringComparison.OrdinalIgnoreCase);
+
+                try
+                {
+                    Card card = new Card();
+                    card.Count = int.Parse(line.Substring(0, firstSpaceIndex));
+                    card.SetSymbol = line.Substring(firstParenIndex + 1, 3);
+                    card.Name = line.Substring(firstSpaceIndex + 1, firstParenIndex - 3).Trim();
+
+                    deck.Cards.Add(card);
+                }
+                catch (Exception ex)
+                {
+                    ServiceLocator.Instance.LoggerService.Error($"Could not convert card {line} for usability. Moving to next card.{Environment.NewLine}{ex}");
+                    Debug.WriteLine($"Could not convert card {line} for usability. Moving to next card.{Environment.NewLine}{ex}");
+                }
+            }
+
+            Decks.Add(deck);
+
+            ClearDeckBuilderView();
+
+            DoEditWorkflow(deck);
         }
 
         public void QueryDatabaseForDecks()
@@ -427,25 +493,25 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        private void SetDeckBuilderType()
+        private void SetDeckBuilderType(Deck deck)
         {
-            if (SelectedDeck.GameType == "Alchemy")
+            if (deck.GameType == "Alchemy")
             {
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SelectedSetTypeIndex = 0;
             }
-            else if (SelectedDeck.GameType == "Brawl")
+            else if (deck.GameType == "Brawl")
             {
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SelectedSetTypeIndex = 1;
             }
-            else if (SelectedDeck.GameType == "Explorer")
+            else if (deck.GameType == "Explorer")
             {
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SelectedSetTypeIndex = 2;
             }
-            else if (SelectedDeck.GameType == "Historic")
+            else if (deck.GameType == "Historic")
             {
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SelectedSetTypeIndex = 3;
             }
-            else if (SelectedDeck.GameType == "Standard")
+            else if (deck.GameType == "Standard")
             {
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.SelectedSetTypeIndex = 4;
             }
