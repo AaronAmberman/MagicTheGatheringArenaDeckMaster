@@ -187,6 +187,13 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                                 ServiceLocator.Instance.MainWindowViewModel.StatusMessage = $"Failed to downloaded {card.Name}. See log for more details.";
                             }
 
+                            // set card image path
+                            string name = card.Model.name_field.ReplaceBadWindowsCharacters();
+                            string fullName = name + ".png";
+                            string absolutePathToFile = Path.Combine(setPath, fullName);
+
+                            card.ImagePath = absolutePathToFile;
+
                             DownloadCount++;
                             SetDownloadCount++;
                         }
@@ -219,16 +226,10 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                             : "Creating deck", 
                         7000);
 
-                    ActiveCard = string.Empty;
-                    ActiveSet = string.Empty;
-                    DownloadCount = 0;
-                    DownloadTotal = 0;
-                    SetDownloadCount = 0;
-                    SetDownloadTotal = 0;
-                    SetFilters.Clear();
-                    Visibility = Visibility.Collapsed;
-
-                    ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.Clear();
+                    ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() => 
+                    {
+                        ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.Clear();
+                    });
 
                     List<UniqueArtTypeViewModel> cards = new List<UniqueArtTypeViewModel>();
 
@@ -243,7 +244,19 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     // sort the collection going to the UI
                     cards = cards.OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList();
 
-                    ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(cards);
+                    ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() =>
+                    {
+                        ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(cards);
+                    });
+
+                    ActiveCard = string.Empty;
+                    ActiveSet = string.Empty;
+                    DownloadCount = 0;
+                    DownloadTotal = 0;
+                    SetDownloadCount = 0;
+                    SetDownloadTotal = 0;
+                    SetFilters.Clear();
+                    Visibility = Visibility.Collapsed;
                 }
             });
         }
@@ -323,6 +336,13 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                                 ServiceLocator.Instance.MainWindowViewModel.StatusMessage = $"Failed to downloaded {card.Name}. See log for more details.";
                             }
 
+                            // set card image path
+                            string name = card.Model.name_field.ReplaceBadWindowsCharacters();
+                            string fullName = name + ".png";
+                            string absolutePathToFile = Path.Combine(setPath, fullName);
+
+                            card.ImagePath = absolutePathToFile;
+
                             DownloadCount++;
                             SetDownloadCount++;
                         }
@@ -355,15 +375,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                             : "Creating deck",
                         7000);
 
-                    ActiveCard = string.Empty;
-                    ActiveSet = string.Empty;
-                    DownloadCount = 0;
-                    DownloadTotal = 0;
-                    SetDownloadCount = 0;
-                    SetDownloadTotal = 0;
-                    SetFilters.Clear();
-                    Visibility = Visibility.Collapsed;
-
                     //ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.Clear(); // this will append the current collection of cards so do not clear existing collection
 
                     List<UniqueArtTypeViewModel> cards = new List<UniqueArtTypeViewModel>();
@@ -380,6 +391,15 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     cards = cards.OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList();
 
                     ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(cards);
+
+                    ActiveCard = string.Empty;
+                    ActiveSet = string.Empty;
+                    DownloadCount = 0;
+                    DownloadTotal = 0;
+                    SetDownloadCount = 0;
+                    SetDownloadTotal = 0;
+                    SetFilters.Clear();
+                    Visibility = Visibility.Collapsed;
                 }
             }).Wait(); // we want this call to block
         }
