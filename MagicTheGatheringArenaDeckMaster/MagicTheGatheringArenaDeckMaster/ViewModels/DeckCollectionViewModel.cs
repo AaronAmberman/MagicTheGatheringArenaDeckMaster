@@ -493,7 +493,15 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             {
                 Deck deck = SelectedDeck;
 
-                if (ServiceLocator.Instance.DatabaseService.DeleteDeck(deck))
+                if (!ServiceLocator.Instance.DatabaseService.DeleteDeck(deck))
+                {
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxImage = MessageBoxInternalDialogImage.CriticalError;
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxButton = MessageBoxButton.OK;
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxTitle = "Error Deleting";
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxMessage = "There was a problem deleting the deck. Please see log for details.";
+                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible;
+                }
+                else
                 {
                     Decks.Remove(deck);
                 }

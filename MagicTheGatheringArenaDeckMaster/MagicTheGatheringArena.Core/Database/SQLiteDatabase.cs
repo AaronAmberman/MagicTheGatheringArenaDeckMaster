@@ -81,10 +81,10 @@ namespace MagicTheGatheringArena.Core.Database
 
                 transaction = connection.BeginTransaction();
 
-                string selectStatement = "DELETE * FROM 'Decks' WHERE DeckId = :id";
+                string deleteStatement = "DELETE FROM 'Decks' WHERE Id = :id";
 
                 SqliteCommand command = connection.CreateCommand();
-                command.CommandText = selectStatement;
+                command.CommandText = deleteStatement;
                 command.Parameters.Add(new SqliteParameter(":id", deck.Id));
 
                 int result = command.ExecuteNonQuery();
