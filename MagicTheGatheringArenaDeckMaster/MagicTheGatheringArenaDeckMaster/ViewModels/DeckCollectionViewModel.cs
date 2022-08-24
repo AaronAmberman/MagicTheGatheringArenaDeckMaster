@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -118,7 +119,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             ShowDeckBuilderWindow();
         }
 
-        private void AddSetNamesToGlobalSetNamesAndDownloadCardsIfNeeded(List<UniqueArtTypeViewModel> cards)
+        private List<SetFilter> AddSetNamesToGlobalSetNamesAndDownloadCardsIfNeeded(List<UniqueArtTypeViewModel> cards)
         {
             List<string> setNamesNotInFilter = new List<string>();
 
@@ -130,19 +131,20 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 }
             }
 
+            List<SetFilter> setsNotExisting = new List<SetFilter>();
+
             if (setNamesNotInFilter.Count > 0)
             {
-                List<SetFilter> setsNotExisting = new List<SetFilter>();
-
                 foreach (string name in setNamesNotInFilter)
                 {
-                    SetFilter st = new SetFilter { Name = name };
+                    SetFilter sf = new SetFilter { Name = name };
 
-                    ServiceLocator.Instance.MainWindowViewModel.FilterSetNames.Add(st);
+                    ServiceLocator.Instance.MainWindowViewModel.FilterSetNames.Add(sf);
 
-                    if (!st.Exists && !st.AllImagesExistInSet)
+                    if (!sf.Exists && !sf.AllImagesExistInSet)
                     {
-                        setsNotExisting.Add(st);
+                        if (!setsNotExisting.Any(setfilter => setfilter.Name == name))
+                            setsNotExisting.Add(sf);
                     }
                     else // we have the images already
                     {
@@ -159,16 +161,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                         ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.AddRange(newCards);
                     }
                 }
-
-                // download cards if we have cards to download
-                if (setsNotExisting.Count > 0)
-                {
-                    // show custom progress bar dialog
-                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.CardDownloadViewModel.SetFilters = setsNotExisting;
-                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.CardDownloadViewModel.Visibility = Visibility.Visible;
-                    ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.CardDownloadViewModel.BeingDownloadingSets(); // this blocks
-                }
             }
+
+            return setsNotExisting;
         }
 
         private bool CanCopyDeck()
@@ -264,8 +259,35 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
             List<UniqueArtTypeViewModel> cardsInDeck = GetCardsInDeck(deck);
 
-            AddSetNamesToGlobalSetNamesAndDownloadCardsIfNeeded(cardsInDeck);
+            List<SetFilter> setsNotExisting = AddSetNamesToGlobalSetNamesAndDownloadCardsIfNeeded(cardsInDeck);
 
+            // download cards if we have cards to download
+            if (setsNotExisting.Count > 0)
+            {
+                // show custom progress bar dialog
+                ServiceLocator.Instance.MainWindowViewModel.SetFilterMessageVisibility = Visibility.Collapsed;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.CardDownloadViewModel.SetFilters = setsNotExisting;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.CardDownloadViewModel.Visibility = Visibility.Visible;
+                ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.CardDownloadViewModel.BeingDownloading(() => 
+                {
+                    ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() => 
+                    {
+                        // after downloading card images we need to requery for card info so we get the updated image paths
+                        cardsInDeck = GetCardsInDeck(deck);
+
+                        DoEditWorkflowPart2(cardsInDeck);
+                    });
+                });
+            }
+            else
+            {
+                DoEditWorkflowPart2(cardsInDeck);
+            }
+        }
+
+        private void DoEditWorkflowPart2(List<UniqueArtTypeViewModel> cardsInDeck)
+        {
+            ServiceLocator.Instance.MainWindowViewModel.SetFilterMessageVisibility = Visibility.Collapsed;
             ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Cards.Clear();
 
             foreach (UniqueArtTypeViewModel card in cardsInDeck)

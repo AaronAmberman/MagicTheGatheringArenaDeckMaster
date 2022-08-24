@@ -413,7 +413,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 IsAllChecked = true;
                 AllSetNames = new ObservableCollection<string>(ServiceLocator.Instance.MainWindowViewModel.SetNames.ToList());
                 allSetNamesPool = ServiceLocator.Instance.MainWindowViewModel.SetNames.ToList();
-                //AllSetNamesCollectionView = (CollectionView)CollectionViewSource.GetDefaultView(AllSetNames);
             }
 
             FilterSetNames = new ObservableCollection<SetFilter>(ServiceLocator.Instance.MainWindowViewModel.FilterSetNames.ToList());
