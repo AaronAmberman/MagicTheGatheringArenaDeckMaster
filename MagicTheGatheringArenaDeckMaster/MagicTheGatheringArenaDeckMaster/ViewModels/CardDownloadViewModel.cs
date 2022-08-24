@@ -229,11 +229,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                             : "Creating deck", 
                         7000);
 
-                    ServiceLocator.Instance.MainWindowViewModel.Dispatcher.Invoke(() => 
-                    {
-                        ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.Cards.Clear();
-                    });
-
                     List<UniqueArtTypeViewModel> cards = new List<UniqueArtTypeViewModel>();
 
                     foreach (SetFilter setFilter in SetFilters)
