@@ -199,6 +199,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                         }
                     }
                 }
+
+                // sleep for 3 seconds so Windows can clean up after all the file writing
+                Thread.Sleep(3000);
             }).ContinueWith(task => 
             {
                 if (task.Exception != null)

@@ -131,6 +131,8 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 }
             }
 
+            setNamesNotInFilter = setNamesNotInFilter.Distinct().ToList();
+
             List<SetFilter> setsNotExisting = new List<SetFilter>();
 
             if (setNamesNotInFilter.Count > 0)
@@ -143,8 +145,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                     if (!sf.Exists && !sf.AllImagesExistInSet)
                     {
-                        if (!setsNotExisting.Any(setfilter => setfilter.Name == name))
-                            setsNotExisting.Add(sf);
+                        setsNotExisting.Add(sf);
                     }
                     else // we have the images already
                     {
