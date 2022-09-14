@@ -53,6 +53,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         {
             "Alchemy",
             "Brawl",
+            "Commander",
             "Explorer",
             "Historic",
             "Standard",
@@ -471,12 +472,15 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
 
                 HasChanges = true;
 
-                /*
-                 * the cards in the card collection view may need to be reset,
-                 * for example, if the user chooses Alchemy then we want to load the 
-                 * alchemy versions of cards because costs differ
-                 */
-                // todo
+                switch (value)
+                {
+                    case 0: ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.GameTypeFilter = GameType.Alchemy; break;
+                    case 1: ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.GameTypeFilter = GameType.Brawl; break;
+                    case 2: ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.GameTypeFilter = GameType.Commander; break;
+                    case 3: ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.GameTypeFilter = GameType.Explorer; break;
+                    case 4: ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.GameTypeFilter = GameType.Historic; break;
+                    case 5: ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.GameTypeFilter = GameType.Standard; break;
+                }
 
                 OnPropertyChanged();
             }

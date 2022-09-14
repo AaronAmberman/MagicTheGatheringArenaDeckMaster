@@ -29,12 +29,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private ObservableCollection<string> arenaStandardOnlySetNamesOrig = new ObservableCollection<string>
         {
             // these should be whatever is in the database (or this list if the database is null)
-            "Adventures in the Forgotten Realms",
+            "Dominaria",
             "Innistrad: Crimson Vow",
             "Innistrad: Midnight Hunt",
-            "Kaldheim",
-            "Strixhaven: School of Mages",
-            "Zendikar Rising",
             "Kamigawa: Neon Dynasty",
             "Streets of New Capenna"
         };
@@ -42,45 +39,46 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private ObservableCollection<string> arenaAlchemyOnlySetNamesOrig = new ObservableCollection<string>
         {
             // these should be whatever is in the database (or this list if the database is null)
-            "Alchemy: Innistrad",
+            "Rebalanced",
+            "Alchemy Horizons: Baldur's Gate",
             "Alchemy: Kamigawa",
             "Alchemy: New Capenna",
+            "Alchemy: Innistrad",
             "Rebalanced",
             "Arena Base Set",
-            "Adventures in the Forgotten Realms",
-            "Innistrad: Crimson Vow",
-            "Innistrad: Midnight Hunt",
-            "Kaldheim",
-            "Strixhaven: School of Mages",
-            "Zendikar Rising",
-            "Kamigawa: Neon Dynasty",
-            "Streets of New Capenna"
         };
 
         private ObservableCollection<string> arenaHistoricOnlySetNamesOrig = new ObservableCollection<string>
         {
             // these should be whatever is in the database (or this list if the database is null)
-            "Core Set 2021",
-            "Ikoria Lair of Behemoths",
-            "Theros Beyond Death",
-            "Theros of Eldraine",
-            "Core Set 2020",
-            "War of the Spark",
-            "Ravnica Allegiance",
-            "Guilds of Ravnica",
-            "Core Set 2019",
-            "Dominaria",
-            "Rivals of Ixalan",
-            "Amonkhet Remastered",
-            "Kaladesh Remastered",
+            "Adventures in the Forgotten Realms",
             "Historic Anthology",
             "Historic Anthology2",
             "Historic Anthology3",
             "Historic Anthology4",
             "Historic Anthology5",
-            "Jumpstart",
+            "Historic Anthology6",
+            "Amonkhet Remastered",
+            "Dominaria",
+            "Explorer Anthology 1",
+            "Throne of Eldraine",
+            "Guilds of Ravnica",
+            "Ikoria Lair of Behemoths",
             "Jumpstart: Historic Horizons",
-            "Mystical Archive"
+            "Jumpstart",
+            "Kaldheim",
+            "Kaladesh Remastered",
+            "Core Set 2019",
+            "Core Set 2020",
+            "Core Set 2021",
+            "Rivals of Ixalan",
+            "Ravnica Allegiance",
+            "Mystical Archive",
+            "Strixhaven",
+            "Theros Beyond Death",
+            "War of the Spark",
+            "Ixanlan",
+            "Zendikar Rising"
         };
 
         private ObservableCollection<string> arenaStandardOnlySetNames;

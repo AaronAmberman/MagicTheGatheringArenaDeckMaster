@@ -1,5 +1,6 @@
 ﻿using MagicTheGatheringArena.Core.MVVM;
 using MagicTheGatheringArena.Core.Types;
+using MagicTheGatheringArenaDeckMaster.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +20,7 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private ICommand advancedFilterCommand;
         private ObservableCollection<UniqueArtTypeViewModel> cards = new ObservableCollection<UniqueArtTypeViewModel>();
         private CollectionView cardCollectionView;
+        private GameType gameTypeFilter = GameType.None;
         private bool isBlackChecked;
         private bool isBlueChecked;
         private bool isColorlessChecked;
@@ -42,6 +44,23 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             set
             {
                 cards = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public GameType GameTypeFilter 
+        { 
+            get => gameTypeFilter; 
+            set
+            {
+                gameTypeFilter = value;
+
+                // if the game type if alchemy then we need to get the alchemy variation of cards
+                if (gameTypeFilter == GameType.Alchemy) SetAlchemicCardVariations();
+                else SetNonAlchemicCardVariations();
+
+                SetupOrRefreshFilter();
+
                 OnPropertyChanged();
             }
         }
@@ -150,9 +169,9 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             }
         }
 
-        public string SearchText 
-        { 
-            get => searchText; 
+        public string SearchText
+        {
+            get => searchText;
             set
             {
                 searchText = value;
@@ -174,9 +193,37 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             if (obj is not UniqueArtTypeViewModel uavm) return false;
             if (uavm == null) return false;
 
+            if (GameTypeFilter != GameType.None)
+            {
+                if (GameTypeFilter == GameType.Alchemy)
+                {
+                    if (uavm.Model.legalities.alchemy == "not_legal") return false;
+                }
+                else if (GameTypeFilter == GameType.Brawl)
+                {
+                    if (uavm.Model.legalities.brawl == "not_legal") return false;
+                }
+                else if (GameTypeFilter == GameType.Commander)
+                {
+                    if (uavm.Model.legalities.commander == "not_legal") return false;
+                }
+                else if (GameTypeFilter == GameType.Explorer)
+                {
+                    if (uavm.Model.legalities.explorer == "not_legal") return false;
+                }
+                else if (GameTypeFilter == GameType.Historic)
+                {
+                    if (uavm.Model.legalities.historic == "not_legal") return false;
+                }
+                else if (GameTypeFilter == GameType.Standard)
+                {
+                    if (uavm.Model.legalities.standard == "not_legal") return false;
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(SearchText))
             {
-                if (!IsBlackChecked && !IsBlueChecked && !IsColorlessChecked && !IsGreenChecked && 
+                if (!IsBlackChecked && !IsBlueChecked && !IsColorlessChecked && !IsGreenChecked &&
                     !IsLandChecked && !IsMulticolorChecked && !IsRedChecked && !IsWhiteChecked)
                 {
                     return true;
@@ -347,6 +394,40 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             if (IsWhiteChecked) colors.Add("W");
 
             return colors;
+        }
+
+        public void SetAlchemicCardVariations()
+        {
+            Cards.Clear();
+
+            List<UniqueArtTypeViewModel> cards = new List<UniqueArtTypeViewModel>();
+
+            foreach (SetFilter setFilter in ServiceLocator.Instance.MainWindowViewModel.FilterSetNames)
+            {
+                cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, true]);
+            }
+
+            // sort the collection going to the UI
+            cards = cards.OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList();
+
+            Cards.AddRange(cards);
+        }
+
+        public void SetNonAlchemicCardVariations()
+        {
+            Cards.Clear();
+
+            List<UniqueArtTypeViewModel> cards = new List<UniqueArtTypeViewModel>();
+
+            foreach (SetFilter setFilter in ServiceLocator.Instance.MainWindowViewModel.FilterSetNames)
+            {
+                cards.AddRange(ServiceLocator.Instance.MainWindowViewModel.Cards[setFilter.Name, false]);
+            }
+
+            // sort the collection going to the UI
+            cards = cards.OrderBy(x => x.NumberOfColors).ThenBy(x => x.ColorScore).ThenBy(x => x.ManaCostTotal).ThenBy(x => x.Name).ToList();
+
+            Cards.AddRange(cards);
         }
 
         private void SetupOrRefreshFilter()

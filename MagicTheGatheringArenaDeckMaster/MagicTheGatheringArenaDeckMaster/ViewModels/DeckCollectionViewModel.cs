@@ -694,6 +694,10 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                 ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
                 ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
+
+                // tell the card collection view model to ensure no alchemic variations of cards are present and to reset game type to none
+                ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.SetNonAlchemicCardVariations();
+                ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.GameTypeFilter = GameType.None;
             }
             else
             {
@@ -738,6 +742,10 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     ServiceLocator.Instance.MainWindowViewModel.ClearOutMessageBoxDialog();
 
                     ServiceLocator.Instance.MainWindowViewModel.DeckBuilderViewModel.Clear();
+
+                    // tell the card collection view model to ensure no alchemic variations of cards are present and to reset game type to none
+                    ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.SetNonAlchemicCardVariations();
+                    ServiceLocator.Instance.MainWindowViewModel.CardCollectionViewModel.GameTypeFilter = GameType.None;
                 }
             }
         }
