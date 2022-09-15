@@ -1,7 +1,7 @@
 # Magic The Gathering Arena Deck Master
 An application that can assist in managing decks for Magic The Gathering Arena and help build them.
 
-A work in progress. 
+Beta version now out!
 
 I enjoy MTG and find Arena fun but do not love the deck editor and as such wanted to make a tool that could store hundreds of decks and had a better deck editor.
 
