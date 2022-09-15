@@ -43,27 +43,10 @@
                 <Grid Grid.Column="0" Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Margin="0,0,0,5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <RadioButton Grid.Row="0" Content="Show all sets" GroupName="SetSelection" 
-                                     IsChecked="{Binding SetFilterViewModel.IsAllChecked}" />
-                        <RadioButton Grid.Row="1" Content="Show only sets allowed in MTGA Standard" GroupName="SetSelection" 
-                                     IsChecked="{Binding SetFilterViewModel.IsStandardChecked}" />
-                        <RadioButton Grid.Row="2" Content="Show only sets allowed in MTGA Alchemy" GroupName="SetSelection" 
-                                     IsChecked="{Binding SetFilterViewModel.IsAlchemyChecked}" />
-                        <RadioButton Grid.Row="3" Content="Show only sets allowed in MTGA Historic" GroupName="SetSelection" 
-                                     IsChecked="{Binding SetFilterViewModel.IsHistoricChecked}" />
-                    </Grid>
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -72,10 +55,10 @@
                         <customControls:WatermarkTextBox Grid.Column="1" Watermark="Search" 
                                                          Text="{Binding SetFilterViewModel.SetSearchText, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
-                    <ListBox x:Name="setsFilterSetsListBox" Grid.Row="2" Margin="0,5,0,0" SelectionMode="Extended" AllowDrop="False"
+                    <ListBox x:Name="setsFilterSetsListBox" Grid.Row="1" Margin="0,5,0,0" SelectionMode="Extended" AllowDrop="False"
                              ItemsSource="{Binding SetFilterViewModel.AllSetNames}"
                              MouseLeftButtonDown="setsFilterSetsListBox_MouseLeftButtonDown" MouseMove="setsFilterSetsListBox_MouseMove" />
-                    <TextBlock Grid.Row="3" FontSize="10" FontStyle="Italic" TextWrapping="Wrap"
+                    <TextBlock Grid.Row="2" FontSize="10" FontStyle="Italic" TextWrapping="Wrap"
                                Style="{StaticResource DarkThemeTextBlockStyle}">
                         Note: Some of the sets in Arena Historic mode are not listed in the data from Scryfall.com.
                     </TextBlock>

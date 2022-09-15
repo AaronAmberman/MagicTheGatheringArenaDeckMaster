@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using WPF.InternalDialogs;
 
@@ -23,10 +22,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         private ICommand cancelCommand;
         private ListView filterSetsListBox;
         private ObservableCollection<SetFilter> filterSetNames;
-        private bool isAllChecked;
-        private bool isAlchemyChecked;
-        private bool isHistoricChecked;
-        private bool isStandardChecked;
         private ICommand okCommand;
         private MessageBoxResult result;
         private ICommand removeSetsCommand;
@@ -58,86 +53,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
             set
             {
                 filterSetNames = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool IsAllChecked
-        {
-            get => isAllChecked;
-            set
-            {
-                isAllChecked = value;
-
-                if (value)
-                {
-                    IsAlchemyChecked = false;
-                    IsHistoricChecked = false;
-                    IsStandardChecked = false;
-
-                    ManualFilter();
-                }
-
-                OnPropertyChanged();
-            }
-        }
-
-        public bool IsAlchemyChecked
-        {
-            get => isAlchemyChecked;
-            set
-            {
-                isAlchemyChecked = value;
-
-                if (value)
-                {
-                    IsAllChecked = false;
-                    IsHistoricChecked = false;
-                    IsStandardChecked = false;
-
-                    ManualFilter();
-                }
-
-                OnPropertyChanged();
-            }
-        }
-
-        public bool IsHistoricChecked
-        {
-            get => isHistoricChecked;
-            set
-            {
-                isHistoricChecked = value;
-
-                if (value)
-                {
-                    IsAlchemyChecked = false;
-                    IsAllChecked = false;
-                    IsStandardChecked = false;
-
-                    ManualFilter();
-                }
-
-                OnPropertyChanged();
-            }
-        }
-
-        public bool IsStandardChecked
-        {
-            get => isStandardChecked;
-            set
-            {
-                isStandardChecked = value;
-
-                if (value)
-                {
-                    IsAlchemyChecked = false;
-                    IsAllChecked = false;
-                    IsHistoricChecked = false;
-
-                    ManualFilter();
-                }
-
                 OnPropertyChanged();
             }
         }
@@ -258,60 +173,15 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
              * worked in one spot (adding sets to settings) but not in another (here in set filters). So went with a manual approach instead.
              */
 
-            if (IsAllChecked)
+            if (!string.IsNullOrWhiteSpace(SetSearchText))
             {
-                if (!string.IsNullOrWhiteSpace(SetSearchText))
-                {
-                    AllSetNames?.Clear();
-                    AllSetNames?.AddRange(allSetNamesPool.Where(x => x.Contains(SetSearchText, StringComparison.OrdinalIgnoreCase)).ToList());
-                }
-                else
-                {
-                    AllSetNames?.Clear();
-                    AllSetNames?.AddRange(allSetNamesPool.ToList());
-                }
+                AllSetNames?.Clear();
+                AllSetNames?.AddRange(allSetNamesPool.Where(x => x.Contains(SetSearchText, StringComparison.OrdinalIgnoreCase)).ToList());
             }
-            else if (IsAlchemyChecked)
+            else
             {
-                if (!string.IsNullOrWhiteSpace(SetSearchText))
-                {
-                    AllSetNames?.Clear();
-                    AllSetNames?.AddRange(allSetNamesPool.Where(item => ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaAlchemyOnlySetNames.Any(item2 => item == item2) &&
-                        item.Contains(SetSearchText, StringComparison.OrdinalIgnoreCase)));
-                }
-                else
-                {
-                    AllSetNames?.Clear();
-                    AllSetNames?.AddRange(allSetNamesPool.Where(item => ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaAlchemyOnlySetNames.Any(item2 => item == item2)));
-                }
-            }
-            else if (IsHistoricChecked)
-            {
-                if (!string.IsNullOrWhiteSpace(SetSearchText))
-                {
-                    AllSetNames?.Clear();
-                    AllSetNames?.AddRange(allSetNamesPool.Where(item => ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaHistoricOnlySetNames.Any(item2 => item == item2) &&
-                        item.Contains(SetSearchText, StringComparison.OrdinalIgnoreCase)));
-                }
-                else
-                {
-                    AllSetNames?.Clear();
-                    AllSetNames?.AddRange(allSetNamesPool.Where(item => ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaHistoricOnlySetNames.Any(item2 => item == item2)));
-                }
-            }
-            else if (isStandardChecked)
-            {
-                if (!string.IsNullOrWhiteSpace(SetSearchText))
-                {
-                    AllSetNames?.Clear();
-                    AllSetNames?.AddRange(allSetNamesPool.Where(item => ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaStandardOnlySetNames.Any(item2 => item == item2) &&
-                        item.Contains(SetSearchText, StringComparison.OrdinalIgnoreCase)));
-                }
-                else
-                {
-                    AllSetNames?.Clear();
-                    AllSetNames?.AddRange(allSetNamesPool.Where(item => ServiceLocator.Instance.MainWindowViewModel.PopupDialogViewModel.SettingsViewModel.ArenaStandardOnlySetNames.Any(item2 => item == item2)));
-                }
+                AllSetNames?.Clear();
+                AllSetNames?.AddRange(allSetNamesPool.ToList());
             }
         }
 
@@ -410,7 +280,6 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
         {
             if (AllSetNames == null)
             {
-                IsAllChecked = true;
                 AllSetNames = new ObservableCollection<string>(ServiceLocator.Instance.MainWindowViewModel.SetNames.ToList());
                 allSetNamesPool = ServiceLocator.Instance.MainWindowViewModel.SetNames.ToList();
             }
