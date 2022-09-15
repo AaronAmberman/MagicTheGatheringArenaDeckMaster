@@ -45,7 +45,6 @@ namespace MagicTheGatheringArenaDeckMaster
                 DeckCollectionViewModel = new DeckCollectionViewModel(),
                 PopupDialogViewModel = new PopupDialogViewModel
                 {
-                    AddSetToSettingsViewModel = new AddSetToSettingsViewModel(),
                     AboutDialogViewModel = new AboutDialogViewModel(),
                     CardDownloadViewModel = new CardDownloadViewModel(),
                     DataViewModel = new DataViewModel(),
