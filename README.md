@@ -3,7 +3,7 @@ An application that can assist in managing decks for Magic The Gathering Arena a
 
 A work in progress. 
 
-I enjoy MTG and find Arena fun but do not love the deck editor and as such wanted to make a tool that could store hundreds of decks and had a better deck editor. Its just me on this project so it is moving slowly. Current work in progress (6/30/2022 10 PM EST)...
+I enjoy MTG and find Arena fun but do not love the deck editor and as such wanted to make a tool that could store hundreds of decks and had a better deck editor. Its just me on this project so it is moving slowly.
 
 ### Main View
 ![WIP](https://user-images.githubusercontent.com/23512394/176679514-490481d6-fa41-4913-a24f-3790ec522d3c.png)
@@ -18,3 +18,5 @@ I enjoy MTG and find Arena fun but do not love the deck editor and as such wante
 
 ### Decks
 ![DeckListing](https://user-images.githubusercontent.com/23512394/189485050-351f4916-d438-4ab2-82e3-e767cc69043b.png)
+
+I have included the initial beta release and believe I am passed alpha. Seems pretty bug free at this point with a complete feature set. As of 9/15/2022 I added the beta version to the setup folder along with the .NET installers needed to run the application. No application installer itself just unzip and run from directory after .NET is installed.
