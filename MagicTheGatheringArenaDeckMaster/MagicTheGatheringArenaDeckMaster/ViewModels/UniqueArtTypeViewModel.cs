@@ -68,6 +68,11 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     score = 16;
                 }
                 else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
+                    model.colors.Count == 0 && !string.IsNullOrEmpty(model.mana_cost) && Char.IsNumber(model.mana_cost.Replace("{", "").Replace("}", ""), 0)) // colorless cards with a mana cost treat as artifact
+                {
+                    score = 16;
+                }
+                else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
                     !model.type_line.Contains("Artifact") && model.type_line.Contains("Land"))
                 {
                     score = 17;
@@ -158,6 +163,11 @@ namespace MagicTheGatheringArenaDeckMaster.ViewModels
                     model.type_line.Contains("Lesson") && model.colors.Count == 0)
                 {
                     // there aren't actually 6 colors but this will put lands at the end of the list
+                    return 6;
+                }
+                else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
+                    model.colors.Count == 0 && !string.IsNullOrEmpty(model.mana_cost) && Char.IsNumber(model.mana_cost.Replace("{", "").Replace("}", ""), 0)) // colorless cards with a mana cost treat as artifact
+                {
                     return 6;
                 }
                 else if (!model.mana_cost.Contains("W") && !model.mana_cost.Contains("U") && !model.mana_cost.Contains("B") && !model.mana_cost.Contains("R") && !model.mana_cost.Contains("G") &&
