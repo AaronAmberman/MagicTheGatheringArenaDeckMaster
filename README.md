@@ -3,7 +3,7 @@ An application that can assist in managing decks for Magic The Gathering Arena a
 
 A work in progress. 
 
-I enjoy MTG and find Arena fun but do not love the deck editor and as such wanted to make a tool that could store hundreds of decks and had a better deck editor. Its just me on this project so it is moving slowly.
+I enjoy MTG and find Arena fun but do not love the deck editor and as such wanted to make a tool that could store hundreds of decks and had a better deck editor.
 
 ### Main View
 ![WIP](https://user-images.githubusercontent.com/23512394/176679514-490481d6-fa41-4913-a24f-3790ec522d3c.png)
