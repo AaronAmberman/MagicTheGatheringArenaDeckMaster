@@ -33,7 +33,6 @@ namespace MagicTheGatheringArenaDeckMaster
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ServiceLocator.Instance.LoggerService.LogFile = Path.Combine(ServiceLocator.Instance.PathingService.BaseDataPath, "Logs", "DeckMaster.log");
-            ServiceLocator.Instance.LoggerService.LogRollSize = 100240; // 100 MB
 
             viewModel = new MainWindowViewModel
             {

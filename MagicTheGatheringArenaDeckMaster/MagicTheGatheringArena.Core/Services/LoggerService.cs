@@ -11,7 +11,7 @@ namespace MagicTheGatheringArena.Core.Services
         public string LogFile { get; set; }
 
         /// <summary>Gets or sets the log file size, in bytes, limit before the log file is rolled.</summary>
-        public long LogRollSize { get; set; } = 102400; // 100 MB by default
+        public long LogRollSize { get; set; } = 102400; // 100 KB by default
 
         public LoggerService()
         {            
