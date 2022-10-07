@@ -1,5 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!--
+        Information retrieved from Visual Studio Image Library
+        https://www.microsoft.com/en-us/download/details.aspx?id=35825
+        (Data was taken from the .xaml file of the images in the image library.)
+    -->
+    
     <Rectangle x:Key="Add" Width="24" Height="24">
         <Rectangle.Fill>
             <DrawingBrush>
