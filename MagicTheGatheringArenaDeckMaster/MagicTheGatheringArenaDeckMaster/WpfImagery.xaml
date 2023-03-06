@@ -6,8 +6,8 @@
         https://www.microsoft.com/en-us/download/details.aspx?id=35825
         (Data was taken from the .xaml file of the images in the image library.)
     -->
-    
-    <Rectangle x:Key="Add" Width="24" Height="24">
+
+    <Rectangle x:Key="Add" Width="24" Height="24" x:Shared="False">
         <Rectangle.Fill>
             <DrawingBrush>
                 <DrawingBrush.Drawing>
@@ -23,7 +23,7 @@
         </Rectangle.Fill>
     </Rectangle>
 
-    <Rectangle x:Key="Remove" Width="24" Height="24">
+    <Rectangle x:Key="Remove" Width="24" Height="24" x:Shared="False">
         <Rectangle.Fill>
             <DrawingBrush>
                 <DrawingBrush.Drawing>
@@ -39,7 +39,7 @@
         </Rectangle.Fill>
     </Rectangle>
 
-    <Rectangle x:Key="Edit" Width="24" Height="24">
+    <Rectangle x:Key="Edit" Width="24" Height="24" x:Shared="False">
         <Rectangle.Fill>
             <DrawingBrush>
                 <DrawingBrush.Drawing>
@@ -56,7 +56,7 @@
         </Rectangle.Fill>
     </Rectangle>
 
-    <Rectangle x:Key="Copy" Width="24" Height="24">
+    <Rectangle x:Key="Copy" Width="24" Height="24" x:Shared="False">
         <Rectangle.Fill>
             <DrawingBrush>
                 <DrawingBrush.Drawing>
@@ -73,7 +73,7 @@
         </Rectangle.Fill>
     </Rectangle>
 
-    <Rectangle x:Key="Import" Width="24" Height="24">
+    <Rectangle x:Key="Import" Width="24" Height="24" x:Shared="False">
         <Rectangle.Fill>
             <DrawingBrush>
                 <DrawingBrush.Drawing>
@@ -89,7 +89,7 @@
         </Rectangle.Fill>
     </Rectangle>
 
-    <Rectangle x:Key="Export" Width="24" Height="24">
+    <Rectangle x:Key="Export" Width="24" Height="24" x:Shared="False">
         <Rectangle.Fill>
             <DrawingBrush>
                 <DrawingBrush.Drawing>
@@ -105,7 +105,7 @@
         </Rectangle.Fill>
     </Rectangle>
 
-    <Rectangle x:Key="StatusHidden" Width="16" Height="16">
+    <Rectangle x:Key="StatusHidden" Width="16" Height="16" x:Shared="False">
         <Rectangle.Fill>
             <DrawingBrush>
                 <DrawingBrush.Drawing>
